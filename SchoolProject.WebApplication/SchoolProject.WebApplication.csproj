@@ -172,6 +172,10 @@
     <Compile Include="Models\PMReviewProgressStatus.cs" />
     <Compile Include="Models\PMReviewReportingStructure.cs" />
     <Compile Include="Models\PMStrategicGoal.cs" />
+    <Compile Include="Models\Repository\BaseRepository.cs" />
+    <Compile Include="Models\Repository\IBaseRepository.cs" />
+    <Compile Include="Models\Repository\IPerformanceManagmentRepository.cs" />
+    <Compile Include="Models\Repository\PerformanceManagmentRepository.cs" />
     <Compile Include="Models\StructureDepartment.cs" />
     <Compile Include="Models\StructureEmployee.cs" />
     <Compile Include="Models\StructureOrganisation.cs" />
@@ -219,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ServiceManager\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
