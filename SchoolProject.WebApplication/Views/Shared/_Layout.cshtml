@@ -1,42 +1,71 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PERFORMANCE MANAGEMENT SYSTEM | </title>
+    @Styles.Render("~/bundle/css")
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <!-- Left Navigation-->
+            @Html.Partial("_LeftNavigation")
+            <!-- /Left Navigation-->
+
+            <!-- Top Vavigation -->
+            @Html.Partial("_TopNavigation")
+            <!-- /top navigation -->
+
+            <!-- page content -->
+            <div class="right_col" role="main">
+                @RenderBody()
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
+            <!-- /page content -->
+
+            <!-- modal placeholder-->
+            <div id='myModal' class='modal'>
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content animated flipInY">
+                        <div id='myModalContent'></div>
+                    </div>
+                </div>
             </div>
+
+            <div class="modal inmodal" id="MessageModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content animated flipInY">
+                        <div class="modal-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- footer content -->
+            @Html.Partial("_Footer")
+            <!-- /footer content -->
+
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
 
+    <!-- Section for main scripts render -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    @Scripts.Render("~/bundles/FastClick")
+    @Scripts.Render("~/bundles/NProgress")
+    @Scripts.Render("~/bundles/Chart")
+    @Scripts.Render("~/bundles/Gauge")
+    @Scripts.Render("~/bundles/iCheck")
+    @Scripts.Render("~/bundles/Skycons")
+    @Scripts.Render("~/bundles/Flot")
+    @Scripts.Render("~/bundles/JQVMap")
+    @Scripts.Render("~/bundles/Daterangepicker")
+    @Scripts.Render("~/bundles/Datatables")
+    @Scripts.Render("~/bundles/CustomScript")
+   
 </body>
 </html>
