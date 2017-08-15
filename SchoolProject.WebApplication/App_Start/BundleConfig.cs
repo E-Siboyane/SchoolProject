@@ -82,7 +82,7 @@ namespace SchoolProject.WebApplication {
                              "~/Scripts/vendors/bootstrap-daterangepicker/daterangepicker.js",
                              "~/Scripts/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"));
 
-            //Datatables
+            //Datatables comments
             bundles.Add(new ScriptBundle("~/bundles/Datatables").Include(
                              "~/Scripts/vendors/datatables.net/js/jquery.dataTables.min.js",
                              "~/Scripts/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js",
