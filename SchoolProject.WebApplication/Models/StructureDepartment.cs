@@ -8,6 +8,7 @@ namespace SchoolProject.WebApplication.Models {
     public class StructureDepartment : Audit, IStatus {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DepartmentId { get; set; }
+        public string DepartmentCode { get; set; }
         public string DepartmentName { get; set; }
         [ForeignKey("Portfolio")]
         public int PortfolioId { get; set; }
