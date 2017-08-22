@@ -1,0 +1,61 @@
+﻿@model IEnumerable<SchoolProject.WebApplication.Models.AdminPerformanceYear>
+
+@{
+    ViewBag.Title = "PerformanceYear";
+}
+
+<h2>Performance Review Years</h2>
+
+<table id="datatable" class="table table-hover">
+    <thead>
+        <tr>            
+            <th>
+                @Html.Raw("Performance Year Description")
+            </th>
+            <th>
+                @Html.Raw("Start Date")
+            </th>
+            <th>
+                @Html.Raw("End Date")
+            </th>
+            <th>
+                @Html.ActionLink("Create New", "Create")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.Raw(item.PerformanceYearName)
+                </td>
+                <td>
+                    @Html.Raw(item.StartDate.ToString("MMMM dd yyyy"))
+                </td>
+                <td>
+                    @Html.Raw(item.EndDate.ToString("MMMM dd yyyy"))
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /*id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                @Html.Raw("Performance Year Description")
+            </th>
+            <th>
+                @Html.Raw("Start Date")
+            </th>
+            <th>
+                @Html.Raw("End Date")
+            </th>
+            <th>
+            </th>
+        </tr>
+    </tfoot>
+</table>

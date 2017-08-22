@@ -255,5 +255,348 @@ namespace SchoolProject.WebApplication.ServiceManager {
             }
             return null;
         }
+
+
+
+        //Status
+
+        public AdminStatus AddStatus(AdminStatus Status) {
+            return _pmRepository.Insert(Status, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeleteStatus(AdminStatus Status) {
+             _pmRepository.Delete(Status, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminStatus UpdateStatus(AdminStatus Status) {
+            return _pmRepository.Update(Status, _pmRepository.GetApplicationDbContext);
+        }
+
+        public AdminStatus FindStatus(int id) {
+            return _pmRepository.Find<AdminStatus>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<AdminStatus> GetStatuses() {
+            return _pmRepository.Get<AdminStatus>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public List<AdminStatus> GetActiveStatuses() {
+            return GetStatuses().Where(x => x.DateDeleted == null).ToList();
+        }
+
+        //Job Grade
+        public AdminJobGrade AddJobGrade(AdminJobGrade jobGrade) {
+            return _pmRepository.Insert(jobGrade, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeleteJobGrade(AdminJobGrade jobGrade) {
+             _pmRepository.Delete(jobGrade, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminJobGrade UpdateJobGrade(AdminJobGrade jobGrade) {
+            return _pmRepository.Update(jobGrade,_pmRepository.GetApplicationDbContext);
+        }
+
+        public JobGrade FindJobGrade(int id) {
+            return SearchJobGrade(id);
+        }
+
+        public List<JobGrade> GetJobGrades() {
+            return GetJobGrade();
+        }
+
+        public List<JobGrade> GetActiveJobGrades() {
+            return GetJobGrades().Where(x => x.DeleteDate == null).ToList();
+        }
+
+        public AdminMeasure AddMeasure(AdminMeasure measure) {
+            return _pmRepository.Insert(measure, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeleteMeasure(AdminMeasure measure) {
+            _pmRepository.Delete(measure, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminMeasure UpdateMeasure(AdminMeasure measure) {
+            return _pmRepository.Update(measure, _pmRepository.GetApplicationDbContext);
+        }
+
+        public AdminMeasure FindMeasure(int id) {
+            return _pmRepository.Find<AdminMeasure>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<AdminMeasure> GetMeasures() {
+            return _pmRepository.Get<AdminMeasure>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public List<AdminMeasure> GetActiveMeasures() {
+            return GetMeasures().Where(x => x.DateDeleted == null).ToList();
+        }
+
+        public AdminObjective AddObjective(AdminObjective objective) {
+            return _pmRepository.Insert(objective, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeleteObjective(AdminObjective objective) {
+            _pmRepository.Delete(objective, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminObjective UpdateObjective(AdminObjective objective) {
+            return _pmRepository.Update(objective, _pmRepository.GetApplicationDbContext);
+        }
+
+        public AdminObjective FindObjective(int id) {
+            return _pmRepository.Find<AdminObjective>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<AdminObjective> GetObjectives() {
+            return _pmRepository.Get<AdminObjective>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public List<AdminObjective> GetActiveObjectives() {
+            return GetObjectives().Where(x => x.DateDeleted == null).ToList();
+        }
+
+        public AdminPerformanceYear AddPerformanceYear(AdminPerformanceYear performanceYear) {
+            return _pmRepository.Insert(performanceYear, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeletePerformanceYear(AdminPerformanceYear performanceYear) {
+            _pmRepository.Delete(performanceYear, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminPerformanceYear UpdatePerformanceYear(AdminPerformanceYear performanceYear) {
+            return _pmRepository.Update(performanceYear, _pmRepository.GetApplicationDbContext);
+        }
+
+        public AdminPerformanceYear FindPerformanceYear(int id) {
+            return _pmRepository.Find<AdminPerformanceYear>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<AdminPerformanceYear> GetPerformanceYears() {
+            return _pmRepository.Get<AdminPerformanceYear>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public List<AdminPerformanceYear> GetActivePerformanceYears() {
+            return _pmRepository.Get<AdminPerformanceYear>(_pmRepository.GetApplicationDbContext).Where(x => x.DateDeleted == null).ToList();
+        }
+
+        public AdminReviewPeriod AddReviewPeriod(AdminReviewPeriod reviewPeriod) {
+            return _pmRepository.Insert(reviewPeriod, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeleteReviewPeriod(AdminReviewPeriod reviewPeriod) {
+            _pmRepository.Delete(reviewPeriod, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminReviewPeriod UpdateReviewPeriod(AdminReviewPeriod reviewPeriod) {
+            return _pmRepository.Update(reviewPeriod, _pmRepository.GetApplicationDbContext);
+        }
+
+        public AdminReviewPeriod FindReviewPeriod(int id) {
+            return _pmRepository.Find<AdminReviewPeriod>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<AdminReviewPeriod> GetReviewPeriods() {
+            return _pmRepository.Get<AdminReviewPeriod>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public List<AdminReviewPeriod> GetActiveReviewPeriods() {
+            return _pmRepository.Get<AdminReviewPeriod>(_pmRepository.GetApplicationDbContext).Where(x => x.DateDeleted == null).ToList();
+        }
+
+        public AdminScoreRating AddScoreRating(AdminScoreRating scoreRating) {
+            return _pmRepository.Insert(scoreRating, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeleteScoreRating(AdminScoreRating scoreRating) {
+            _pmRepository.Delete(scoreRating, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminScoreRating UpdateScoreRating(AdminScoreRating scoreRating) {
+            return _pmRepository.Update(scoreRating, _pmRepository.GetApplicationDbContext);
+        }
+
+        public AdminScoreRating FindScoreRating(int id) {
+            return _pmRepository.Find<AdminScoreRating>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<AdminScoreRating> GetScoreRatings() {
+            return _pmRepository.Get<AdminScoreRating>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public List<AdminScoreRating> GetActiveScoreRatings() {
+            return _pmRepository.Get<AdminScoreRating>(_pmRepository.GetApplicationDbContext).Where(x => x.DateDeleted == null).ToList();
+        }
+
+        public AdminStrategicGoal AddStrategicGoal(AdminStrategicGoal strategicGoal) {
+            return _pmRepository.Insert(strategicGoal, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeleteStrategicGoal(AdminStrategicGoal strategicGoal) {
+            _pmRepository.Delete(strategicGoal, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminStrategicGoal UpdateStrategicGoal(AdminStrategicGoal strategicGoal) {
+            return _pmRepository.Update(strategicGoal, _pmRepository.GetApplicationDbContext);
+        }
+
+        public AdminStrategicGoal FindStrategicGoal(int id) {
+            return _pmRepository.Find<AdminStrategicGoal>(id,_pmRepository.GetApplicationDbContext);
+        }
+
+        public List<AdminStrategicGoal> GetStrategicGoals() {
+            return _pmRepository.Get<AdminStrategicGoal>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public List<AdminStrategicGoal> GetActiveStrategicGoals() {
+            return _pmRepository.Get<AdminStrategicGoal>(_pmRepository.GetApplicationDbContext).Where(x => x.DateDeleted == null).ToList();
+        }
+
+        public AdminTerm AddTerm(AdminTerm term) {
+            return _pmRepository.Insert(term, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeleteTerm(AdminTerm term) {
+             _pmRepository.Delete(term, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public AdminTerm UpdateTerm(AdminTerm term) {
+            return _pmRepository.Update(term, _pmRepository.GetApplicationDbContext);
+        }
+
+        public AdminTerm FindTerm(int id) {
+            return _pmRepository.Find<AdminTerm>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<AdminTerm> GetTerms() {
+            return _pmRepository.Get<AdminTerm>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public List<AdminTerm> GetActiveTerms() {
+            return _pmRepository.Get<AdminTerm>(_pmRepository.GetApplicationDbContext).Where(x => x.DateDeleted == null && x.StatusId == 1).ToList();
+        }
+
+        public List<LinkPerformanceYearReviewPeriod> GetLinkedPerformanceYearReviews() {
+            return GetLinkedPerformanceYearReviews();
+        }
+
+        //Structure Organisation
+
+        public StructureOrganisation AddStructureOrganisation(StructureOrganisation structureOrganisation) {
+            return _pmRepository.Insert(structureOrganisation, _pmRepository.GetApplicationDbContext);
+        }
+        public bool DeleteStructureOrganisation(StructureOrganisation structureOrganisation) {
+            _pmRepository.Delete(structureOrganisation, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+        public StructureOrganisation UpdateStructureOrganisation(StructureOrganisation structureOrganisation) {
+            return _pmRepository.Update(structureOrganisation, _pmRepository.GetApplicationDbContext);
+        }
+        public StructureOrganisation FindStructureOrganisation(int id) {
+            return _pmRepository.Find<StructureOrganisation>(id,_pmRepository.GetApplicationDbContext);
+        }
+        public List<StructureOrganisation> GetStructureOrganisation() {
+            return _pmRepository.Get<StructureOrganisation>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+        public List<StructureOrganisation> GetActiveStructureOrganisation() {
+            return _pmRepository.Get<StructureOrganisation>(_pmRepository.GetApplicationDbContext).Where(x => x.DateDeleted == null).ToList();
+        }
+
+        //Structure Portfolios
+        public StructurePortfolio AddStructurePortfolio(StructurePortfolio structurePortfolio) {
+            return _pmRepository.Insert(structurePortfolio, _pmRepository.GetApplicationDbContext);
+        }
+        public bool DeleteStructurePortfolio(StructurePortfolio structurePortfolio) {
+             _pmRepository.Delete(structurePortfolio, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+        public StructurePortfolio UpdateStructurePortfolio(StructurePortfolio structurePortfolio) {
+            return _pmRepository.Update(structurePortfolio, _pmRepository.GetApplicationDbContext);
+        }
+        public Portfolio FindStructurePortfolio(int id) {
+            return SearchPortfolio(id);
+        }
+        public List<Portfolio> GetStructurePortfolio() {
+            return GetPortfolios();
+        }
+        public List<Portfolio> GetActiveStructurePortfolio() {
+            return GetStructurePortfolio().Where(p => p.DeleteDate == null).ToList();
+        }
+
+        //Structure Department
+        public StructureDepartment AddStructureDepartment(StructureDepartment structureDepartment) {
+            return _pmRepository.Insert(structureDepartment, _pmRepository.GetApplicationDbContext);
+        }
+        public bool DeleteStructureDepartment(StructureDepartment structureDepartment) {
+             _pmRepository.Delete(structureDepartment, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public StructureDepartment UpdateStructureDepartment(StructureDepartment structureDepartment) {
+            return _pmRepository.Update(structureDepartment, _pmRepository.GetApplicationDbContext);
+        }
+
+        public Department FindStructureDepartment(int id) {
+            return SearchDepartment(id);
+        }
+
+        public List<Department> GetStructureDepartment() {
+            return GetDepartment();
+        }
+        public List<Department> GetActiveStructureDepartment() {
+            return GetStructureDepartment().Where(x => x.DeleteDate == null).ToList();
+        }
+
+        //Structure Teams
+        public StructureTeam AddStructureTeam(StructureTeam structureTeam) {
+            return _pmRepository.Insert(structureTeam, _pmRepository.GetApplicationDbContext);
+        }
+        public bool DeleteStructureTeam(StructureTeam structureTeam) {
+             _pmRepository.Delete(structureTeam, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+        public StructureTeam UpdateStructureTeam(StructureTeam structureTeam) {
+            return _pmRepository.Update(structureTeam, _pmRepository.GetApplicationDbContext);
+        }
+        public Team FindStructureTeam(int id) {
+            return SearchTeam(id);
+        }
+        public List<Team> GetStructureTeam() {
+            return GetTeam();
+        }
+        public List<Team> GetActiveStructureTeam() {
+            return GetStructureTeam().Where(t => t.DeleteDate == null).ToList();
+        }
+
+        //Document Types
+        public PMDocumentType AddDocumentType(PMDocumentType pmDocumentType) {
+            return _pmRepository.Insert(pmDocumentType, _pmRepository.GetApplicationDbContext);
+        }
+        public bool DeleteDocumentType(PMDocumentType pmDocumentType) {
+             _pmRepository.Delete(pmDocumentType, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+        public PMDocumentType UpdateDocumentType(PMDocumentType pmDocumentType) {
+            return _pmRepository.Update(pmDocumentType, _pmRepository.GetApplicationDbContext);
+        }
+        public DocumentType FindDocumentType(int id) {
+            return SearchDocumentType(id);
+        }
+        
+        public List<DocumentType> GetActiveDocumentType() {
+            return GetDocumentType().Where(x => x.DeleteDate == null).ToList();
+        }
+
     }
+
 }

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SchoolProject.WebApplication.DTO.Portfolio>
+
+@{
+    ViewBag.Title = "Portfolios";
+}
+
+<h2>Portfolios</h2>
+
+<table id="datatable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>@Html.Raw("Portfolio Code")</th>
+            <th>@Html.Raw("Organisation Code")</th>
+            <th>@Html.Raw("Portfolio")</th>
+            <th>@Html.Raw("Organisation")</th>
+            <th>@Html.Raw("Status")</th>
+            <th>@Html.ActionLink("Create New", "Create")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PortfolioCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrganisationStructureCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PortfolioName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrganisationStructureName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>@Html.Raw("Portfolio Code")</th>
+            <th>@Html.Raw("Organisation Code")</th>
+            <th>@Html.Raw("Portfolio")</th>
+            <th>@Html.Raw("Organisation")</th>
+            <th>@Html.Raw("Status")</th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>

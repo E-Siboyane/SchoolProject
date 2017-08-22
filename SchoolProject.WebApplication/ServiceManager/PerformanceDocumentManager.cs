@@ -20,6 +20,49 @@ namespace SchoolProject.WebApplication.ServiceManager {
             _pmRepository = kernel.Get<IPerformanceManagmentRepository>();
         }
 
+        public PMReviewPeriod AddPerformanceReviewPeriod(PMReviewPeriod performanceReviewPeriod) {
+            return _pmRepository.Insert(performanceReviewPeriod,_pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeletePerformanceReviewPeriod(PMReviewPeriod performanceReviewPeriod) {
+             _pmRepository.Delete(performanceReviewPeriod, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+
+        public PMReviewPeriod FindPerformanceReviewPeriod(int id) {
+            return _pmRepository.Find<PMReviewPeriod>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<PMReviewPeriod> GetPerformanceReviewPeriods() {
+            return _pmRepository.Get<PMReviewPeriod>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
+        public PMReviewPeriod UpdatePerformanceReviewPeriod(PMReviewPeriod performanceReviewPeriod) {
+            return _pmRepository.Update(performanceReviewPeriod, _pmRepository.GetApplicationDbContext);
+        }
+
+        public PMReview AddPerformanceReview(PMReview performanceReview) {
+            return _pmRepository.Insert(performanceReview, _pmRepository.GetApplicationDbContext);
+        }
+
+        public PMReview UpdatePerformanceReview(PMReview performanceReview) {
+            return _pmRepository.Update(performanceReview, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeletePerformanceReview(PMReview performanceReview) {
+             _pmRepository.Delete(performanceReview, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public PMReview FindPerformanceReview(int id) {
+            return _pmRepository.Find<PMReview>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<PMReview> GetPerformanceReviews() {
+            return _pmRepository.Get<PMReview>(_pmRepository.GetApplicationDbContext).ToList();
+        }
+
         public List<LinkPerformanceYearReviewPeriod> GetLinkedPerformanceYearReviews() {
             var results = new List<LinkPerformanceYearReviewPeriod>();
             var linkedPerformanceYears = _pmRepository.Get<PMReviewPeriod>(_pmRepository.GetApplicationDbContext).

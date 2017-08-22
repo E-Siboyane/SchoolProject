@@ -1,0 +1,61 @@
+﻿@model IEnumerable<SchoolProject.WebApplication.DTO.Team>
+
+@{
+    ViewBag.Title = "Team";
+}
+
+<h2>Teams</h2>
+
+<table id="datatable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>@Html.Raw("Team Code")</th>
+            <th>@Html.Raw("Team")</th>
+            <th>@Html.Raw("Department")</th>
+            <th>@Html.Raw("Porfolio")</th>
+            <th>@Html.Raw("Organisation")</th>
+            <th>@Html.Raw("Status")</th>
+            <th>@Html.ActionLink("Create New", "Create")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PortfolioName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrganisationStructureName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.TeamId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.TeamId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.TeamId })
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>@Html.Raw("Team Code")</th>
+            <th>@Html.Raw("Team")</th>
+            <th>@Html.Raw("Department")</th>
+            <th>@Html.Raw("Porfolio")</th>
+            <th>@Html.Raw("Organisation")</th>
+            <th>@Html.Raw("Status")</th>
+            <th>@Html.ActionLink("Create New", "Create")</th>
+        </tr>
+    </tfoot>
+</table>

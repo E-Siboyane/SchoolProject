@@ -1,0 +1,70 @@
+﻿@model IEnumerable<SchoolProject.WebApplication.DTO.LinkPerformanceYearReviewPeriod>
+
+@{
+    ViewBag.Title = "PerformanceReviewPeriodLinking";
+}
+
+<h2>Performance Review Period Linking</h2>
+
+<table id="datatable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.Raw("Performance Year")
+            </th>
+            <th>
+                @Html.Raw("Performance Year Start-End Date")
+            </th>
+            <th>
+                @Html.Raw("Review Period")
+            </th>
+            <th>
+                @Html.Raw("Status")
+            </th>
+            <th>
+                @Html.ActionLink("Create New", "Create")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PerformanceYear)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PerformanceYearStartEndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewPeriod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusDescription)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>
+                @Html.Raw("Performance Year")
+            </th>
+            <th>
+                @Html.Raw("Performance Year Start-End Date")
+            </th>
+            <th>
+                @Html.Raw("Review Period")
+            </th>
+            <th>
+                @Html.Raw("Status")
+            </th>
+            <th>
+            </th>
+        </tr>
+    </tfoot>
+</table>

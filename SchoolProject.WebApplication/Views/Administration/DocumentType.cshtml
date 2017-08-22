@@ -1,0 +1,46 @@
+﻿@model IEnumerable<SchoolProject.WebApplication.DTO.DocumentType>
+
+@{
+    ViewBag.Title = "DocumentType";
+}
+
+<h2>Document Type</h2>
+
+<table id="datatable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>@Html.Raw("Code")</th>
+            <th>@Html.Raw("Document Type")</th>
+            <th>@Html.Raw("Status")</th>
+            <th>@Html.ActionLink("Create New", "Create")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DocumentTypeCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DocumentTypeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.DocumentTypeId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.DocumentTypeId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.DocumentTypeId })
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>@Html.Raw("Code")</th>
+            <th>@Html.Raw("Document Type")</th>
+            <th>@Html.Raw("Status")</th>
+            <th>@Html.ActionLink("Create New", "Create")</th>
+        </tr>
+    </tfoot>
+</table>

@@ -77,6 +77,14 @@
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Ninject.Web.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Web.Common.3.2.0.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.MVC4.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -130,6 +138,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -147,7 +159,9 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DTO\Department.cs" />
     <Compile Include="DTO\DocumentType.cs" />
@@ -256,6 +270,17 @@
     <Content Include="Views\Shared\_LeftNavigation.cshtml" />
     <Content Include="Views\Shared\_MainContent.cshtml" />
     <Content Include="Views\Shared\_TopNavigation.cshtml" />
+    <Content Include="Views\Administration\Department.cshtml" />
+    <Content Include="Views\Administration\DocumentType.cshtml" />
+    <Content Include="Views\Administration\JobGrade.cshtml" />
+    <Content Include="Views\Administration\OrganisationStructure.cshtml" />
+    <Content Include="Views\Administration\PerformanceReviewPeriodLinking.cshtml" />
+    <Content Include="Views\Administration\PerformanceYear.cshtml" />
+    <Content Include="Views\Administration\PerformanceYearReviews.cshtml" />
+    <Content Include="Views\Administration\Portfolios.cshtml" />
+    <Content Include="Views\Administration\Status.cshtml" />
+    <Content Include="Views\Administration\Team.cshtml" />
+    <Content Include="Views\Administration\Terms.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
