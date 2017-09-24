@@ -487,7 +487,26 @@ namespace SchoolProject.WebApplication.ServiceManager {
         }
 
         public List<LinkPerformanceYearReviewPeriod> GetLinkedPerformanceYearReviews() {
-            return GetLinkedPerformanceYearReviews();
+            var results = new List<LinkPerformanceYearReviewPeriod>();
+            var linkedPerformanceYears = _pmRepository.Get<PMReviewPeriod>(_pmRepository.GetApplicationDbContext).
+                                         Where(x => x.DateDeleted == null && x.StatusId != 4).
+                                         Include(x => x.Status).Include(x => x.PerformanceYear).Include(x => x.ReviewPeriod);
+            foreach (var item in linkedPerformanceYears) {
+                var review = new LinkPerformanceYearReviewPeriod() {
+                    PMReviewPeriodId = item.PMReviewPeriodId,
+                    ReviewPeriodId = item.ReviewPeriodId,
+                    PerformanceYearId = item.PerformanceYearId,
+                    PerformanceYear = item.PerformanceYear.PerformanceYearName,
+                    PerformanceYearStartEndDate = string.Format("{0} - {1}",
+                                                                       item.PerformanceYear.StartDate.ToString("MMMM dd yyyy"),
+                                                                       item.PerformanceYear.EndDate.ToString("MMMM dd yyyy")),
+                    ReviewPeriod = item.ReviewPeriod.ReviewPeriodName,
+                    StatusId = item.StatusId,
+                    StatusDescription = item.Status.StatusName
+                };
+                results.Add(review);
+            }
+            return (results);
         }
 
         //Structure Organisation
@@ -597,6 +616,40 @@ namespace SchoolProject.WebApplication.ServiceManager {
             return GetDocumentType().Where(x => x.DeleteDate == null).ToList();
         }
 
+        //Reporting Structure
+        public PMReviewReportingStructure AddReportingStructure(PMReviewReportingStructure pmReviewReportingStructure) {
+            return _pmRepository.Insert(pmReviewReportingStructure, _pmRepository.GetApplicationDbContext);
+        }
+        public bool DeleteReportingStructure(PMReviewReportingStructure pmReviewReportingStructure) {
+            _pmRepository.Delete(pmReviewReportingStructure, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+        public PMReviewReportingStructure UpdateDocumentType(PMReviewReportingStructure pmReviewReportingStructure) {
+            return _pmRepository.Update(pmReviewReportingStructure, _pmRepository.GetApplicationDbContext);
+        }
+        public PMReviewReportingStructure FindReviewReportingStructure(int id) {
+            return _pmRepository.Find<PMReviewReportingStructure>(id,_pmRepository.GetApplicationDbContext);
+        }
+
+        public List<ReportingStructure> GetPMReviewReportingStructure() {
+            var reportingStructure = new List<ReportingStructure>();
+            var results = _pmRepository.Get<PMReviewReportingStructure>(_pmRepository.GetApplicationDbContext).
+                          Include(X => X.Status).Include(x => x.Manager).Include(x => x.Owner).Include(x => x.DocumentType).
+                          Include(x => x.Owner.JobGrade).Include(x => x.Manager.JobGrade).Where(x => x.DateDeleted == null).ToList();
+            foreach(var item in results) {
+                reportingStructure.Add(new ReportingStructure {
+                    EmployeeRecordId = item.ReviewReportingStructureId,
+                    EmployeeCode = item.Owner.EmployeeCode,
+                    ManagerEployeeCode = item.Manager.EmployeeCode,
+                    JobGradeName = item.Owner.JobGrade.JobGrade,
+                    EmployeeName = string.Format("{0} {1}", item.Owner.Name, item.Owner.Surname),
+                    ManagerName = string.Format("{0} {1}", item.Manager.Name, item.Manager.Surname),
+                    DocumentTypeName = item.DocumentType.DocumentTypeName,
+                    StatusName = item.Status.StatusName
+                });
+            }
+            return (reportingStructure);
+        }
     }
 
 }

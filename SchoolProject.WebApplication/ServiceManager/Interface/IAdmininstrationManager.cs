@@ -194,5 +194,13 @@ namespace SchoolProject.WebApplication.ServiceManager.Interface {
 
        List<DocumentType> GetActiveDocumentType();
 
+        //Reporting Structure
+        PMReviewReportingStructure AddReportingStructure(PMReviewReportingStructure pmReviewReportingStructure);
+        bool DeleteReportingStructure(PMReviewReportingStructure pmReviewReportingStructure);
+        PMReviewReportingStructure UpdateDocumentType(PMReviewReportingStructure pmReviewReportingStructure);
+        PMReviewReportingStructure FindReviewReportingStructure(int id);
+
+        List<ReportingStructure> GetPMReviewReportingStructure();
+
     }
 }

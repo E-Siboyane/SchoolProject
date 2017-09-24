@@ -168,6 +168,7 @@
     <Compile Include="DTO\JobGrade.cs" />
     <Compile Include="DTO\LinkPerformanceYearReviewPeriod.cs" />
     <Compile Include="DTO\Portfolio.cs" />
+    <Compile Include="DTO\ReportingStructure.cs" />
     <Compile Include="DTO\Team.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -281,6 +282,7 @@
     <Content Include="Views\Administration\Status.cshtml" />
     <Content Include="Views\Administration\Team.cshtml" />
     <Content Include="Views\Administration\Terms.cshtml" />
+    <Content Include="Views\Administration\ReviewReportingStructure.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

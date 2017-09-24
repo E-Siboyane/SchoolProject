@@ -69,6 +69,11 @@ namespace SchoolProject.WebApplication.Controllers
             return View(results);
         }
 
+        public ActionResult ReviewReportingStructure() {
+            var results = _iAdminstrationManager.GetPMReviewReportingStructure();
+            return View(results);
+        }
+
         // GET: Administration
         public ActionResult Index()
         {

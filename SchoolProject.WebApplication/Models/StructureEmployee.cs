@@ -27,5 +27,7 @@ namespace SchoolProject.WebApplication.Models {
         [ForeignKey("Status"), Required]
         public int StatusId { get; set; }
         public virtual AdminStatus Status { get; set; }
+        public int JobGradeId { get; set; }
+        public virtual AdminJobGrade JobGrade { get; set; }
     }
 }
