@@ -208,6 +208,7 @@
     <Compile Include="Models\StructureTeam.cs" />
     <Compile Include="Models\Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DTO\Employee.cs" />
     <Compile Include="ServiceManager\AdmininstrationManager.cs" />
     <Compile Include="ServiceManager\Interface\IAdmininstrationManager.cs" />
     <Compile Include="ServiceManager\Interface\INinjectStandardModule.cs" />
@@ -283,6 +284,7 @@
     <Content Include="Views\Administration\Team.cshtml" />
     <Content Include="Views\Administration\Terms.cshtml" />
     <Content Include="Views\Administration\ReviewReportingStructure.cshtml" />
+    <Content Include="Views\Administration\Employees.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

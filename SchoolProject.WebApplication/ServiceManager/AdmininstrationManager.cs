@@ -650,6 +650,41 @@ namespace SchoolProject.WebApplication.ServiceManager {
             }
             return (reportingStructure);
         }
+
+        //Structure Employees
+        public StructureEmployee AddEmployee(StructureEmployee employee) {
+            return _pmRepository.Insert(employee, _pmRepository.GetApplicationDbContext);
+        }
+        public bool DeleteEmployee(StructureEmployee employee) {
+            _pmRepository.Delete(employee, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+        public StructureEmployee UpdateDocumentType(StructureEmployee employee) {
+            return _pmRepository.Update(employee, _pmRepository.GetApplicationDbContext);
+        }
+        public StructureEmployee FindEmployee(int id) {
+            return _pmRepository.Find<StructureEmployee>(id, _pmRepository.GetApplicationDbContext);
+        }
+
+        public List<Employee> GetEmployee() {
+            var employees = new List<Employee>();
+            var results = _pmRepository.Get<StructureEmployee>(_pmRepository.GetApplicationDbContext).
+                          Include(X => X.Status).Include(x => x.JobGrade).Include(x => x.Team).Include(x => x.Team.Department).
+                          Where(x => x.DateDeleted == null).ToList();
+            foreach (var item in results) {
+                employees.Add(new Employee {
+                    EmployeeRecordId = item.EmployeeRecordId,
+                    EmployeeCode = item.EmployeeCode,
+                    JobGradeName = item.JobGrade.JobGrade,
+                    EmployeeName = string.Format("{0} {1}", item.Name, item.Surname),
+                    Team = item.Team.TeamName,
+                    Department = item.Team.Department.DepartmentName,
+                    StatusName = item.Status.StatusName
+                });
+            }
+            return (employees);
+        }
+
     }
 
 }

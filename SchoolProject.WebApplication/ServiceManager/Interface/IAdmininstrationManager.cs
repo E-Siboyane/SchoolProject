@@ -202,5 +202,12 @@ namespace SchoolProject.WebApplication.ServiceManager.Interface {
 
         List<ReportingStructure> GetPMReviewReportingStructure();
 
+        //Structure Employees
+        StructureEmployee AddEmployee(StructureEmployee employee);
+        bool DeleteEmployee(StructureEmployee employee);
+        StructureEmployee UpdateDocumentType(StructureEmployee employee);
+         StructureEmployee FindEmployee(int id);
+        List<Employee> GetEmployee();
+
     }
 }

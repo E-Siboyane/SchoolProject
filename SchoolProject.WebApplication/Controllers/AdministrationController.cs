@@ -74,6 +74,11 @@ namespace SchoolProject.WebApplication.Controllers
             return View(results);
         }
 
+        public ActionResult Employees() {
+            var results = _iAdminstrationManager.GetEmployee();
+            return View(results);
+        }
+
         // GET: Administration
         public ActionResult Index()
         {
