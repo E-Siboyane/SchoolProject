@@ -119,6 +119,26 @@ namespace SchoolProject.WebApplication.Controllers
             return RedirectToAction("CreateEmployee");
         }
 
+        [HttpGet]
+        public ActionResult RemoveEmployee(int employeeRecordId) {
+            var dbEmployee = _iAdminstrationManager.FindEmployee(employeeRecordId);
+            var viewModelEmployee = new RegisterEmployee() {
+                EmployeeRecordId = dbEmployee.EmployeeRecordId,
+                EmployeeCode = dbEmployee.EmployeeCode,
+                NetworkUsername = dbEmployee.NetworkUsername,
+                EmployeeName = dbEmployee.Name,
+                EmployeeSurname = dbEmployee.Surname,
+                JobGradeId = dbEmployee.JobGradeId,
+                TeamId = dbEmployee.TeamId,
+                JobGrade = GetJobGrades(),
+                Team = GetJobTeams(),
+                ProcessingStatusMessage = string.Empty,
+                FormMode = FormModeOption.DELETE
+            };
+            TempData["viewModelEmployee"] = viewModelEmployee;
+            return RedirectToAction("CreateEmployee");
+        }
+
         [HttpPost]
         public ActionResult CreateEmployee(RegisterEmployee registerEmployee) {
 
@@ -135,9 +155,11 @@ namespace SchoolProject.WebApplication.Controllers
                                 createNew.JobGrade = GetJobGrades();
                                 createNew.FormMode = FormModeOption.CREATE;
                                 createNew.ProcessingStatus = true;
-                                createNew.ProcessingStatusMessage = string.Format("Successfully added {0} {1}", 
-                                                                 registerEmployee.NetworkUsername, registerEmployee.EmployeeSurname);
-                                return View(createNew);
+                                createNew.ProcessingStatusMessage = string.Format("Successfully added employee {0} - {1} {2}",
+                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeName,
+                                                             registerEmployee.EmployeeSurname);
+                                TempData["viewModelEmployee"] = createNew;
+                                return RedirectToAction("CreateEmployee");
                             }
                             else {
                                 ModelState.AddModelError(string.Empty, "Employee aready exist...");
@@ -159,19 +181,44 @@ namespace SchoolProject.WebApplication.Controllers
                                 entry.State = EntityState.Modified;
                                 dbContext.SaveChanges();
                             }
-                            TempData["viewModelEmployee"] = null;
+                            
                             var createNew = new RegisterEmployee();
                             createNew.Team = GetJobTeams();
                             createNew.JobGrade = GetJobGrades();
                             createNew.FormMode = FormModeOption.CREATE;
                             createNew.ProcessingStatus = true;
-                            createNew.ProcessingStatusMessage = string.Format("Successfully updated {0} {1}",
-                                                             registerEmployee.NetworkUsername, registerEmployee.EmployeeSurname);
-                            return View(createNew);
+                            createNew.ProcessingStatusMessage = string.Format("Successfully updated employee: {0} - {1} {2}",
+                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeName,
+                                                             registerEmployee.EmployeeSurname);
+                            TempData["viewModelEmployee"] = createNew;
+                            return RedirectToAction("CreateEmployee");
+                        }
+                    case FormModeOption.DELETE: {
+                            var employee = _iAdminstrationManager.FindEmployee(registerEmployee.EmployeeRecordId);
+                            employee.DeletedBy = "System";
+                            employee.DateDeleted = DateTime.Now;
+                            employee.StatusId = 2; //Deleted Status Id
+
+                            DbEntityEntry entry = dbContext.Entry(employee);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterEmployee();
+                            createNew.Team = GetJobTeams();
+                            createNew.JobGrade = GetJobGrades();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully remove employee: {0} - {1} {2}",
+                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeSurname,
+                                                             registerEmployee.EmployeeName);
+                            TempData["viewModelEmployee"] = createNew;
+                            return RedirectToAction("CreateEmployee");
                         }
                     default: {
                             registerEmployee.ProcessingStatus = false;
-                            registerEmployee.ProcessingStatusMessage = "Unknown form processing state. the following are supported states: Create, Edit, Delete and Details";
+                            registerEmployee.ProcessingStatusMessage = "Unknown form processing Mode. the following are supported ModesS: Create, Edit, Delete and Details";
                             break;
                         }
                 }
@@ -208,6 +255,181 @@ namespace SchoolProject.WebApplication.Controllers
                 results.Add(new SelectionOptions {
                     DisplayText = x.JobGradeName,
                     ValueText = x.JodGradeId.ToString()
+                });
+            });
+            return (results);
+        }
+
+        [HttpGet]
+        public ActionResult LinkEmployeeToManager() {
+            if (TempData["viewModelLinkEmployeeManager"] != null) {
+                return View((LinkEmployeeManager)TempData["viewModelLinkEmployeeManager"]);
+            }
+            else {
+                var linkEmployeeManager = new LinkEmployeeManager();
+                linkEmployeeManager.Employees = GetEmployees();
+                linkEmployeeManager.Managers = GetManagers();
+                linkEmployeeManager.DocumentTypes = GetDocumentTypes();
+                linkEmployeeManager.FormMode = FormModeOption.CREATE;
+                return View(linkEmployeeManager);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult UpdateReportingStructure(int employeeReportingRecordId, FormModeOption formMode) {
+            var mode = FormModeOption.EDIT;
+            if (formMode == FormModeOption.DELETE)
+                mode = FormModeOption.DELETE;
+
+            var dbEmployeeLink = dbContext.PMReviewReportingStructure.Find(employeeReportingRecordId);
+            var viewModelLinkEmployee = new LinkEmployeeManager() {
+                EmployeeReportingRecordId = dbEmployeeLink.ReviewReportingStructureId,
+                EmployeeRecordId = dbEmployeeLink.MemberId,
+                ManagerRecordId = dbEmployeeLink.ManagerId,
+                DocumentTypeId = dbEmployeeLink.DocumentTypeId,
+                ProcessingStatusMessage = string.Empty,
+                FormMode = mode,
+                Employees = GetEmployees(),
+                Managers = GetManagers(),
+                DocumentTypes = GetDocumentTypes()
+            };
+            TempData["viewModelLinkEmployeeManager"] = viewModelLinkEmployee;
+            return RedirectToAction("LinkEmployeeToManager");
+        }
+
+        public ActionResult ManageEmployeeManager(LinkEmployeeManager linkEmployeeManager) {
+            if (ModelState.IsValid) {
+                switch (registerEmployee.FormMode) {
+                    case FormModeOption.CREATE: {
+                            if (!EmployeeExist(registerEmployee.EmployeeCode)) {
+                                var employee = TransformEmployee(registerEmployee);
+                                dbContext.StructureEmployee.Add(employee);
+                                dbContext.SaveChanges();
+
+                                var createNew = new RegisterEmployee();
+                                createNew.Team = GetJobTeams();
+                                createNew.JobGrade = GetJobGrades();
+                                createNew.FormMode = FormModeOption.CREATE;
+                                createNew.ProcessingStatus = true;
+                                createNew.ProcessingStatusMessage = string.Format("Successfully added employee {0} - {1} {2}",
+                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeName,
+                                                             registerEmployee.EmployeeSurname);
+                                TempData["viewModelEmployee"] = createNew;
+                                return RedirectToAction("CreateEmployee");
+                            }
+                            else {
+                                ModelState.AddModelError(string.Empty, "Employee aready exist...");
+                                break;
+                            }
+                        }
+                    case FormModeOption.EDIT: {
+                            var employee = _iAdminstrationManager.FindEmployee(registerEmployee.EmployeeRecordId);
+                            employee.JobGradeId = registerEmployee.JobGradeId;
+                            employee.TeamId = registerEmployee.TeamId;
+                            employee.Name = registerEmployee.EmployeeName;
+                            employee.Surname = registerEmployee.EmployeeSurname;
+                            employee.NetworkUsername = registerEmployee.NetworkUsername;
+                            employee.DateModified = DateTime.Now;
+                            employee.ModifiedBy = "System";
+
+                            DbEntityEntry entry = dbContext.Entry(employee);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterEmployee();
+                            createNew.Team = GetJobTeams();
+                            createNew.JobGrade = GetJobGrades();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully updated employee: {0} - {1} {2}",
+                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeName,
+                                                             registerEmployee.EmployeeSurname);
+                            TempData["viewModelEmployee"] = createNew;
+                            return RedirectToAction("CreateEmployee");
+                        }
+                    case FormModeOption.DELETE: {
+                            var employee = _iAdminstrationManager.FindEmployee(registerEmployee.EmployeeRecordId);
+                            employee.DeletedBy = "System";
+                            employee.DateDeleted = DateTime.Now;
+                            employee.StatusId = 2; //Deleted Status Id
+
+                            DbEntityEntry entry = dbContext.Entry(employee);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterEmployee();
+                            createNew.Team = GetJobTeams();
+                            createNew.JobGrade = GetJobGrades();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully remove employee: {0} - {1} {2}",
+                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeSurname,
+                                                             registerEmployee.EmployeeName);
+                            TempData["viewModelEmployee"] = createNew;
+                            return RedirectToAction("CreateEmployee");
+                        }
+                    default: {
+                            registerEmployee.ProcessingStatus = false;
+                            registerEmployee.ProcessingStatusMessage = "Unknown form processing Mode. the following are supported Modes: Create, Edit, Delete and Details";
+                            break;
+                        }
+                }
+            }
+            return View(registerEmployee);
+        }
+
+        public List<SelectionOptions> GetEmployees() {
+            var resulst = new List<SelectionOptions>();
+            var employeesList = new List<string>() {
+                "F1".ToUpper(),
+                "E1".ToUpper(),
+                "E3".ToUpper()
+            };
+
+            var employees = dbContext.StructureEmployee.Include(x => x.JobGrade).Where(x => x.StatusId == 1 && 
+                                                              employeesList.Contains(x.JobGrade.JobGradeCode.ToUpper()));
+
+            employees.ToList().ForEach(x => {
+                resulst.Add(new SelectionOptions() {
+                    DisplayText = string.Format("{0} - {1} {2} ({3})", x.EmployeeCode, x.Name, x.Surname, x.JobGrade.JobGrade),
+                    ValueText = x.EmployeeRecordId.ToString()
+                });
+            });
+
+            return (resulst);
+        }
+
+        public List<SelectionOptions> GetManagers() {
+            var resulst = new List<SelectionOptions>();
+            var employeesList = new List<string>() {
+                "F1".ToUpper(),
+                "E1".ToUpper(),
+                "E3".ToUpper()
+            };
+
+            var managers = dbContext.StructureEmployee.Include(x => x.JobGrade).Where(x => x.StatusId == 1 &&
+                                                              !employeesList.Contains(x.JobGrade.JobGradeCode.ToUpper()));
+
+            managers.ToList().ForEach(x => {
+                resulst.Add(new SelectionOptions() {
+                    DisplayText = string.Format("{0} - {1} {2} ({3})", x.EmployeeCode, x.Name, x.Surname, x.JobGrade.JobGrade),
+                    ValueText = x.EmployeeRecordId.ToString()
+                });
+            });
+
+            return (resulst);
+        }
+
+        public List<SelectionOptions> GetDocumentTypes() {
+            var results = new List<SelectionOptions>();
+            dbContext.PMDocumentType.Where(x => x.StatusId == 1).ToList().ForEach(x => {
+                results.Add(new SelectionOptions() {
+                    DisplayText = x.DocumentTypeName,
+                    ValueText = x.DocumentTypeId.ToString()
                 });
             });
             return (results);

@@ -4,8 +4,8 @@
     ViewBag.Title = "Employees";
 }
 
-<h2>Employees</h2>
-
+<h2>Manage Employees</h2>
+<hr />
 
 <table id="datatable" class="table table-hover">
     <thead>
@@ -29,9 +29,15 @@
                 <td>@Html.DisplayFor(modelItem => item.Department)</td>
                 <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
                 <td>
-                    @Html.ActionLink("Create Employee", "CreateEmployee") |
-                    @Html.ActionLink("Update", "UpdateEmployee", new { employeeRecordId = item.EmployeeRecordId  }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeRecordId })
+                   
+                    <a href="@Url.Action("UpdateEmployee", "Administration", new { employeeRecordId = item.EmployeeRecordId  })" class="btn btn-md btn-primary" role="button">
+                        <span class="glyphicon glyphicon-pencil">
+                        </span>
+                    </a> 
+                    <a href="@Url.Action("RemoveEmployee", "Administration", new { employeeRecordId = item.EmployeeRecordId })" class="btn btn-md btn-danger" role="button">
+                        <span class="glyphicon glyphicon-remove">
+                        </span>
+                    </a>
                 </td>
             </tr>
         }
@@ -48,3 +54,12 @@
         </tr>
     </tfoot>
 </table>
+
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <a href="@Url.Action("CreateEmployee", "Administration")" class="btn btn-md btn-primary" role="button">
+            <span class="glyphicon glyphicon-plus">
+            </span>Add New Employee
+        </a>
+    </div>
+</div>

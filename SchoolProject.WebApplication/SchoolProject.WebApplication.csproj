@@ -217,6 +217,7 @@
     <Compile Include="ServiceManager\NinjectStandardModuleManager.cs" />
     <Compile Include="ServiceManager\PerformanceDocumentManager.cs" />
     <Compile Include="ViewModels\FormModeOption.cs" />
+    <Compile Include="ViewModels\LinkEmployeeManager.cs" />
     <Compile Include="ViewModels\RegisterEmployee.cs" />
     <Compile Include="ViewModels\SelectionOptions.cs" />
   </ItemGroup>
@@ -308,6 +309,7 @@
     <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap-theme.min.css.map" />
     <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap.css.map" />
     <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap.min.css.map" />
+    <Content Include="Views\Administration\LinkEmployeeToManager.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

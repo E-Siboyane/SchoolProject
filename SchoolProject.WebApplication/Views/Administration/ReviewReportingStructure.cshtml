@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<SchoolProject.WebApplication.DTO.ReportingStructure>
+@using SchoolProject.WebApplication.ViewModels;
 
 @{
     ViewBag.Title = "ReviewReportingStructure";
 }
 
 <h2>Employees Reporting Structure</h2>
+<hr />
 
  <table id="datatable" class="table table-hover">
     <thead>
@@ -14,7 +16,7 @@
             <th>@Html.Raw("Manager")</th>
             <th>@Html.Raw("Document Type")</th>
             <th>@Html.Raw("Status")</th>
-            <th>@Html.ActionLink("Create New", "Create")</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,9 +28,14 @@
                 <td>@Html.DisplayFor(modelItem => item.DocumentTypeName)</td>
                 <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new {  id=item.EmployeeRecordId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.EmployeeRecordId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeRecordId })
+                    <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.EDIT  })" class="btn btn-md btn-primary" role="button">
+                        <span class="glyphicon glyphicon-pencil">
+                        </span>
+                    </a>
+                    <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.DELETE })" class="btn btn-md btn-danger" role="button">
+                        <span class="glyphicon glyphicon-remove">
+                        </span>
+                    </a>
                 </td>
             </tr>
         }
@@ -44,3 +51,10 @@
         </tr>
     </tfoot>
 </table>
+
+    <div class="row">
+        <a href="@Url.Action("LinkEmployeeToManager", "Administration")" class="btn btn-md btn-primary" role="button" style="float:right">
+            <span class="glyphicon glyphicon-link">
+            </span>Link New Employee Manager
+        </a>
+</div>

@@ -1,15 +1,34 @@
 ﻿@model SchoolProject.WebApplication.ViewModels.RegisterEmployee
+@using SchoolProject.WebApplication.ViewModels;
 
 @{
     ViewBag.Title = "Create Employee";
 }
 
-<h2>Create Employee</h2>
+@switch (Model.FormMode) {
+    case FormModeOption.CREATE: {
+            <h2>Create Employee</h2>
+            break;
+        }
+    case FormModeOption.EDIT: {
+            <h2>Update Employee</h2>
+            break;
+        }
+    case FormModeOption.DELETE: {
+            <h2>Remove Employee</h2>
+
+            break;
+        }
+}
+
 <hr />
 
-@using (Html.BeginForm("CreateEmployee", "Administration", FormMethod.Post, new { @id = "SelectBenefit" })) {
+@using (Html.BeginForm("CreateEmployee", "Administration", FormMethod.Post, new { @id = "ManageEmployeeForm" })) {
     @Html.HiddenFor(model => model.FormMode)
-    if (Model.FormMode == SchoolProject.WebApplication.ViewModels.FormModeOption.EDIT) {
+
+    var formModes = Enum.GetValues(typeof(FormModeOption)).Cast<FormModeOption>().Where(i => i == FormModeOption.DELETE ||
+                                                                                       i == FormModeOption.EDIT).ToList();
+    if (formModes.Contains(Model.FormMode)) {
         @Html.HiddenFor(model => model.EmployeeRecordId)
     }
     for (int i = 0; i < Model.JobGrade.Count; i++) {
@@ -23,69 +42,157 @@
 
     @*Display Error messages*@
 if (!ViewData.ModelState.IsValid) {
-        <div class="row">
-            <div class="alert alert-danger alert-dismissable">
-                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                <p>
-                    @Html.ValidationSummary(true)
-                </p>
-            </div>
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.ValidationSummary(true)
+            </p>
         </div>
-    }
+    </div>
+}
 
     @*Display Processing Status*@
-if (!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) {
-        <div class="row">
-            <div class="alert alert-success alert-dismissable">
-                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                <p>
-                    @Html.Raw(Model.ProcessingStatusMessage)
-                </p>
-            </div>
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (Model.ProcessingStatus)) {
+    <div class="row">
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
         </div>
+    </div>
+}
+
+    @*Display Processing Status*@
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (!Model.ProcessingStatus)) {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+
+if (Model.FormMode == FormModeOption.DELETE) {
+    @Html.HiddenFor(x => x.JobGradeId)
+    @Html.HiddenFor(x => x.TeamId)
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+
+            <p>
+                Are you sure you want to delete employee @string.Format("{0} - {1} {2}", Model.EmployeeCode, Model.EmployeeName, Model.EmployeeSurname) ?
+            </p>
+        </div>
+    </div>
     }
 
     <div class="row">
         <div class="col-md-6">
-            <div class="row">
-                @Html.Label("Employee Code", htmlAttributes: new { @class = "control-label" })<br />
-                @Html.EditorFor(model => model.EmployeeCode, new { htmlAttributes = new { @class = "form-control", @required = true } })
-                @Html.ValidationMessageFor(model => model.EmployeeCode, "", new { @class = "text-danger" })
-            </div>
 
-            <div class="row">
-                @Html.Label("Employee Name", htmlAttributes: new { @class = "control-label" })<br />
-                @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control", @required = true } })
-                @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger" })
-            </div>
+            @if (Model.FormMode != FormModeOption.DELETE) {
+                <div class="row">
+                    @Html.Label("Employee Code", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.EmployeeCode, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                    @Html.ValidationMessageFor(model => model.EmployeeCode, "", new { @class = "text-danger" })
+                </div>
 
-            <div class="row">
-                @Html.Label("Employee Surname", htmlAttributes: new { @class = "control-label" })<br />
-                @Html.EditorFor(model => model.EmployeeSurname, new { htmlAttributes = new { @class = "form-control", @required = true } })
-                @Html.ValidationMessageFor(model => model.EmployeeSurname, "", new { @class = "text-danger" })
-            </div>
+                <div class="row">
+                    @Html.Label("Employee Name", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                    @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger" })
+                 </div>
 
-            <div class="row">
-                @Html.Label("Network Username", htmlAttributes: new { @class = "control-label" })<br />
-                @Html.EditorFor(model => model.NetworkUsername, new { htmlAttributes = new { @class = "form-control", @required = true } })
-                @Html.ValidationMessageFor(model => model.NetworkUsername, "", new { @class = "text-danger" })
-            </div>
+                <div class="row">
+                    @Html.Label("Employee Surname", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.EmployeeSurname, new { htmlAttributes = new { @class = "form-control", @required = true} })
+                    @Html.ValidationMessageFor(model => model.EmployeeSurname, "", new { @class = "text-danger" })
+                </div>
 
-            <div class="row">
-                @Html.Label("Team", htmlAttributes: new { @class = "control-label" })<br />
-                @Html.DropDownList("TeamId", new SelectList(Model.Team, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Team"), new { @class = "form-control", @required = true, @Placeholder = Html.DisplayNameFor(m => m.TeamId) })
-                @Html.ValidationMessageFor(model => model.TeamId, "", new { @class = "text-danger" }) 
-            </div>
+                <div class="row">
+                    @Html.Label("Network Username", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.NetworkUsername, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                    @Html.ValidationMessageFor(model => model.NetworkUsername, "", new { @class = "text-danger" })
+                </div>
 
-            <div class="row">
-                @Html.Label("Job Grade", htmlAttributes: new { @class = "control-label" })<br />
-                @Html.DropDownList("JobGradeId", new SelectList(Model.JobGrade, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Job Grade"), new { @class = "form-control", @required = true, @Placeholder = Html.DisplayNameFor(m => m.TeamId) })
-                @Html.ValidationMessageFor(model => model.JobGradeId, "", new { @class = "text-danger" })
-            </div>
+                <div class="row">
+                    @Html.Label("Team", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.DropDownList("TeamId", new SelectList(Model.Team, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Team"), new { @class = "form-control", @required = true })
+                    @Html.ValidationMessageFor(model => model.TeamId, "", new { @class = "text-danger" })
+                 </div>
+
+                <div class="row">
+                    @Html.Label("Job Grade", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.DropDownList("JobGradeId", new SelectList(Model.JobGrade, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Job Grade"), new { @class = "form-control", @required = true })
+                    @Html.ValidationMessageFor(model => model.JobGradeId, "", new { @class = "text-danger" })
+                </div>
+            }
+            else {
+                <div class="row">
+                    @Html.Label("Employee Code", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.EmployeeCode, new { htmlAttributes = new { @class = "form-control", @readOnly =true } })
+                </div>
+
+                <div class="row">
+                    @Html.Label("Employee Name", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                </div>
+
+                <div class="row">
+                    @Html.Label("Employee Surname", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.EmployeeSurname, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                </div>
+
+                <div class="row">
+                    @Html.Label("Network Username", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.NetworkUsername, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                </div>
+
+                <div class="row">
+                    @Html.Label("Team", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.DropDownList("TeamId", new SelectList(Model.Team, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Team"), new { @class = "form-control", @disabled ="disabled" })
+                </div>
+
+                <div class="row">
+                    @Html.Label("Job Grade", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.DropDownList("JobGradeId", new SelectList(Model.JobGrade, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Job Grade"), new { @class = "form-control", @disabled = "disabled" })
+                </div>
+            }
             <br />
             <div class="row">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create Employee" class="btn btn-primary" />
+                    <a href="@Url.Action("Employees", "Administration")" class="btn btn-md btn-primary" role="button">
+                        <span class="glyphicon glyphicon-chevron-left glyphicon-chevron-left">
+                        </span>&nbsp;Back To Employee Listing
+                    </a>
+                    @switch (Model.FormMode) {
+                        case FormModeOption.CREATE: {
+                                <button id="SubmitCreateEmployee" type="submit" class="btn btn-md btn-primary">
+                                    <span class="glyphicon glyphicon-plus">
+                                    </span>&nbsp;Create New Employee
+                                </button>
+                                break;
+                            }
+                        case FormModeOption.EDIT: {
+                                <button id="SubmitCreateEmployee" type="submit" class="btn btn-md btn-primary">
+                                    <span class="glyphicon glyphicon-pencil">
+                                    </span>&nbsp;Update Employee Details
+                                </button>
+                                break;
+                            }
+                        case FormModeOption.DELETE: {
+                                <button id="SubmitCreateEmployee" type="submit" class="btn btn-md btn-danger">
+                                    <span class="glyphicon glyphicon-remove">
+                                    </span>&nbsp;Remove Employee Record
+                                </button>
+                                break;
+                            }
+                        default: {
+                                break;
+                            }
+                    }
                 </div>
             </div>
             <br />
