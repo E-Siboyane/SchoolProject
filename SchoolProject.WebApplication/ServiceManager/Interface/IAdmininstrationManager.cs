@@ -205,7 +205,7 @@ namespace SchoolProject.WebApplication.ServiceManager.Interface {
         //Structure Employees
         StructureEmployee AddEmployee(StructureEmployee employee);
         bool DeleteEmployee(StructureEmployee employee);
-        StructureEmployee UpdateDocumentType(StructureEmployee employee);
+        StructureEmployee UpdateEmployee(StructureEmployee employee);
          StructureEmployee FindEmployee(int id);
         List<Employee> GetEmployee();
 

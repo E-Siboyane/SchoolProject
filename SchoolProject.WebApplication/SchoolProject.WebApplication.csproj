@@ -216,6 +216,9 @@
     <Compile Include="ServiceManager\NinjectBinding.cs" />
     <Compile Include="ServiceManager\NinjectStandardModuleManager.cs" />
     <Compile Include="ServiceManager\PerformanceDocumentManager.cs" />
+    <Compile Include="ViewModels\FormModeOption.cs" />
+    <Compile Include="ViewModels\RegisterEmployee.cs" />
+    <Compile Include="ViewModels\SelectionOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -253,6 +256,16 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap-theme.css" />
+    <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap-theme.min.css" />
+    <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="Scripts\vendors\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\vendors\bootstrap\dist\js\bootstrap.js" />
+    <Content Include="Scripts\vendors\bootstrap\dist\js\bootstrap.min.js" />
+    <Content Include="Scripts\vendors\bootstrap\dist\js\npm.js" />
+    <Content Include="Scripts\vendors\jquery\dist\jquery.js" />
+    <Content Include="Scripts\vendors\jquery\dist\jquery.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -285,6 +298,16 @@
     <Content Include="Views\Administration\Terms.cshtml" />
     <Content Include="Views\Administration\ReviewReportingStructure.cshtml" />
     <Content Include="Views\Administration\Employees.cshtml" />
+    <Content Include="Views\Administration\CreateEmployee.cshtml" />
+    <Content Include="Scripts\vendors\jquery\dist\jquery.min.map" />
+    <Content Include="Scripts\vendors\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\vendors\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Scripts\vendors\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Scripts\vendors\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap-theme.css.map" />
+    <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap-theme.min.css.map" />
+    <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap.css.map" />
+    <Content Include="Scripts\vendors\bootstrap\dist\css\bootstrap.min.css.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

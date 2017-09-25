@@ -29,8 +29,8 @@
                 <td>@Html.DisplayFor(modelItem => item.Department)</td>
                 <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
                 <td>
-                    @Html.ActionLink("Create Employee", "Create") |
-                    @Html.ActionLink("Edit", "Edit", new {  id=item.EmployeeRecordId  }) |
+                    @Html.ActionLink("Create Employee", "CreateEmployee") |
+                    @Html.ActionLink("Update", "UpdateEmployee", new { employeeRecordId = item.EmployeeRecordId  }) |
                     @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeRecordId })
                 </td>
             </tr>

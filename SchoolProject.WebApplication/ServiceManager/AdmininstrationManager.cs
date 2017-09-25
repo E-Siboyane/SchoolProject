@@ -659,7 +659,7 @@ namespace SchoolProject.WebApplication.ServiceManager {
             _pmRepository.Delete(employee, _pmRepository.GetApplicationDbContext);
             return true;
         }
-        public StructureEmployee UpdateDocumentType(StructureEmployee employee) {
+        public StructureEmployee UpdateEmployee(StructureEmployee employee) {
             return _pmRepository.Update(employee, _pmRepository.GetApplicationDbContext);
         }
         public StructureEmployee FindEmployee(int id) {

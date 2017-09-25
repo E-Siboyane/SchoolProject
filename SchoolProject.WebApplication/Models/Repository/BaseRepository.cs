@@ -17,6 +17,7 @@ namespace SchoolProject.WebApplication.Models.Repository {
         /// <returns>Class Object</returns>
         public T Insert<T>(T item, DbContext _dbContext) where T : class {
             _dbContext.Set<T>().Add(item);
+            CommitTransaction(_dbContext);
             return (item);
         }
 
@@ -49,6 +50,7 @@ namespace SchoolProject.WebApplication.Models.Repository {
         /// <returns>Class Instance/Object</returns>
         public T Delete<T>(T item, DbContext _dbContext) where T : class {
             _dbContext.Set<T>().Remove(item);
+            CommitTransaction(_dbContext);
             return (item);
         }
 
@@ -63,6 +65,7 @@ namespace SchoolProject.WebApplication.Models.Repository {
             DbEntityEntry entry = _dbContext.Entry<T>(item);
             if (entry.State == EntityState.Detached) {
                 entry.State = EntityState.Modified;
+                CommitTransaction(_dbContext);
             }
             return (item);
         }
