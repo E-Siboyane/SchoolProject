@@ -299,87 +299,110 @@ namespace SchoolProject.WebApplication.Controllers
 
         public ActionResult ManageEmployeeManager(LinkEmployeeManager linkEmployeeManager) {
             if (ModelState.IsValid) {
-                switch (registerEmployee.FormMode) {
+                switch (linkEmployeeManager.FormMode) {
                     case FormModeOption.CREATE: {
-                            if (!EmployeeExist(registerEmployee.EmployeeCode)) {
-                                var employee = TransformEmployee(registerEmployee);
-                                dbContext.StructureEmployee.Add(employee);
+                            if (!EmployeeManagerLinkExist(linkEmployeeManager.EmployeeRecordId, linkEmployeeManager.ManagerRecordId)) {
+                                var link = TransformEmployeeManagerLink(linkEmployeeManager);
+                                dbContext.PMReviewReportingStructure.Add(link);
                                 dbContext.SaveChanges();
+                                var employeeName = linkEmployeeManager.Employees.FirstOrDefault(x => x.ValueText == linkEmployeeManager.EmployeeRecordId.ToString()).DisplayText;
+                                var managerName = linkEmployeeManager.Managers.FirstOrDefault(x => x.ValueText == linkEmployeeManager.ManagerRecordId.ToString()).DisplayText;
 
                                 var createNew = new RegisterEmployee();
                                 createNew.Team = GetJobTeams();
                                 createNew.JobGrade = GetJobGrades();
                                 createNew.FormMode = FormModeOption.CREATE;
                                 createNew.ProcessingStatus = true;
-                                createNew.ProcessingStatusMessage = string.Format("Successfully added employee {0} - {1} {2}",
-                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeName,
-                                                             registerEmployee.EmployeeSurname);
-                                TempData["viewModelEmployee"] = createNew;
-                                return RedirectToAction("CreateEmployee");
+                                createNew.ProcessingStatusMessage = string.Format("Successfully linked employee {0} to manager {1} ",
+                                                             employeeName, managerName);
+                                TempData["viewModelLinkEmployeeManager"] = createNew;
+                                return RedirectToAction("LinkEmployeeToManager");
                             }
                             else {
-                                ModelState.AddModelError(string.Empty, "Employee aready exist...");
+                                ModelState.AddModelError(string.Empty, "Employee Manager linking aready exist...");
                                 break;
                             }
                         }
                     case FormModeOption.EDIT: {
-                            var employee = _iAdminstrationManager.FindEmployee(registerEmployee.EmployeeRecordId);
-                            employee.JobGradeId = registerEmployee.JobGradeId;
-                            employee.TeamId = registerEmployee.TeamId;
-                            employee.Name = registerEmployee.EmployeeName;
-                            employee.Surname = registerEmployee.EmployeeSurname;
-                            employee.NetworkUsername = registerEmployee.NetworkUsername;
-                            employee.DateModified = DateTime.Now;
-                            employee.ModifiedBy = "System";
+                            var link = dbContext.PMReviewReportingStructure.Find(linkEmployeeManager.EmployeeReportingRecordId);
+                            link.ManagerId = linkEmployeeManager.ManagerRecordId;
+                            link.MemberId = linkEmployeeManager.EmployeeRecordId;
+                            link.DocumentTypeId = linkEmployeeManager.DocumentTypeId;
+                            link.DateModified = DateTime.Now;
+                            link.ModifiedBy = "System";
 
-                            DbEntityEntry entry = dbContext.Entry(employee);
+                            DbEntityEntry entry = dbContext.Entry(link);
                             if (entry.State == EntityState.Detached) {
                                 entry.State = EntityState.Modified;
                                 dbContext.SaveChanges();
                             }
+
+                            var employeeName = linkEmployeeManager.Employees.FirstOrDefault(x => x.ValueText == linkEmployeeManager.EmployeeRecordId.ToString()).DisplayText;
+                            var managerName = linkEmployeeManager.Managers.FirstOrDefault(x => x.ValueText == linkEmployeeManager.ManagerRecordId.ToString()).DisplayText;
 
                             var createNew = new RegisterEmployee();
                             createNew.Team = GetJobTeams();
                             createNew.JobGrade = GetJobGrades();
                             createNew.FormMode = FormModeOption.CREATE;
                             createNew.ProcessingStatus = true;
-                            createNew.ProcessingStatusMessage = string.Format("Successfully updated employee: {0} - {1} {2}",
-                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeName,
-                                                             registerEmployee.EmployeeSurname);
-                            TempData["viewModelEmployee"] = createNew;
-                            return RedirectToAction("CreateEmployee");
+                            createNew.ProcessingStatusMessage = string.Format("Successfully updated employee {0} link to manager {1} ",
+                                                         employeeName, managerName);
+                            TempData["viewModelLinkEmployeeManager"] = createNew;
+                            return RedirectToAction("LinkEmployeeToManager");
                         }
                     case FormModeOption.DELETE: {
-                            var employee = _iAdminstrationManager.FindEmployee(registerEmployee.EmployeeRecordId);
-                            employee.DeletedBy = "System";
-                            employee.DateDeleted = DateTime.Now;
-                            employee.StatusId = 2; //Deleted Status Id
+                            var link =  dbContext.PMReviewReportingStructure.Find(linkEmployeeManager.EmployeeReportingRecordId);
+                            link.DeletedBy = "System";
+                            link.DateDeleted = DateTime.Now;
+                            link.StatusId = 2; //Deleted Status Id
 
-                            DbEntityEntry entry = dbContext.Entry(employee);
+                            DbEntityEntry entry = dbContext.Entry(link);
                             if (entry.State == EntityState.Detached) {
                                 entry.State = EntityState.Modified;
                                 dbContext.SaveChanges();
                             }
+
+                            var employeeName = linkEmployeeManager.Employees.FirstOrDefault(x => x.ValueText == linkEmployeeManager.EmployeeRecordId.ToString()).DisplayText;
+                            var managerName = linkEmployeeManager.Managers.FirstOrDefault(x => x.ValueText == linkEmployeeManager.ManagerRecordId.ToString()).DisplayText;
 
                             var createNew = new RegisterEmployee();
                             createNew.Team = GetJobTeams();
                             createNew.JobGrade = GetJobGrades();
                             createNew.FormMode = FormModeOption.CREATE;
                             createNew.ProcessingStatus = true;
-                            createNew.ProcessingStatusMessage = string.Format("Successfully remove employee: {0} - {1} {2}",
-                                                             registerEmployee.EmployeeCode, registerEmployee.EmployeeSurname,
-                                                             registerEmployee.EmployeeName);
-                            TempData["viewModelEmployee"] = createNew;
-                            return RedirectToAction("CreateEmployee");
+                            createNew.ProcessingStatusMessage = string.Format("Successfully removed employee {0} link to manager {1} ",
+                                                         employeeName, managerName);
+                            TempData["viewModelLinkEmployeeManager"] = createNew;
+                            return RedirectToAction("LinkEmployeeToManager");
                         }
                     default: {
-                            registerEmployee.ProcessingStatus = false;
-                            registerEmployee.ProcessingStatusMessage = "Unknown form processing Mode. the following are supported Modes: Create, Edit, Delete and Details";
+                            linkEmployeeManager.ProcessingStatus = false;
+                            linkEmployeeManager.ProcessingStatusMessage = "Unknown form processing Mode. the following are supported Modes: Create, Edit, Delete and Details";
                             break;
                         }
                 }
             }
-            return View(registerEmployee);
+            return View(linkEmployeeManager);
+        }
+
+        public PMReviewReportingStructure TransformEmployeeManagerLink(LinkEmployeeManager linkEmployeeManager) {
+            var link = new PMReviewReportingStructure() {
+                MemberId = linkEmployeeManager.EmployeeRecordId,
+                ManagerId = linkEmployeeManager.ManagerRecordId,
+                DocumentTypeId = linkEmployeeManager.DocumentTypeId,
+                StatusId = 1,
+                DateCreated = DateTime.Now,
+                CreatedBy = "System"
+            };
+            return (link);
+        }
+
+        private bool EmployeeManagerLinkExist(int employeeRecordId, int managerRecordId) {
+            var getEmployee = dbContext.PMReviewReportingStructure.FirstOrDefault(x => x.MemberId == employeeRecordId &&
+                                                                       x.ManagerId == managerRecordId   && x.StatusId == 1);
+            if (getEmployee == null)
+                return false;
+            return true;
         }
 
         public List<SelectionOptions> GetEmployees() {
