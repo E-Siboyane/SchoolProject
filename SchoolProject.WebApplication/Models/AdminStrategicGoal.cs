@@ -16,7 +16,7 @@ namespace SchoolProject.WebApplication.Models {
         public string StrategicGoalName { get; set; }
         [Required, StringLength(150)]
         public string StrategicGoalCode { get; set; }
-        [Required, Range(0.01, 100.00, ErrorMessage = "Weight should range from 0.01 to 100.00")]
+        [Required,Range(0.00, 100.00, ErrorMessage = "Weight should range from 0.00 to 100.00")]
         public decimal DefaultOverallWeight { get; set; }
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }

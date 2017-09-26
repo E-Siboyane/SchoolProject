@@ -12,7 +12,7 @@ namespace SchoolProject.WebApplication.Models {
         public int PMStrategicGoalId { get; set; }
         public virtual PMStrategicGoal PMStrategicGoal { get; set; }
         public string ObjectiveName { get; set; }
-        [Required, Range(0.01, 100.00, ErrorMessage = "Weight should be between 0.01 to 100")]
+        [Range(0.00, 100.00, ErrorMessage = "Weight should range from 0.00 to 100.00")]
         public decimal ObjectiveWeight { get; set; }
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }

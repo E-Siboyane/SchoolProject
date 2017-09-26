@@ -1,0 +1,73 @@
+﻿@model IEnumerable<SchoolProject.WebApplication.Models.AdminStrategicGoal>
+@using SchoolProject.WebApplication.ViewModels;
+
+@{
+    ViewBag.Title = "StrategicGoals";
+}
+
+<h2>Strategic Goals</h2>
+<hr />
+<div class="table-responsive">
+    <table id="datatable" class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.Raw("Code")
+                </th>
+                <th>
+                    @Html.Raw("Goal")
+                </th>
+                <th>
+                    @Html.Raw("Status Name")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.StrategicGoalCode)</td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StrategicGoalName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status.StatusName)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("ManageStrategicGoal", "Administration", new { goalId = item.StrategicGoalId , formMode = FormModeOption.EDIT  })" class="btn btn-md btn-primary" role="button">
+                            <span class="glyphicon glyphicon-pencil">
+                            </span>
+                        </a>
+                        <a href="@Url.Action("ManageStrategicGoal", "Administration", new { goalId = item.StrategicGoalId, formMode = FormModeOption.DELETE  })" class="btn btn-md btn-danger" role="button">
+                            <span class="glyphicon glyphicon-remove">
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    @Html.Raw("Strategic Code")
+                </th>
+                <th>
+                    @Html.Raw("Strategic Goal Name")
+                </th>
+                <th>
+                    @Html.Raw("Status")
+                </th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <a href="@Url.Action("CreateStrategicGoal", "Administration")" class="btn btn-md btn-primary" role="button">
+            <span class="glyphicon glyphicon-plus">
+            </span>Add New Strategic Goal
+        </a>
+    </div>
+</div>

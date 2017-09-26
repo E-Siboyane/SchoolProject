@@ -7,54 +7,54 @@
 
 <h2>Employees Reporting Structure</h2>
 <hr />
-
- <table id="datatable" class="table table-hover">
-    <thead>
-        <tr>
-            <th>@Html.Raw("Job Grade")</th>
-            <th>@Html.Raw("Employee")</th>
-            <th>@Html.Raw("Manager")</th>
-            <th>@Html.Raw("Document Type")</th>
-            <th>@Html.Raw("Status")</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
+<div class="table-responsive">
+    <table id="datatable" class="table table-hover">
+        <thead>
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.JobGradeName)</td>
-                <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
-                <td>@Html.DisplayFor(modelItem => item.ManagerName)</td>
-                <td>@Html.DisplayFor(modelItem => item.DocumentTypeName)</td>
-                <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
-                <td>
-                    <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.EDIT  })" class="btn btn-md btn-primary" role="button">
-                        <span class="glyphicon glyphicon-pencil">
-                        </span>
-                    </a>
-                    <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.DELETE })" class="btn btn-md btn-danger" role="button">
-                        <span class="glyphicon glyphicon-remove">
-                        </span>
-                    </a>
-                </td>
+                <th>@Html.Raw("Job Grade")</th>
+                <th>@Html.Raw("Employee")</th>
+                <th>@Html.Raw("Manager")</th>
+                <th>@Html.Raw("Document Type")</th>
+                <th>@Html.Raw("Status")</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>@Html.Raw("Job Grade")</th>
-            <th>@Html.Raw("Employee")</th>
-            <th>@Html.Raw("Manager")</th>
-            <th>@Html.Raw("Document Type")</th>
-            <th>@Html.Raw("Status")</th>
-            <th></th>
-        </tr>
-    </tfoot>
-</table>
-
-    <div class="row">
-        <a href="@Url.Action("LinkEmployeeToManager", "Administration")" class="btn btn-md btn-primary" role="button" style="float:right">
-            <span class="glyphicon glyphicon-link">
-            </span>Link New Employee Manager
-        </a>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.JobGradeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ManagerName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DocumentTypeName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
+                    <td>
+                        <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.EDIT  })" class="btn btn-md btn-primary" role="button">
+                            <span class="glyphicon glyphicon-pencil">
+                            </span>
+                        </a>
+                        <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.DELETE })" class="btn btn-md btn-danger" role="button">
+                            <span class="glyphicon glyphicon-remove">
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>@Html.Raw("Job Grade")</th>
+                <th>@Html.Raw("Employee")</th>
+                <th>@Html.Raw("Manager")</th>
+                <th>@Html.Raw("Document Type")</th>
+                <th>@Html.Raw("Status")</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="row">
+    <a href="@Url.Action("LinkEmployeeToManager", "Administration")" class="btn btn-md btn-primary" role="button" style="float:right">
+        <span class="glyphicon glyphicon-link">
+        </span>Link New Employee Manager
+    </a>
 </div>

@@ -471,6 +471,150 @@ namespace SchoolProject.WebApplication.Controllers
             return (results);
         }
 
+        public ActionResult StrategicGoals() {
+            var results = dbContext.StrategicGoal.Include(x => x.Status).Where(x => x.StatusId == 1 && x.DateDeleted == null).ToList();
+            return View(results);
+        }
+
+        [HttpGet]
+        public ActionResult CreateStrategicGoal() {
+            if (TempData["viewModelStrategicGoal"] != null) {
+                return View("ManageStrategicgoal",(RegisterStrategicGoal)TempData["viewModelStrategicGoal"]);
+            }
+            else {
+                var goal = new RegisterStrategicGoal();
+                goal.FormMode = FormModeOption.CREATE;
+                return View("ManageStrategicgoal",goal);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ManageStrategicGoal(int goalId, FormModeOption formMode) {
+            var mode = FormModeOption.EDIT;
+            if (formMode == FormModeOption.DELETE)
+                mode = FormModeOption.DELETE;
+
+            var dbGoal = dbContext.StrategicGoal.Find(goalId);
+            var goal = new RegisterStrategicGoal() {
+                StrategicGoalId = dbGoal.StrategicGoalId,
+                StrategicGoalCode = dbGoal.StrategicGoalCode,
+                StrategicGoalName = dbGoal.StrategicGoalName,
+                ProcessingStatusMessage = string.Empty,
+                FormMode = mode,
+            };
+            TempData["viewModelStrategicGoal"] = goal;
+            return RedirectToAction("CreateStrategicGoal");
+        }
+
+        [HttpPost]
+        public ActionResult ManageStrategicGoal(RegisterStrategicGoal goal) {
+            if (ModelState.IsValid) {
+                switch (goal.FormMode) {
+                    case FormModeOption.CREATE: {
+                            if (!StrategicGoalCodeExist(goal.StrategicGoalCode)) {
+                                if (!StrategicGoalNameExist(goal.StrategicGoalName)) {
+                                    var transformedGoal = TransformStrategicGoal(goal);
+                                    dbContext.StrategicGoal.Add(transformedGoal);
+                                    dbContext.SaveChanges();
+                                    
+                                    var createNew = new RegisterStrategicGoal();
+                                    createNew.FormMode = FormModeOption.CREATE;
+                                    createNew.ProcessingStatus = true;
+                                    createNew.ProcessingStatusMessage = string.Format("Successfully added Strategic Goal:{0} - {1} ",
+                                                                 goal.StrategicGoalCode, goal.StrategicGoalName);
+                                    TempData["viewModelStrategicGoal"] = createNew;
+                                    return RedirectToAction("CreateStrategicGoal");
+                                }
+                                else {
+                                    ModelState.AddModelError(string.Empty, "The Strategic Goal Name is alreay exist...");
+                                    break;
+                                }
+                            }
+                            else {
+                                ModelState.AddModelError(string.Empty, "The Strategic Goal Code is alreay used...");
+                                break;
+                            }
+                        }
+                    case FormModeOption.EDIT: {
+                            var dbGoal = _iAdminstrationManager.FindStrategicGoal(goal.StrategicGoalId);
+
+                            dbGoal.StrategicGoalName = goal.StrategicGoalName;
+                            dbGoal.DateModified = DateTime.Now;
+                            dbGoal.ModifiedBy = "System";
+
+                            DbEntityEntry entry = dbContext.Entry(dbGoal);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterStrategicGoal();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully updated Strategic Goal: {0} - {1} ",
+                                                         goal.StrategicGoalCode, goal.StrategicGoalName);
+                            TempData["viewModelStrategicGoal"] = createNew;
+                            return RedirectToAction("CreateStrategicGoal");
+                        }
+                    case FormModeOption.DELETE: {
+                            var dbGoal = _iAdminstrationManager.FindStrategicGoal(goal.StrategicGoalId);
+                            dbGoal.DeletedBy = "System";
+                            dbGoal.DateDeleted = DateTime.Now;
+                            dbGoal.StatusId = 2; //Deleted Status Id
+
+                            DbEntityEntry entry = dbContext.Entry(dbGoal);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterStrategicGoal();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully removed Strategic Goal: {0} - {1} ",
+                                                         goal.StrategicGoalCode, goal.StrategicGoalName);
+                            TempData["viewModelStrategicGoal"] = createNew;
+                            return RedirectToAction("CreateStrategicGoal");
+                        }
+                    default: {
+                            goal.ProcessingStatus = false;
+                            goal.ProcessingStatusMessage = "Unknown form processing Mode. the following are supported Modes: Create, Edit, Delete and Details";
+                            break;
+                        }
+                }
+            }
+            return View(goal);
+        }
+
+        private AdminStrategicGoal TransformStrategicGoal(RegisterStrategicGoal goal) {
+            var newGoal = new AdminStrategicGoal() {
+               StrategicGoalCode = goal.StrategicGoalCode.Replace(" ","").Trim().TrimEnd().TrimStart(),
+               StrategicGoalName = goal.StrategicGoalName,
+               DefaultOverallWeight = 0.00M,
+                StatusId = 1,
+                DateCreated = DateTime.Now,
+                CreatedBy = "System"
+            };
+            return (newGoal);
+        }
+
+        private bool StrategicGoalCodeExist(string goalCode) {
+            var getEmployee = dbContext.StrategicGoal.FirstOrDefault(x => string.Compare(x.StrategicGoalCode,goalCode,true) == 0 &&
+                                                                     x.StatusId == 1);
+            if (getEmployee == null)
+                return false;
+            return true;
+        }
+
+        private bool StrategicGoalNameExist(string goalName) {
+            var getEmployee = dbContext.StrategicGoal.FirstOrDefault(x => string.Compare(x.StrategicGoalName, goalName, true) == 0
+                                                                     && x.StatusId == 1);
+            if (getEmployee == null)
+                return false;
+            return true;
+        }
+
+
         // GET: Administration
         public ActionResult Index()
         {

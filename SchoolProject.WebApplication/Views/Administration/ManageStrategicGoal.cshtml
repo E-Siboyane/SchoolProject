@@ -1,0 +1,154 @@
+﻿@model SchoolProject.WebApplication.ViewModels.RegisterStrategicGoal
+@using SchoolProject.WebApplication.ViewModels;
+
+@{
+    ViewBag.Title = "ManageStrategicGoal";
+}
+
+@switch (Model.FormMode) {
+    case FormModeOption.CREATE: {
+            <h2>Create Strategic Goal</h2>
+            break;
+        }
+    case FormModeOption.EDIT: {
+            <h2>Update Strategic Goal</h2>
+            break;
+        }
+    case FormModeOption.DELETE: {
+            <h2>Remove Strategic Goal</h2>
+            break;
+        }
+}
+
+<hr />
+
+@using (Html.BeginForm("ManageStrategicGoal", "Administration", FormMethod.Post, new { @id = "ManageStrategicGoalForm" })) {
+    @Html.HiddenFor(model => model.FormMode)
+
+    var formModes = Enum.GetValues(typeof(FormModeOption)).Cast<FormModeOption>().Where(i => i == FormModeOption.DELETE ||
+                                                                                       i == FormModeOption.EDIT).ToList();
+    if (formModes.Contains(Model.FormMode)) {
+        @Html.HiddenFor(model => model.StrategicGoalId)
+    }
+
+    @*Display Error messages*@
+if (!ViewData.ModelState.IsValid) {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.ValidationSummary(true)
+            </p>
+        </div>
+    </div>
+}
+
+    @*Display Processing Status*@
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (Model.ProcessingStatus)) {
+    <div class="row">
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+
+    @*Display Processing Status*@
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (!Model.ProcessingStatus)) {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+
+if (Model.FormMode == FormModeOption.DELETE) {
+
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <p>
+                Are you sure you want to remove Strategic Goal - @string.Format("({0} - {1})", Model.StrategicGoalCode, Model.StrategicGoalName)?
+            </p>
+        </div>
+    </div>
+    }
+
+    <div class="row">
+        <div class="col-md-7">
+
+            @if (Model.FormMode != FormModeOption.DELETE) {
+
+                if (Model.FormMode == FormModeOption.EDIT) {
+                    <div class="row">
+                        @Html.Label("Strategic Goal Code", htmlAttributes: new { @class = "control-label" })<br />
+                        @Html.EditorFor(model => model.StrategicGoalCode, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                    </div>
+                }
+                else {
+                    <div class="row">
+                        @Html.Label("Strategic Goal Code", htmlAttributes: new { @class = "control-label" })<br />
+                        @Html.EditorFor(model => model.StrategicGoalCode, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                        @Html.ValidationMessageFor(model => model.StrategicGoalCode, "", new { @class = "text-danger" })
+                    </div>
+                }
+
+                <div class="row">
+                    @Html.Label("Strategic Goal Name", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.StrategicGoalName, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                    @Html.ValidationMessageFor(model => model.StrategicGoalName, "", new { @class = "text-danger" })
+                </div>
+            }
+            else {
+                <div class="row">
+                    @Html.Label("Strategic Goal Code", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.StrategicGoalCode, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                </div>
+                <div class="row">
+                    @Html.Label("Strategic Goal Name", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.StrategicGoalName, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                </div>
+            }
+            <br />
+            <div class="row">
+                <a href="@Url.Action("StrategicGoals", "Administration")" class="btn btn-md btn-primary" role="button">
+                    <span class="glyphicon glyphicon-chevron-left glyphicon-chevron-left">
+                    </span>&nbsp;Back To Strategic Goals Listing
+                </a>
+                @switch (Model.FormMode) {
+                    case FormModeOption.CREATE: {
+                            <button id="SubmitCreateEmployee" type="submit" class="btn btn-md btn-primary">
+                                <span class="glyphicon glyphicon-plus">
+                                </span>&nbsp;Create Strategic Goal
+                            </button>
+                            break;
+                        }
+                    case FormModeOption.EDIT: {
+                            <button id="SubmitCreateEmployee" type="submit" class="btn btn-md btn-primary">
+                                <span class="glyphicon glyphicon-pencil">
+                                </span>&nbsp;Update Strategic Goal Details
+                            </button>
+                            break;
+                        }
+                    case FormModeOption.DELETE: {
+                            <button id="SubmitCreateEmployee" type="submit" class="btn btn-md btn-danger">
+                                <span class="glyphicon glyphicon-remove">
+                                </span>&nbsp;Remove Strategic Goal Record
+                            </button>
+                            break;
+                        }
+                    default: {
+                            break;
+                        }
+                }
+            </div>
+            <br />
+        </div>
+
+    </div>
+
+}
