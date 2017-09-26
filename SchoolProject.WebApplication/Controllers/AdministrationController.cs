@@ -308,10 +308,10 @@ namespace SchoolProject.WebApplication.Controllers
                                 var employeeName = linkEmployeeManager.Employees.FirstOrDefault(x => x.ValueText == linkEmployeeManager.EmployeeRecordId.ToString()).DisplayText;
                                 var managerName = linkEmployeeManager.Managers.FirstOrDefault(x => x.ValueText == linkEmployeeManager.ManagerRecordId.ToString()).DisplayText;
 
-                                var createNew = new RegisterEmployee();
-                                createNew.Team = GetJobTeams();
-                                createNew.JobGrade = GetJobGrades();
-                                createNew.FormMode = FormModeOption.CREATE;
+                                var createNew = new LinkEmployeeManager();
+                                createNew.Employees = GetEmployees();
+                                createNew.Managers = GetManagers();
+                                createNew.DocumentTypes = GetDocumentTypes();
                                 createNew.ProcessingStatus = true;
                                 createNew.ProcessingStatusMessage = string.Format("Successfully linked employee {0} to manager {1} ",
                                                              employeeName, managerName);
@@ -324,7 +324,7 @@ namespace SchoolProject.WebApplication.Controllers
                             }
                         }
                     case FormModeOption.EDIT: {
-                            var link = dbContext.PMReviewReportingStructure.Find(linkEmployeeManager.EmployeeReportingRecordId);
+                            var link = _iAdminstrationManager.FindReviewReportingStructure(linkEmployeeManager.EmployeeReportingRecordId);
                             link.ManagerId = linkEmployeeManager.ManagerRecordId;
                             link.MemberId = linkEmployeeManager.EmployeeRecordId;
                             link.DocumentTypeId = linkEmployeeManager.DocumentTypeId;
@@ -340,9 +340,10 @@ namespace SchoolProject.WebApplication.Controllers
                             var employeeName = linkEmployeeManager.Employees.FirstOrDefault(x => x.ValueText == linkEmployeeManager.EmployeeRecordId.ToString()).DisplayText;
                             var managerName = linkEmployeeManager.Managers.FirstOrDefault(x => x.ValueText == linkEmployeeManager.ManagerRecordId.ToString()).DisplayText;
 
-                            var createNew = new RegisterEmployee();
-                            createNew.Team = GetJobTeams();
-                            createNew.JobGrade = GetJobGrades();
+                            var createNew = new LinkEmployeeManager();
+                            createNew.Employees = GetEmployees();
+                            createNew.Managers = GetManagers();
+                            createNew.DocumentTypes = GetDocumentTypes();
                             createNew.FormMode = FormModeOption.CREATE;
                             createNew.ProcessingStatus = true;
                             createNew.ProcessingStatusMessage = string.Format("Successfully updated employee {0} link to manager {1} ",
@@ -351,7 +352,7 @@ namespace SchoolProject.WebApplication.Controllers
                             return RedirectToAction("LinkEmployeeToManager");
                         }
                     case FormModeOption.DELETE: {
-                            var link =  dbContext.PMReviewReportingStructure.Find(linkEmployeeManager.EmployeeReportingRecordId);
+                            var link = _iAdminstrationManager.FindReviewReportingStructure(linkEmployeeManager.EmployeeReportingRecordId);
                             link.DeletedBy = "System";
                             link.DateDeleted = DateTime.Now;
                             link.StatusId = 2; //Deleted Status Id
@@ -365,9 +366,10 @@ namespace SchoolProject.WebApplication.Controllers
                             var employeeName = linkEmployeeManager.Employees.FirstOrDefault(x => x.ValueText == linkEmployeeManager.EmployeeRecordId.ToString()).DisplayText;
                             var managerName = linkEmployeeManager.Managers.FirstOrDefault(x => x.ValueText == linkEmployeeManager.ManagerRecordId.ToString()).DisplayText;
 
-                            var createNew = new RegisterEmployee();
-                            createNew.Team = GetJobTeams();
-                            createNew.JobGrade = GetJobGrades();
+                            var createNew = new LinkEmployeeManager();
+                            createNew.Employees = GetEmployees();
+                            createNew.Managers = GetManagers();
+                            createNew.DocumentTypes = GetDocumentTypes();
                             createNew.FormMode = FormModeOption.CREATE;
                             createNew.ProcessingStatus = true;
                             createNew.ProcessingStatusMessage = string.Format("Successfully removed employee {0} link to manager {1} ",
