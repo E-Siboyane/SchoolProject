@@ -1,70 +1,67 @@
 ﻿@model IEnumerable<SchoolProject.WebApplication.DTO.LinkPerformanceYearReviewPeriod>
-
+@using SchoolProject.WebApplication.ViewModels;
 @{
     ViewBag.Title = "PerformanceReviewPeriodLinking";
 }
 
-<h2>Performance Review Period Linking</h2>
-
-<table id="datatable" class="table table-hover">
-    <thead>
-        <tr>
-            <th>
-                @Html.Raw("Performance Year")
-            </th>
-            <th>
-                @Html.Raw("Performance Year Start-End Date")
-            </th>
-            <th>
-                @Html.Raw("Review Period")
-            </th>
-            <th>
-                @Html.Raw("Status")
-            </th>
-            <th>
-                @Html.ActionLink("Create New", "Create")
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
+<h2>Performance Year Review Period Linking</h2>
+<div class="table-responsive">
+    <table id="datatable" class="table table-hover">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PerformanceYear)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PerformanceYearStartEndDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReviewPeriod)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StatusDescription)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
+                <th>
+                    @Html.Raw("Performance Year")
+                </th>
+                <th>
+                    @Html.Raw("Performance Year")
+                </th>
+                <th>
+                    @Html.Raw("Review Period")
+                </th>
+                <th>
+                    @Html.Raw("Status")
+                </th>
+                <th>
+
+                </th>
             </tr>
-        }
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>
-                @Html.Raw("Performance Year")
-            </th>
-            <th>
-                @Html.Raw("Performance Year Start-End Date")
-            </th>
-            <th>
-                @Html.Raw("Review Period")
-            </th>
-            <th>
-                @Html.Raw("Status")
-            </th>
-            <th>
-            </th>
-        </tr>
-    </tfoot>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PerformanceYear)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PerformanceYearStartEndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReviewPeriod)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StatusDescription)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("ManagePerformanceYearReviewPeriodLink", "Administration", new { pmReviewPeriodId = item.PMReviewPeriodId , formMode = FormModeOption.EDIT  })" class="btn btn-md btn-primary" role="button">
+                            <span class="glyphicon glyphicon-pencil">
+                            </span>
+                        </a>
+                        <a href="@Url.Action("ManagePerformanceYearReviewPeriodLink", "Administration", new { pmReviewPeriodId = item.PMReviewPeriodId, formMode = FormModeOption.DELETE  })" class="btn btn-md btn-danger" role="button">
+                            <span class="glyphicon glyphicon-remove">
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-8">
+        <a href="@Url.Action("CreatePerformanceYearReviewPeriodLink", "Administration")" class="btn btn-md btn-primary" role="button">
+            <span class="glyphicon glyphicon-plus">
+            </span>Link New Performance Year Review Period
+        </a>
+    </div>
+</div>
+

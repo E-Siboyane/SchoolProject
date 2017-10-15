@@ -219,6 +219,8 @@
     <Compile Include="ViewModels\FormModeOption.cs" />
     <Compile Include="ViewModels\LinkEmployeeManager.cs" />
     <Compile Include="ViewModels\RegisterEmployee.cs" />
+    <Compile Include="ViewModels\RegisterPerformanceYear.cs" />
+    <Compile Include="ViewModels\RegisterPerformanceYearReviewPeriodLink.cs" />
     <Compile Include="ViewModels\RegisterStrategicGoal.cs" />
     <Compile Include="ViewModels\SelectionOptions.cs" />
   </ItemGroup>
@@ -314,6 +316,8 @@
     <Content Include="Views\Administration\LinkEmployeeToManager.cshtml" />
     <Content Include="Views\Administration\StrategicGoals.cshtml" />
     <Content Include="Views\Administration\ManageStrategicGoal.cshtml" />
+    <Content Include="Views\Administration\ManagePerformanceYear.cshtml" />
+    <Content Include="Views\Administration\ManagePerformanceYearReviewPeriodLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

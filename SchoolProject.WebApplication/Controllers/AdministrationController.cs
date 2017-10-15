@@ -599,19 +599,313 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         private bool StrategicGoalCodeExist(string goalCode) {
-            var getEmployee = dbContext.StrategicGoal.FirstOrDefault(x => string.Compare(x.StrategicGoalCode,goalCode,true) == 0 &&
+            var goal = dbContext.StrategicGoal.FirstOrDefault(x => string.Compare(x.StrategicGoalCode,goalCode,true) == 0 &&
                                                                      x.StatusId == 1);
-            if (getEmployee == null)
+            if (goal == null)
                 return false;
             return true;
         }
 
         private bool StrategicGoalNameExist(string goalName) {
-            var getEmployee = dbContext.StrategicGoal.FirstOrDefault(x => string.Compare(x.StrategicGoalName, goalName, true) == 0
+            var name = dbContext.StrategicGoal.FirstOrDefault(x => string.Compare(x.StrategicGoalName, goalName, true) == 0
                                                                      && x.StatusId == 1);
-            if (getEmployee == null)
+            if (name == null)
                 return false;
             return true;
+        }
+
+        [HttpGet]
+        public ActionResult CreatePerformaceYear() {
+            if (TempData["viewModelPerformaceYear"] != null) {
+                return View("ManagePerformanceYear", (RegisterPerformanceYear)TempData["viewModelPerformaceYear"]);
+            }
+            else {
+                var performanceYear = new RegisterPerformanceYear();
+                performanceYear.FormMode = FormModeOption.CREATE;
+                return View("ManagePerformanceYear", performanceYear);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ManagePerformanceYear(int performanceYearId, FormModeOption formMode) {
+            var mode = FormModeOption.EDIT;
+            if (formMode == FormModeOption.DELETE)
+                mode = FormModeOption.DELETE;
+
+            var dbperfromanceYear = dbContext.PerformanceYear.Find(performanceYearId);
+            var performanceYear = new RegisterPerformanceYear() {
+                PerformanceYearId = dbperfromanceYear.PerformanceYearId,
+                PerformanceYearName = dbperfromanceYear.PerformanceYearName,
+                StartDate = dbperfromanceYear.StartDate,
+                EndDate = dbperfromanceYear.EndDate,
+                ProcessingStatusMessage = string.Empty,
+                FormMode = mode,
+            };
+            TempData["viewModelPerformaceYear"] = performanceYear;
+            return RedirectToAction("CreatePerformaceYear");
+        }
+
+        [HttpPost]
+        public ActionResult ManagePerformanceYear(RegisterPerformanceYear performanceYear) {
+            if (ModelState.IsValid) {
+                switch (performanceYear.FormMode) {
+                    case FormModeOption.CREATE: {
+                            if (!PerformanceYearExist(performanceYear)) {
+                                    var transformedYear = TransformPerformanceYear(performanceYear);
+                                    dbContext.PerformanceYear.Add(transformedYear);
+                                    dbContext.SaveChanges();
+
+                                    var createNew = new RegisterPerformanceYear();
+                                    createNew.FormMode = FormModeOption.CREATE;
+                                    createNew.ProcessingStatus = true;
+                                    createNew.ProcessingStatusMessage = string.Format("Successfully added Performanve Year:{0} ( {1} - {2})",
+                                                                 performanceYear.PerformanceYearName, 
+                                                                 performanceYear.StartDate.Date.ToString("MMMM dd yyyy"), 
+                                                                 performanceYear.EndDate.Date.ToString("MMMM dd yyyy"));
+                                    TempData["viewModelPerformaceYear"] = createNew;
+                                    return RedirectToAction("CreatePerformaceYear");
+                            }
+                            else {
+                                ModelState.AddModelError(string.Empty, "Performance Year Exist...");
+                                break;
+                            }
+                        }
+                    case FormModeOption.EDIT: {
+                            var dbYear = _iAdminstrationManager.FindPerformanceYear(performanceYear.PerformanceYearId);
+
+                            dbYear.PerformanceYearName = performanceYear.PerformanceYearName;
+                            dbYear.StartDate = performanceYear.StartDate.Date;
+                            dbYear.EndDate = performanceYear.EndDate.Date;
+                            dbYear.DateModified = DateTime.Now;
+                            dbYear.ModifiedBy = "System";
+
+                            DbEntityEntry entry = dbContext.Entry(dbYear);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterPerformanceYear();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully updated Performanve Year:{0} ( {1} - {2})",
+                                                                 performanceYear.PerformanceYearName,
+                                                                 performanceYear.StartDate.Date.ToString("MMMM dd yyyy"),
+                                                                 performanceYear.EndDate.Date.ToString("MMMM dd yyyy"));
+                            TempData["viewModelPerformaceYear"] = createNew;
+                            return RedirectToAction("CreatePerformaceYear");
+                        }
+                    case FormModeOption.DELETE: {
+                            var dbYear = _iAdminstrationManager.FindPerformanceYear(performanceYear.PerformanceYearId);
+                            dbYear.DeletedBy = "Administrator";
+                            dbYear.DateDeleted = DateTime.Now;
+                            dbYear.StatusId = 2; //Deleted Status Id
+
+                            DbEntityEntry entry = dbContext.Entry(dbYear);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterPerformanceYear();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully removed Performanve Year:{0} ( {1} - {2})",
+                                                                 performanceYear.PerformanceYearName,
+                                                                 performanceYear.StartDate.Date.ToString("MMMM dd yyyy"),
+                                                                 performanceYear.EndDate.Date.ToString("MMMM dd yyyy"));
+                            TempData["viewModelPerformaceYear"] = createNew;
+                            return RedirectToAction("CreatePerformaceYear");
+                        }
+                    default: {
+                            performanceYear.ProcessingStatus = false;
+                            performanceYear.ProcessingStatusMessage = "Unknown form processing Mode. the following are supported Modes: Create, Edit, Delete and Details";
+                            break;
+                        }
+                }
+            }
+            return View(performanceYear);
+        }
+
+        private AdminPerformanceYear TransformPerformanceYear(RegisterPerformanceYear performanceYear) {
+            return (new AdminPerformanceYear() {
+                PerformanceYearName = performanceYear.PerformanceYearName,
+                StartDate = performanceYear.StartDate.Date,
+                EndDate = performanceYear.EndDate.Date,
+                StatusId = 1,
+                DateCreated = DateTime.Now,
+                CreatedBy = "Administrator",
+                DateModified = DateTime.Now,
+                ModifiedBy = "Administrator"
+            });
+        }
+
+        private bool PerformanceYearExist(RegisterPerformanceYear performanceYear) {
+            var newYear = _iAdminstrationManager.GetPerformanceYears().FirstOrDefault(x => x.StatusId == 1 &&
+                                string.Compare(x.PerformanceYearName,performanceYear.PerformanceYearName,true) == 0 &&
+                                x.StartDate.Date == performanceYear.StartDate.Date && 
+                                x.EndDate.Date == x.EndDate.Date);
+            return (newYear != null) ? true : false;
+        }
+
+        public List<SelectionOptions> GetReviewPeriod() {
+            var results = new List<SelectionOptions>();
+            _iAdminstrationManager.GetReviewPeriods().Where(x => x.StatusId == 1).ToList().ForEach(x => {
+                results.Add(new SelectionOptions {
+                    DisplayText = x.ReviewPeriodName,
+                    ValueText = x.ReviewPeriodId.ToString()
+                });
+            });
+            return (results);
+        }
+
+        public List<SelectionOptions> GetPerformanceYearsSelection() {
+            var results = new List<SelectionOptions>();
+            _iAdminstrationManager.GetPerformanceYears().Where(x => x.StatusId == 1).ToList().ForEach(x => {
+                results.Add(new SelectionOptions {
+                    DisplayText = string.Format("{0} - ({1} - {2})", x.PerformanceYearName, 
+                                                                     x.StartDate.Date.ToString("MMMM dd yyyy"),
+                                                                     x.EndDate.Date.ToString("MMMM dd yyyy")),
+                    ValueText = x.PerformanceYearId.ToString()
+                });
+            });
+            return (results);
+        }
+
+        [HttpGet]
+        public ActionResult CreatePerformanceYearReviewPeriodLink() {
+            if (TempData["viewPerformanceYearReviewPeriodLink"] != null) {
+                return View("ManagePerformanceYearReviewPeriodLink", (RegisterPerformanceYearReviewPeriodLink)TempData["viewPerformanceYearReviewPeriodLink"]);
+            }
+            else {
+                var reviewYearLink = new RegisterPerformanceYearReviewPeriodLink();
+                reviewYearLink.FormMode = FormModeOption.CREATE;
+                reviewYearLink.PerformanceYears = GetPerformanceYearsSelection();
+                reviewYearLink.ReviewPeriods = GetReviewPeriod();
+                return View("ManagePerformanceYearReviewPeriodLink", reviewYearLink);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ManagePerformanceYearReviewPeriodLink(int pmReviewPeriodId, FormModeOption formMode) {
+            var mode = FormModeOption.EDIT;
+            if (formMode == FormModeOption.DELETE)
+                mode = FormModeOption.DELETE;
+
+            var dbperfromanceYearReviewPeriodLink = dbContext.PMReviewPeriod.Find(pmReviewPeriodId);
+            var newLink = new RegisterPerformanceYearReviewPeriodLink() {
+                PerformanceYearId = dbperfromanceYearReviewPeriodLink.PerformanceYearId,
+                ReviewPeriodId = dbperfromanceYearReviewPeriodLink.ReviewPeriodId,
+                PMReviewPeriodId = dbperfromanceYearReviewPeriodLink.PMReviewPeriodId,
+                PerformanceYears = GetPerformanceYearsSelection(),
+                ReviewPeriods = GetReviewPeriod(),
+                ProcessingStatusMessage = string.Empty,
+                FormMode = mode,
+            };
+            TempData["viewPerformanceYearReviewPeriodLink"] = newLink;
+            return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
+        }
+
+        [HttpPost]
+        public ActionResult ManagePerformanceYearReviewPeriodLink(RegisterPerformanceYearReviewPeriodLink performanceYearReviewLink) {
+            if (ModelState.IsValid) {
+                switch (performanceYearReviewLink.FormMode) {
+                    case FormModeOption.CREATE: {
+                            if (!PerformanceYearReviewPeriodExist(performanceYearReviewLink)) {
+                                var transformedYear = TransformPerformanceYearReviewPeriodLink(performanceYearReviewLink);
+                                dbContext.PMReviewPeriod.Add(transformedYear);
+                                dbContext.SaveChanges();
+
+                                var createNew = new RegisterPerformanceYearReviewPeriodLink();
+                                createNew.PerformanceYears = GetPerformanceYearsSelection();
+                                createNew.ReviewPeriods = GetReviewPeriod();
+                                createNew.FormMode = FormModeOption.CREATE;
+                                createNew.ProcessingStatus = true;
+                                createNew.ProcessingStatusMessage = string.Format("Successfully added Performanve Year Review Link :{0} - {1}",
+                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId),
+                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId));
+                                TempData["viewPerformanceYearReviewPeriodLink"] = createNew;
+                                return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
+                            }
+                            else {
+                                ModelState.AddModelError(string.Empty, "Performance Year Review Period Link Exist...");
+                                break;
+                            }
+                        }
+                    case FormModeOption.EDIT: {
+                            var dbYearLink =dbContext.PMReviewPeriod.Find(performanceYearReviewLink.ReviewPeriodId);
+                            dbYearLink.ReviewPeriodId = performanceYearReviewLink.ReviewPeriodId;
+                            dbYearLink.PerformanceYearId = performanceYearReviewLink.PerformanceYearId;
+                            dbYearLink.DateModified = DateTime.Now;
+                            dbYearLink.ModifiedBy = "System";
+
+                            DbEntityEntry entry = dbContext.Entry(dbYearLink);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterPerformanceYearReviewPeriodLink();
+                            createNew.PerformanceYears = GetPerformanceYearsSelection();
+                            createNew.ReviewPeriods = GetReviewPeriod();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully updated Performanve Year Review Link :{0} - {1}",
+                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId),
+                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId));
+                            TempData["viewPerformanceYearReviewPeriodLink"] = createNew;
+                            return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
+                        }
+                    case FormModeOption.DELETE: {
+                            var dbYearLink = dbContext.PMReviewPeriod.Find(performanceYearReviewLink.ReviewPeriodId);
+                            dbYearLink.DeletedBy = "Administrator";
+                            dbYearLink.DateDeleted = DateTime.Now;
+                            dbYearLink.StatusId = 2; //Deleted Status Id
+
+                            DbEntityEntry entry = dbContext.Entry(dbYearLink);
+                            if (entry.State == EntityState.Detached) {
+                                entry.State = EntityState.Modified;
+                                dbContext.SaveChanges();
+                            }
+
+                            var createNew = new RegisterPerformanceYearReviewPeriodLink();
+                            createNew.PerformanceYears = GetPerformanceYearsSelection();
+                            createNew.ReviewPeriods = GetReviewPeriod();
+                            createNew.FormMode = FormModeOption.CREATE;
+                            createNew.ProcessingStatus = true;
+                            createNew.ProcessingStatusMessage = string.Format("Successfully removed Performanve Year Review Link :{0} - {1}",
+                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId),
+                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId));
+                            TempData["viewPerformanceYearReviewPeriodLink"] = createNew;
+                            return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
+                        }
+                    default: {
+                            performanceYearReviewLink.ProcessingStatus = false;
+                            performanceYearReviewLink.ProcessingStatusMessage = "Unknown form processing Mode. the following are supported Modes: Create, Edit, Delete and Details";
+                            break;
+                        }
+                }
+            }
+            return View(performanceYearReviewLink);
+        }
+
+        private PMReviewPeriod TransformPerformanceYearReviewPeriodLink(RegisterPerformanceYearReviewPeriodLink performanceYearReviewLink) {
+            return (new PMReviewPeriod() {
+                ReviewPeriodId = performanceYearReviewLink.ReviewPeriodId,
+                PerformanceYearId = performanceYearReviewLink.PerformanceYearId,
+                StatusId = 1,
+                DateCreated = DateTime.Now,
+                CreatedBy = "Admin",
+                ModifiedBy = "Admin",
+                DateModified = DateTime.Now
+            });
+        }
+
+        private bool PerformanceYearReviewPeriodExist(RegisterPerformanceYearReviewPeriodLink performanceYearReviewLink) {
+            var checkLink = _iAdminstrationManager.GetLinkedPerformanceYearReviews().FirstOrDefault(x => x.StatusId == 1 &&
+                                x.PerformanceYearId == performanceYearReviewLink.PerformanceYearId &&
+                                x.ReviewPeriodId == performanceYearReviewLink.ReviewPeriodId);
+            return (checkLink != null) ? true : false;
         }
 
 

@@ -1,0 +1,151 @@
+﻿@model SchoolProject.WebApplication.ViewModels.RegisterPerformanceYear
+@using SchoolProject.WebApplication.ViewModels;
+
+@{
+    ViewBag.Title = "ManageStrategicGoal";
+}
+
+@switch (Model.FormMode) {
+    case FormModeOption.CREATE: {
+            <h2>Create Performance Year</h2>
+            break;
+        }
+    case FormModeOption.EDIT: {
+            <h2>Update Performance Year</h2>
+            break;
+        }
+    case FormModeOption.DELETE: {
+            <h2>Remove Performance Year</h2>
+            break;
+        }
+}
+
+<hr />
+
+@using (Html.BeginForm("ManagePerformanceYear", "Administration", FormMethod.Post, new { @id = "ManagePerformanceYearForm" })) {
+    @Html.HiddenFor(model => model.FormMode)
+
+    var formModes = Enum.GetValues(typeof(FormModeOption)).Cast<FormModeOption>().Where(i => i == FormModeOption.DELETE ||
+                                                                                       i == FormModeOption.EDIT).ToList();
+    if (formModes.Contains(Model.FormMode)) {
+        @Html.HiddenFor(model => model.PerformanceYearId)
+    }
+
+    @*Display Error messages*@
+if (!ViewData.ModelState.IsValid) {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.ValidationSummary(true)
+            </p>
+        </div>
+    </div>
+}
+
+    @*Display Processing Status*@
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (Model.ProcessingStatus)) {
+    <div class="row">
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+
+    @*Display Processing Status*@
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (!Model.ProcessingStatus)) {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+
+if (Model.FormMode == FormModeOption.DELETE) {
+
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <p>
+                Are you sure you want to remove Performance Year - @string.Format("({0})", Model.PerformanceYearName)?
+            </p>
+        </div>
+    </div>
+    }
+
+    <div class="row">
+        <div class="col-md-7">
+
+            @if (Model.FormMode != FormModeOption.DELETE) {
+                <div class="row">
+                    @Html.Label("Performance Year Name", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.PerformanceYearName, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                    @Html.ValidationMessageFor(model => model.PerformanceYearName, "", new { @class = "text-danger" })
+                </div>
+                <div class="row">
+                    @Html.Label("Start Date", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="row">
+                    @Html.Label("End Date", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                </div>
+            }
+            else {
+                <div class="row">
+                    @Html.Label("Perfromance Year Name", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.PerformanceYearName, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                </div>
+                <div class="row">
+                    @Html.Label("Start Date", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                </div>
+                <div class="row">
+                    @Html.Label("End Date", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                </div>
+            }
+            <br />
+            <div class="row">
+                <a href="@Url.Action("PerformanceYear", "Administration")" class="btn btn-md btn-primary" role="button">
+                    <span class="glyphicon glyphicon-chevron-left glyphicon-chevron-left">
+                    </span>&nbsp;Back To Performance Year Listing
+                </a>
+                @switch (Model.FormMode) {
+                    case FormModeOption.CREATE: {
+                            <button id="SubmitPerformanceYear" type="submit" class="btn btn-md btn-primary">
+                                <span class="glyphicon glyphicon-plus">
+                                </span>&nbsp;Create Performance Year
+                            </button>
+                            break;
+                        }
+                    case FormModeOption.EDIT: {
+                            <button id="SubmitPerformanceYear" type="submit" class="btn btn-md btn-primary">
+                                <span class="glyphicon glyphicon-pencil">
+                                </span>&nbsp;Update Performance Year Details
+                            </button>
+                            break;
+                        }
+                    case FormModeOption.DELETE: {
+                            <button id="SubmitPerformanceYear" type="submit" class="btn btn-md btn-danger">
+                                <span class="glyphicon glyphicon-remove">
+                                </span>&nbsp;Remove Performance Year
+                            </button>
+                            break;
+                        }
+                    default: {
+                            break;
+                        }
+                }
+            </div>
+            <br />
+        </div>
+    </div>
+}
