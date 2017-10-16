@@ -685,6 +685,23 @@ namespace SchoolProject.WebApplication.ServiceManager {
             return (employees);
         }
 
+        //PM Review Period (Linkinng PM Years to Review Periods
+        public PMReviewPeriod AddPMReview(PMReviewPeriod pmReview) {
+            return _pmRepository.Insert(pmReview, _pmRepository.GetApplicationDbContext);
+        }
+
+        public bool DeletePMReview(PMReviewPeriod pmReview) {
+            _pmRepository.Delete(pmReview, _pmRepository.GetApplicationDbContext);
+            return true;
+        }
+
+        public PMReviewPeriod UpdatePMReview(PMReviewPeriod pmReview) {
+            return _pmRepository.Update(pmReview, _pmRepository.GetApplicationDbContext);
+        }
+
+        public PMReviewPeriod FindPMReview(int id) {
+            return _pmRepository.Find<PMReviewPeriod>(id, _pmRepository.GetApplicationDbContext);
+        }
     }
 
 }

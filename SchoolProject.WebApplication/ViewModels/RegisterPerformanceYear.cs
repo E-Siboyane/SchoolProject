@@ -9,9 +9,9 @@ namespace SchoolProject.WebApplication.ViewModels {
         public int PerformanceYearId { get; set; }
         public string PerformanceYearName { get; set; }
         [Required]
-        public DateTime StartDate { get; set; }
+        public string StartDate { get; set; }
         [Required]
-        public DateTime EndDate { get; set; }
+        public string EndDate { get; set; }
         [Required]
         public FormModeOption FormMode { get; set; }
         public string ProcessingStatusMessage { get; set; }

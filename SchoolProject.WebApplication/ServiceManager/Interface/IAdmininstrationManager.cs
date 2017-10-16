@@ -209,5 +209,14 @@ namespace SchoolProject.WebApplication.ServiceManager.Interface {
          StructureEmployee FindEmployee(int id);
         List<Employee> GetEmployee();
 
+        //PM Review Period (Linkinng PM Years to Review Periods
+        PMReviewPeriod AddPMReview(PMReviewPeriod pmReview);
+
+        bool DeletePMReview(PMReviewPeriod pmReview);
+
+        PMReviewPeriod UpdatePMReview(PMReviewPeriod pmReview);
+
+        PMReviewPeriod FindPMReview(int id);
+
     }
 }

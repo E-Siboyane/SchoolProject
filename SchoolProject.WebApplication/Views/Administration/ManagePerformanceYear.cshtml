@@ -37,7 +37,7 @@ if (!ViewData.ModelState.IsValid) {
         <div class="alert alert-danger alert-dismissable">
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
             <p>
-                @Html.ValidationSummary(true)
+                @Html.ValidationSummary()
             </p>
         </div>
     </div>
@@ -88,13 +88,27 @@ if (Model.FormMode == FormModeOption.DELETE) {
                     @Html.ValidationMessageFor(model => model.PerformanceYearName, "", new { @class = "text-danger" })
                 </div>
                 <div class="row">
-                    @Html.Label("Start Date", htmlAttributes: new { @class = "control-label" })<br />
-                    @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @required = true } })
-                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                    @Html.Label("Start Date", htmlAttributes: new { @class = "control-label" })
                 </div>
                 <div class="row">
-                    @Html.Label("End Date", htmlAttributes: new { @class = "control-label" })<br />
-                    @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                    <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                        @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div> 
+                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })             
+                </div>
+                <div class="row">
+                    @Html.Label("End Date", htmlAttributes: new { @class = "control-label" })
+                </div>
+                <div class="row">
+                    <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+                         @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
                     @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
                 </div>
             }
@@ -112,6 +126,7 @@ if (Model.FormMode == FormModeOption.DELETE) {
                     @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @readOnly = true } })
                 </div>
             }
+            
             <br />
             <div class="row">
                 <a href="@Url.Action("PerformanceYear", "Administration")" class="btn btn-md btn-primary" role="button">
@@ -148,4 +163,48 @@ if (Model.FormMode == FormModeOption.DELETE) {
             <br />
         </div>
     </div>
+}
+
+@section Styles {
+<link href="~/Scripts/datepicker3.css" rel="stylesheet" />
+
+    <style>
+        a:hover, a:visited, a:link, a:active {
+            text-decoration: none;
+        }
+
+        .controls {
+            margin-bottom: 10px;
+        }
+
+        .collapse-group {
+            padding: 10px;
+            border: 1px solid darkgrey;
+            margin-bottom: 10px;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+}
+
+
+
+
+@section Scripts {
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy'
+        });
+    });
+ </script>
 }

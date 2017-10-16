@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PERFORMANCE MANAGEMENT SYSTEM | </title>
     @Styles.Render("~/bundle/css")
+    @RenderSection("Styles", required: false)
 </head>
 <body class="nav-md">
     <div class="container body">
@@ -68,6 +69,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     @Scripts.Render("~/bundles/CustomScript")
     
+    @RenderSection("scripts", required: false)
    
 </body>
 </html>

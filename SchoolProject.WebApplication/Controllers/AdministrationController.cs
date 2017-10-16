@@ -636,8 +636,8 @@ namespace SchoolProject.WebApplication.Controllers
             var performanceYear = new RegisterPerformanceYear() {
                 PerformanceYearId = dbperfromanceYear.PerformanceYearId,
                 PerformanceYearName = dbperfromanceYear.PerformanceYearName,
-                StartDate = dbperfromanceYear.StartDate,
-                EndDate = dbperfromanceYear.EndDate,
+                StartDate = dbperfromanceYear.StartDate.ToString("MMMM dd yyyy"),
+                EndDate = dbperfromanceYear.EndDate.ToString("MMMM dd yyyy"),
                 ProcessingStatusMessage = string.Empty,
                 FormMode = mode,
             };
@@ -660,8 +660,8 @@ namespace SchoolProject.WebApplication.Controllers
                                     createNew.ProcessingStatus = true;
                                     createNew.ProcessingStatusMessage = string.Format("Successfully added Performanve Year:{0} ( {1} - {2})",
                                                                  performanceYear.PerformanceYearName, 
-                                                                 performanceYear.StartDate.Date.ToString("MMMM dd yyyy"), 
-                                                                 performanceYear.EndDate.Date.ToString("MMMM dd yyyy"));
+                                                                 DateTime.Parse(performanceYear.StartDate).ToString("MMMM dd yyyy"),
+                                                                 DateTime.Parse(performanceYear.EndDate).ToString("MMMM dd yyyy"));
                                     TempData["viewModelPerformaceYear"] = createNew;
                                     return RedirectToAction("CreatePerformaceYear");
                             }
@@ -674,8 +674,8 @@ namespace SchoolProject.WebApplication.Controllers
                             var dbYear = _iAdminstrationManager.FindPerformanceYear(performanceYear.PerformanceYearId);
 
                             dbYear.PerformanceYearName = performanceYear.PerformanceYearName;
-                            dbYear.StartDate = performanceYear.StartDate.Date;
-                            dbYear.EndDate = performanceYear.EndDate.Date;
+                            dbYear.StartDate = DateTime.Parse(performanceYear.StartDate).Date;
+                            dbYear.EndDate = DateTime.Parse(performanceYear.EndDate).Date;
                             dbYear.DateModified = DateTime.Now;
                             dbYear.ModifiedBy = "System";
 
@@ -690,8 +690,8 @@ namespace SchoolProject.WebApplication.Controllers
                             createNew.ProcessingStatus = true;
                             createNew.ProcessingStatusMessage = string.Format("Successfully updated Performanve Year:{0} ( {1} - {2})",
                                                                  performanceYear.PerformanceYearName,
-                                                                 performanceYear.StartDate.Date.ToString("MMMM dd yyyy"),
-                                                                 performanceYear.EndDate.Date.ToString("MMMM dd yyyy"));
+                                                                 DateTime.Parse(performanceYear.StartDate).ToString("MMMM dd yyyy"),
+                                                                 DateTime.Parse(performanceYear.EndDate).ToString("MMMM dd yyyy"));
                             TempData["viewModelPerformaceYear"] = createNew;
                             return RedirectToAction("CreatePerformaceYear");
                         }
@@ -712,8 +712,8 @@ namespace SchoolProject.WebApplication.Controllers
                             createNew.ProcessingStatus = true;
                             createNew.ProcessingStatusMessage = string.Format("Successfully removed Performanve Year:{0} ( {1} - {2})",
                                                                  performanceYear.PerformanceYearName,
-                                                                 performanceYear.StartDate.Date.ToString("MMMM dd yyyy"),
-                                                                 performanceYear.EndDate.Date.ToString("MMMM dd yyyy"));
+                                                                 DateTime.Parse(performanceYear.StartDate).ToString("MMMM dd yyyy"),
+                                                                 DateTime.Parse(performanceYear.EndDate).ToString("MMMM dd yyyy"));
                             TempData["viewModelPerformaceYear"] = createNew;
                             return RedirectToAction("CreatePerformaceYear");
                         }
@@ -730,8 +730,8 @@ namespace SchoolProject.WebApplication.Controllers
         private AdminPerformanceYear TransformPerformanceYear(RegisterPerformanceYear performanceYear) {
             return (new AdminPerformanceYear() {
                 PerformanceYearName = performanceYear.PerformanceYearName,
-                StartDate = performanceYear.StartDate.Date,
-                EndDate = performanceYear.EndDate.Date,
+                StartDate = DateTime.Parse(performanceYear.StartDate).Date,
+                EndDate = DateTime.Parse(performanceYear.EndDate).Date,
                 StatusId = 1,
                 DateCreated = DateTime.Now,
                 CreatedBy = "Administrator",
@@ -741,10 +741,12 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         private bool PerformanceYearExist(RegisterPerformanceYear performanceYear) {
+            var startDate = DateTime.Parse(performanceYear.StartDate);
+            var endDate = DateTime.Parse(performanceYear.EndDate);
             var newYear = _iAdminstrationManager.GetPerformanceYears().FirstOrDefault(x => x.StatusId == 1 &&
                                 string.Compare(x.PerformanceYearName,performanceYear.PerformanceYearName,true) == 0 &&
-                                x.StartDate.Date == performanceYear.StartDate.Date && 
-                                x.EndDate.Date == x.EndDate.Date);
+                                x.StartDate.Date == startDate && 
+                                x.EndDate.Date == endDate);
             return (newYear != null) ? true : false;
         }
 
@@ -833,17 +835,12 @@ namespace SchoolProject.WebApplication.Controllers
                             }
                         }
                     case FormModeOption.EDIT: {
-                            var dbYearLink =dbContext.PMReviewPeriod.Find(performanceYearReviewLink.ReviewPeriodId);
+                            var dbYearLink = _iAdminstrationManager.FindPMReview(performanceYearReviewLink.PMReviewPeriodId); 
                             dbYearLink.ReviewPeriodId = performanceYearReviewLink.ReviewPeriodId;
                             dbYearLink.PerformanceYearId = performanceYearReviewLink.PerformanceYearId;
                             dbYearLink.DateModified = DateTime.Now;
                             dbYearLink.ModifiedBy = "System";
-
-                            DbEntityEntry entry = dbContext.Entry(dbYearLink);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            var update = _iAdminstrationManager.UpdatePMReview(dbYearLink);
 
                             var createNew = new RegisterPerformanceYearReviewPeriodLink();
                             createNew.PerformanceYears = GetPerformanceYearsSelection();
@@ -857,16 +854,11 @@ namespace SchoolProject.WebApplication.Controllers
                             return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
                         }
                     case FormModeOption.DELETE: {
-                            var dbYearLink = dbContext.PMReviewPeriod.Find(performanceYearReviewLink.ReviewPeriodId);
+                            var dbYearLink = _iAdminstrationManager.FindPMReview(performanceYearReviewLink.PMReviewPeriodId);
                             dbYearLink.DeletedBy = "Administrator";
                             dbYearLink.DateDeleted = DateTime.Now;
                             dbYearLink.StatusId = 2; //Deleted Status Id
-
-                            DbEntityEntry entry = dbContext.Entry(dbYearLink);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            var updatePMReviewPeriod = _iAdminstrationManager.DeletePMReview(dbYearLink);
 
                             var createNew = new RegisterPerformanceYearReviewPeriodLink();
                             createNew.PerformanceYears = GetPerformanceYearsSelection();
