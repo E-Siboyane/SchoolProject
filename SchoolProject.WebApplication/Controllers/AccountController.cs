@@ -8,21 +8,75 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using SchoolProject.WebApplication.Models;
 using SchoolProject.WebApplication.ViewModels;
+using System.Globalization;
+using System.Security.Claims;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System.Net;
 
 namespace SchoolProject.WebApplication.Controllers
-{
+{   
     public class AccountController : Controller
     {
         private ApplicationDatabaseContext _dbContext;
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
         public AccountController() {
             _dbContext = new ApplicationDatabaseContext();
         }
-        public ActionResult Login() {
-            
-            return View();
+
+        public ApplicationSignInManager SignInManager {
+            get {
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set {
+                _signInManager = value;
+            }
         }
 
-       [HttpGet]
+        public ApplicationUserManager UserManager {
+            get {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set {
+                _userManager = value;
+            }
+        }
+
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) {
+            UserManager = userManager;
+            SignInManager = signInManager;
+        }
+
+        [HttpGet]
+        public ActionResult Login() {
+            var loginModel = new LoginViewModel();
+            loginModel.Username = "E947470";
+            return View(loginModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Login(LoginViewModel loginModel) {
+            if (!ModelState.IsValid) {
+                return View(loginModel);
+            }
+
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(loginModel.Username, loginModel.Password, loginModel.RememberMe, shouldLockout: false);
+            switch (result) {
+                case SignInStatus.Success:
+                    return RedirectToAction("");
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+               case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(loginModel);
+            }
+        }
+
+        [HttpGet]
         public ActionResult ManageUsers()
         {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_dbContext));
@@ -54,12 +108,13 @@ namespace SchoolProject.WebApplication.Controllers
                 var user = new ApplicationUser() {
                     UserName = registerUserViewModel.Username,
                     Email = registerUserViewModel.EmailAddress,
+                    EmailConfirmed = true
                 };
                 var createUser = await UserManager.CreateAsync(user, registerUserViewModel.Password);
                 if (createUser.Succeeded) {
                     var registerNewUserModel = new RegisterUserViewModel() {
                         Employees = GetEmployees(),
-                        ProcessingStatusMessage = string.Format("Successfully added account : {0}", GetEmployees().FirstOrDefault(x => string.Compare( x.ValueText,registerUserViewModel.Username,true) == 0)),
+                        ProcessingStatusMessage = string.Format("Successfully added account : {0}", GetEmployees().FirstOrDefault(x => string.Compare( x.ValueText,registerUserViewModel.Username,true) == 0).DisplayText),
                         ProcessingStatus = true
                     };
                     TempData["viewModelRegisterUser"] = registerNewUserModel;

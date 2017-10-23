@@ -1,44 +1,80 @@
-﻿@{
+﻿@model SchoolProject.WebApplication.ViewModels.LoginViewModel
+@{
     ViewBag.Title = "Performance Management - Signin";
-    Layout = null;
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" src="~/favicon.ico" />
 
-    <title>Performance Management - Signin</title>
+@*<div class="row">
+    <div class="col-md-4">
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+                @Html.AntiForgeryToken()
 
-    <!-- Bootstrap core CSS -->
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="col-md-8">
+                    <h4 class="form-signin-heading">@ViewBag.Title.</h4>
+                </div>
 
-    <!-- Custom styles for this template -->
-    <link href="~/Content/signin.css" rel="stylesheet" />
-</head>
+                   <div class="col-md-8">
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                    </div>
+                 
+                    <div class="col-md-8">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <input type="submit" value="Sign in" class="btn btn-lg btn-primary btn-block" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+   
+</div>*@
 
-<body>
 
-    <div class="container">
+<div class="row">
+    <br /><br /><br /><br />
+</div>
 
-        <form class="form-signin">
+
+
+       @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin", role = "form" })) {
             <h2 class="form-signin-heading">Please sign in</h2>
-            <label for="inputEmail" class="sr-only">Employee Code</label>
-            <input type="text" id="inputEmail" class="form-control" placeholder="Employee Code" required autofocus>
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </form>
 
-    </div> <!-- /container -->
-</body>
-</html>
+            <input type="text" id="Username" name="Username" value="@Model.Username" class="form-control" placeholder="Employee Code" required autofocus>
+        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+            <input type="password" id="Password"  name="Password" class="form-control" placeholder="Password" required>
+        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+        <div class="checkbox">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            @Html.LabelFor(m => m.RememberMe)
+        </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <br />
+            @*Display Error messages*@
+            if (!ViewData.ModelState.IsValid) {
+                <div class="row">
+                    <div class="alert alert-danger alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        <p>
+                            @Html.ValidationSummary(true)
+                        </p>
+                    </div>
+                </div>
+            }
+
+       }
+
