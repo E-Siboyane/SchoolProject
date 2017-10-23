@@ -1,0 +1,81 @@
+﻿@model SchoolProject.WebApplication.ViewModels.RegisterUserViewModel
+
+@{
+    ViewBag.Title = "RegisterUser";
+}
+
+<h2>Create New User Account</h2>
+<hr />
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    for (int i = 0; i < Model.Employees.Count; i++) {
+        @Html.HiddenFor(model => Model.Employees[i].ValueText)
+        @Html.HiddenFor(model => Model.Employees[i].DisplayText)
+    }
+
+    @*Display Error messages*@
+if (!ViewData.ModelState.IsValid) {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.ValidationSummary()
+            </p>
+        </div>
+    </div>
+}
+
+    @*Display Processing Status*@
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (Model.ProcessingStatus)) {
+    <div class="row">
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                @Html.LabelFor(model => model.EmailAddress, htmlAttributes: new { @class = "control-label" })<br />
+                @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Username, new SelectList(Model.Employees, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Employee"), new { @class = "form-control", @required = true })
+                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })<br />
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label" })<br />
+                @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <br />
+                    <a href="@Url.Action("ManageUsers", "Account")" class="btn btn-md btn-primary" role="button">
+                        <span class="glyphicon glyphicon-chevron-left glyphicon-chevron-left">
+                        </span>&nbsp;Back To User Listing
+                    </a>
+                    <button id="SubmitCreateEmployee" type="submit" class="btn btn-md btn-primary">
+                        <span class="glyphicon glyphicon-plus">
+                        </span>&nbsp;Add New Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

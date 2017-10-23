@@ -100,8 +100,10 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult UpdateEmployee(int employeeRecordId) {
-            var dbEmployee = _iAdminstrationManager.FindEmployee(employeeRecordId);
+        public ActionResult UpdateEmployee(int? employeeRecordId) {
+            if (employeeRecordId == null)
+                return RedirectToAction("CreateEmployee");
+            var dbEmployee = _iAdminstrationManager.FindEmployee((int)employeeRecordId);
             var viewModelEmployee = new RegisterEmployee() {
                 EmployeeRecordId = dbEmployee.EmployeeRecordId,
                 EmployeeCode = dbEmployee.EmployeeCode,
@@ -120,8 +122,11 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult RemoveEmployee(int employeeRecordId) {
-            var dbEmployee = _iAdminstrationManager.FindEmployee(employeeRecordId);
+        public ActionResult RemoveEmployee(int? employeeRecordId) {
+            if (employeeRecordId == null)
+                return RedirectToAction("CreateEmployee");
+
+            var dbEmployee = _iAdminstrationManager.FindEmployee((int)employeeRecordId);
             var viewModelEmployee = new RegisterEmployee() {
                 EmployeeRecordId = dbEmployee.EmployeeRecordId,
                 EmployeeCode = dbEmployee.EmployeeCode,
@@ -276,12 +281,15 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult UpdateReportingStructure(int employeeReportingRecordId, FormModeOption formMode) {
+        public ActionResult UpdateReportingStructure(int? employeeReportingRecordId, FormModeOption? formMode) {
+            if (employeeReportingRecordId == null)
+                return RedirectToAction("LinkEmployeeToManager");
+
             var mode = FormModeOption.EDIT;
             if (formMode == FormModeOption.DELETE)
                 mode = FormModeOption.DELETE;
 
-            var dbEmployeeLink = dbContext.PMReviewReportingStructure.Find(employeeReportingRecordId);
+            var dbEmployeeLink = dbContext.PMReviewReportingStructure.Find((int)employeeReportingRecordId);
             var viewModelLinkEmployee = new LinkEmployeeManager() {
                 EmployeeReportingRecordId = dbEmployeeLink.ReviewReportingStructureId,
                 EmployeeRecordId = dbEmployeeLink.MemberId,
@@ -489,12 +497,15 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult ManageStrategicGoal(int goalId, FormModeOption formMode) {
+        public ActionResult ManageStrategicGoal(int? goalId, FormModeOption? formMode) {
+            if (goalId == null)
+                return RedirectToAction("CreateStrategicGoal");
+
             var mode = FormModeOption.EDIT;
             if (formMode == FormModeOption.DELETE)
                 mode = FormModeOption.DELETE;
 
-            var dbGoal = dbContext.StrategicGoal.Find(goalId);
+            var dbGoal = dbContext.StrategicGoal.Find((int)goalId);
             var goal = new RegisterStrategicGoal() {
                 StrategicGoalId = dbGoal.StrategicGoalId,
                 StrategicGoalCode = dbGoal.StrategicGoalCode,
@@ -627,12 +638,15 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult ManagePerformanceYear(int performanceYearId, FormModeOption formMode) {
+        public ActionResult ManagePerformanceYear(int? performanceYearId, FormModeOption? formMode) {
+            if (performanceYearId == null)
+                return RedirectToAction("CreatePerformaceYear");
+
             var mode = FormModeOption.EDIT;
             if (formMode == FormModeOption.DELETE)
                 mode = FormModeOption.DELETE;
 
-            var dbperfromanceYear = dbContext.PerformanceYear.Find(performanceYearId);
+            var dbperfromanceYear = dbContext.PerformanceYear.Find((int)performanceYearId);
             var performanceYear = new RegisterPerformanceYear() {
                 PerformanceYearId = dbperfromanceYear.PerformanceYearId,
                 PerformanceYearName = dbperfromanceYear.PerformanceYearName,
@@ -789,12 +803,15 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult ManagePerformanceYearReviewPeriodLink(int pmReviewPeriodId, FormModeOption formMode) {
+        public ActionResult ManagePerformanceYearReviewPeriodLink(int? pmReviewPeriodId, FormModeOption? formMode) {
+            if (pmReviewPeriodId == null)
+                return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
+
             var mode = FormModeOption.EDIT;
             if (formMode == FormModeOption.DELETE)
                 mode = FormModeOption.DELETE;
 
-            var dbperfromanceYearReviewPeriodLink = dbContext.PMReviewPeriod.Find(pmReviewPeriodId);
+            var dbperfromanceYearReviewPeriodLink = dbContext.PMReviewPeriod.Find((int)pmReviewPeriodId);
             var newLink = new RegisterPerformanceYearReviewPeriodLink() {
                 PerformanceYearId = dbperfromanceYearReviewPeriodLink.PerformanceYearId,
                 ReviewPeriodId = dbperfromanceYearReviewPeriodLink.ReviewPeriodId,
