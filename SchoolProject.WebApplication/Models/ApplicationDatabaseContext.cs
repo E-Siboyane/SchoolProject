@@ -11,7 +11,11 @@ namespace SchoolProject.WebApplication.Models {
         public ApplicationDatabaseContext(): base("PerformanceManagementConnectionString") {
             base.Configuration.ProxyCreationEnabled = false;
         }
-       
+
+        public static ApplicationDatabaseContext Create() {
+            return new ApplicationDatabaseContext();
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();

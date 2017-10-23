@@ -65,6 +65,9 @@ namespace SchoolProject.WebApplication.Controllers
                     TempData["viewModelRegisterUser"] = registerNewUserModel;
                     return RedirectToAction("RegisterUser");
                 }
+                else {
+
+                }
             }
             return View(registerUserViewModel);
         }
