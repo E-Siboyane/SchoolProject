@@ -498,11 +498,13 @@
     <Compile Include="ViewModels\FormModeOption.cs" />
     <Compile Include="ViewModels\LinkEmployeeManager.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\ManageUserAccount.cs" />
     <Compile Include="ViewModels\RegisterEmployee.cs" />
     <Compile Include="ViewModels\RegisterPerformanceYear.cs" />
     <Compile Include="ViewModels\RegisterPerformanceYearReviewPeriodLink.cs" />
     <Compile Include="ViewModels\RegisterStrategicGoal.cs" />
     <Compile Include="ViewModels\RegisterUserViewModel.cs" />
+    <Compile Include="ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\SelectionOptions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -533,6 +535,17 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\build\css\custom.css" />
+    <Content Include="Scripts\build\css\custom.min.css" />
+    <Content Include="Scripts\build\images\back_disabled.png" />
+    <Content Include="Scripts\build\images\back_enabled.png" />
+    <Content Include="Scripts\build\images\back_enabled_hover.png" />
+    <Content Include="Scripts\build\images\forward_disabled.png" />
+    <Content Include="Scripts\build\images\forward_enabled.png" />
+    <Content Include="Scripts\build\images\forward_enabled_hover.png" />
+    <Content Include="Scripts\build\images\loading.gif" />
+    <Content Include="Scripts\build\js\custom.js" />
+    <Content Include="Scripts\build\js\custom.min.js" />
     <Content Include="Scripts\datepicker3.css" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -609,6 +622,7 @@
     <Content Include="Views\Account\RegisterUser.cshtml" />
     <Content Include="Views\Account\ManageUsers.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

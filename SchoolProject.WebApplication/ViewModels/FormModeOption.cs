@@ -8,6 +8,8 @@ namespace SchoolProject.WebApplication.ViewModels {
         CREATE,
         EDIT,
         DELETE,
-        DETAIL
+        DETAIL,
+        RESETPASSWORD,
+        REMOVEUSER
     }
 }

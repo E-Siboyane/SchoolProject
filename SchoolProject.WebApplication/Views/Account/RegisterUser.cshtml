@@ -15,12 +15,12 @@
     }
 
     @*Display Error messages*@
-if (!ViewData.ModelState.IsValid) {
+   if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (!Model.ProcessingStatus)) {
     <div class="row">
         <div class="alert alert-danger alert-dismissable">
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
             <p>
-                @Html.ValidationSummary(true)
+                @Html.Raw(Model.ProcessingStatusMessage)
             </p>
         </div>
     </div>

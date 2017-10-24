@@ -841,8 +841,8 @@ namespace SchoolProject.WebApplication.Controllers
                                 createNew.FormMode = FormModeOption.CREATE;
                                 createNew.ProcessingStatus = true;
                                 createNew.ProcessingStatusMessage = string.Format("Successfully added Performanve Year Review Link :{0} - {1}",
-                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId),
-                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId));
+                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId).DisplayText,
+                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId).DisplayText);
                                 TempData["viewPerformanceYearReviewPeriodLink"] = createNew;
                                 return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
                             }
@@ -865,8 +865,8 @@ namespace SchoolProject.WebApplication.Controllers
                             createNew.FormMode = FormModeOption.CREATE;
                             createNew.ProcessingStatus = true;
                             createNew.ProcessingStatusMessage = string.Format("Successfully updated Performanve Year Review Link :{0} - {1}",
-                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId),
-                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId));
+                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId).DisplayText,
+                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId).DisplayText);
                             TempData["viewPerformanceYearReviewPeriodLink"] = createNew;
                             return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
                         }
@@ -883,8 +883,8 @@ namespace SchoolProject.WebApplication.Controllers
                             createNew.FormMode = FormModeOption.CREATE;
                             createNew.ProcessingStatus = true;
                             createNew.ProcessingStatusMessage = string.Format("Successfully removed Performanve Year Review Link :{0} - {1}",
-                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId),
-                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId));
+                                                             GetPerformanceYearsSelection().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.PerformanceYearId).DisplayText,
+                                                             GetReviewPeriod().FirstOrDefault(x => int.Parse(x.ValueText) == performanceYearReviewLink.ReviewPeriodId).DisplayText);
                             TempData["viewPerformanceYearReviewPeriodLink"] = createNew;
                             return RedirectToAction("CreatePerformanceYearReviewPeriodLink");
                         }

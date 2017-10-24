@@ -41,7 +41,7 @@ namespace SchoolProject.WebApplication {
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager) {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = false
             };
 
             // Configure validation logic for passwords
@@ -51,6 +51,7 @@ namespace SchoolProject.WebApplication {
                 RequireDigit = true,
                 RequireLowercase = true,
                 RequireUppercase = true,
+                
             };
 
             // Configure user lockout defaults

@@ -1,7 +1,63 @@
-﻿
+﻿@model IEnumerable<SchoolProject.WebApplication.ViewModels.ManageUserAccount>
 @{
     ViewBag.Title = "Manage Users";
 }
 
 <h2>Manage Users</h2>
+
+<div class="table-responsive">
+    <table id="datatable" class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.Raw("Employee Code")
+                </th>
+                <th>
+                    @Html.Raw("Login Username")
+                </th>
+                <th>
+                    @Html.Raw("Full Name")
+                </th>
+                <th>
+                    @Html.Raw("Email Address")
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.Raw(item.EmployeeCode)
+                    </td>
+                    <td>
+                        @Html.Raw(item.Username)
+                    </td>
+                    <td>
+                        @Html.Raw(item.FullName)
+                    </td>
+                    <td>
+                        @Html.Raw(item.Email)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("ChangePassword", "Account", new { userId = item.UserId })" class="btn btn-md btn-primary" role="button">
+                            <span class="glyphicon glyphicon-pencil"> Change Password
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+<div class="row">
+    <div class="col-md-3 col-md-offset-9">
+        <a href="@Url.Action("RegisterUser", "Account")" class="btn btn-md btn-primary" role="button">
+            <span class="glyphicon glyphicon-plus">
+            </span>Add New Employee Login Details
+        </a>
+    </div>
+</div>
 

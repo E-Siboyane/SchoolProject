@@ -79,12 +79,27 @@ namespace SchoolProject.WebApplication.Controllers
         [HttpGet]
         public ActionResult ManageUsers()
         {
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_dbContext));
-            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+            //var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_dbContext));
+            //var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+            var userAccounts = GetEmployeeLoginDetails();
+            return View(userAccounts);
+        }
+
+        public List<ManageUserAccount> GetEmployeeLoginDetails() {
+            var userAccounts = new List<ManageUserAccount>();
             var employes = _dbContext.StructureEmployee.Where(x => x.DateDeleted == null).ToList();
             var users = UserManager.Users.ToList();
             var results = users.Join(employes, u => u.UserName, e => e.NetworkUsername, (usersList, employeesList) => new { usersList, employeesList }).ToList();
-            return View();
+            foreach (var user in results) {
+                userAccounts.Add(new ManageUserAccount() {
+                    Username = user.usersList.UserName,
+                    UserId = user.usersList.Id,
+                    Email = user.usersList.Email,
+                    FullName = string.Format("{0} - {1} {2}", user.employeesList.EmployeeCode,user.employeesList.Surname, user.employeesList.Name),
+                    EmployeeCode = user.employeesList.EmployeeCode
+                });
+            }
+            return (userAccounts);
         }
 
         [HttpGet]
@@ -103,7 +118,7 @@ namespace SchoolProject.WebApplication.Controllers
         [HttpPost]
         public async Task<ActionResult> RegisterUser(RegisterUserViewModel registerUserViewModel) {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_dbContext));
-            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
+            // var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_dbContext));
             if (ModelState.IsValid) {
                 var user = new ApplicationUser() {
                     UserName = registerUserViewModel.Username,
@@ -114,18 +129,83 @@ namespace SchoolProject.WebApplication.Controllers
                 if (createUser.Succeeded) {
                     var registerNewUserModel = new RegisterUserViewModel() {
                         Employees = GetEmployees(),
-                        ProcessingStatusMessage = string.Format("Successfully added account : {0}", GetEmployees().FirstOrDefault(x => string.Compare( x.ValueText,registerUserViewModel.Username,true) == 0).DisplayText),
+                        ProcessingStatusMessage = string.Format("Successfully added account : {0}", GetEmployees().FirstOrDefault(x => string.Compare(x.ValueText, registerUserViewModel.Username, true) == 0).DisplayText),
                         ProcessingStatus = true
                     };
                     TempData["viewModelRegisterUser"] = registerNewUserModel;
                     return RedirectToAction("RegisterUser");
                 }
                 else {
-
+                    registerUserViewModel.ProcessingStatus = false;
+                    var row = 1;
+                    foreach (var error in createUser.Errors) {
+                        if (createUser.Errors.Count() > 1) {
+                            if (row == 1)
+                            registerUserViewModel.ProcessingStatusMessage = registerUserViewModel.ProcessingStatusMessage + error;
+                            else
+                                registerUserViewModel.ProcessingStatusMessage = registerUserViewModel.ProcessingStatusMessage + "<br>" + error;
+                        }
+                        else {
+                            registerUserViewModel.ProcessingStatusMessage = registerUserViewModel.ProcessingStatusMessage + error;
+                        }
+                        row++;
+                    }
                 }
             }
             return View(registerUserViewModel);
         }
+
+        [HttpGet]
+        public ActionResult ChangePassword(string userId) {
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction("ManageUsers");
+            var userDetails = GetEmployeeLoginDetails().FirstOrDefault(x => string.Compare(x.UserId, userId, false) == 0);
+
+            if (TempData["AddedUser"] != null) {
+                return View((ChangePasswordViewModel)TempData["AddedUser"]);
+            }
+            else {
+                TempData["AddedUser"] = null;
+                var changePasswordModel = new ChangePasswordViewModel() {
+                    UserId = userId,
+                    FullName = userDetails.FullName
+                };
+                return View(changePasswordModel);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel changePasswordModel) {
+            if (ModelState.IsValid) {
+                var passordResetToken = await UserManager.GeneratePasswordResetTokenAsync(changePasswordModel.UserId);
+                var result = await UserManager.ResetPasswordAsync(changePasswordModel.UserId, passordResetToken,changePasswordModel.Password);
+                if (result.Succeeded) {
+                    changePasswordModel.ProcessingStatus = true;
+                    changePasswordModel.Password = string.Empty;
+                    changePasswordModel.ProcessingStatusMessage = string.Format("Successfully Changed Password for {0}", changePasswordModel.FullName);
+                    TempData["AddedUser"] = changePasswordModel;
+                    return RedirectToAction("ChangePassword", new { userId = changePasswordModel.UserId });
+                }
+                else {
+                    changePasswordModel.ProcessingStatus = false;
+                    var row = 1;
+                    foreach (var error in result.Errors) {
+                        if (result.Errors.Count() > 1) {
+                            if (row == 1)
+                                changePasswordModel.ProcessingStatusMessage = changePasswordModel.ProcessingStatusMessage + error;
+                            else
+                                changePasswordModel.ProcessingStatusMessage = changePasswordModel.ProcessingStatusMessage + "<br>" + error;
+                        }
+                        else {
+                            changePasswordModel.ProcessingStatusMessage = changePasswordModel.ProcessingStatusMessage + error;
+                        }
+                        row++;
+                    }
+                }
+            }
+            return View(changePasswordModel);
+        }
+
 
         public List<SelectionOptions> GetEmployees() {
             var employees = new List<SelectionOptions>();
