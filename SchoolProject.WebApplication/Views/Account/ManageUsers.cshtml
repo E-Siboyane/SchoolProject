@@ -6,6 +6,28 @@
 <h2>Manage Users</h2>
 
 <div class="table-responsive">
+    @if (ViewBag.Message != null) {
+        if ((bool)ViewBag.MessageType == true) {
+        <div class="row">
+            <div class="alert alert-success alert-dismissable">
+                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                <p>
+                    @Html.Raw(ViewBag.Message)
+                </p>
+            </div>
+        </div>
+        }
+        else {
+            <div class="row">
+                <div class="alert alert-danger alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    <p>
+                        @Html.Raw(ViewBag.Message)
+                    </p>
+                </div>
+            </div>
+        }
+    }
     <table id="datatable" class="table table-hover">
         <thead>
             <tr>
@@ -20,6 +42,9 @@
                 </th>
                 <th>
                     @Html.Raw("Email Address")
+                </th>
+                <th>
+                    @Html.Raw("Application Role")
                 </th>
                 <th>
                 </th>
@@ -41,8 +66,16 @@
                         @Html.Raw(item.Email)
                     </td>
                     <td>
+                        @Html.Raw(item.Role)
+                    </td>
+                    <td>
                         <a href="@Url.Action("ChangePassword", "Account", new { userId = item.UserId })" class="btn btn-md btn-primary" role="button">
-                            <span class="glyphicon glyphicon-pencil"> Change Password
+                            <span class="glyphicon glyphicon-pencil"> Reset Password
+                            </span>
+                        </a>
+                        <a href="@Url.Action("AssignUserAdminRole", "Account", new { userId = item.UserId })" class="btn btn-md btn-primary" role="button">
+                            <span class="glyphicon glyphicon-user">
+                                Assign Admin Role
                             </span>
                         </a>
                     </td>
