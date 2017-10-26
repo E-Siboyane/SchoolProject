@@ -69,11 +69,11 @@
                         @Html.Raw(item.Role)
                     </td>
                     <td>
-                        <a href="@Url.Action("ChangePassword", "Account", new { userId = item.UserId })" class="btn btn-md btn-primary" role="button">
-                            <span class="glyphicon glyphicon-pencil"> Reset Password
+                        <a href="@Url.Action("ChangePassword", "Account", new { userId = item.UserId })" class="btn btn-md btn-primary" role="button" data-hover="tooltip" title="Change Password" data-placement="top">
+                            <span class="glyphicon glyphicon-pencil">Reset Password
                             </span>
                         </a>
-                        <a href="@Url.Action("AssignUserAdminRole", "Account", new { userId = item.UserId })" class="btn btn-md btn-primary" role="button">
+                        <a href="@Url.Action("AssignUserAdminRole", "Account", new { userId = item.UserId })" class="btn btn-md btn-primary" role="button" data-hover="tooltip" title="Assign User Admin Role" data-placement="top">
                             <span class="glyphicon glyphicon-user">
                                 Assign Admin Role
                             </span>
@@ -93,4 +93,12 @@
         </a>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('[data-toggle=tooltip]').tooltip();
+        $('[rel=tooltip]').tooltip();
+
+
+    });
+</script>
 

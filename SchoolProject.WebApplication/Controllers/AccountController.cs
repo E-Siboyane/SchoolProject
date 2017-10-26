@@ -78,7 +78,7 @@ namespace SchoolProject.WebApplication.Controllers
             switch (result) {
                 case SignInStatus.Success:
                     ViewBag.FullName = "Elias Seboyane";
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal(returnUrl, loginModel.Username);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                case SignInStatus.Failure:
@@ -100,11 +100,11 @@ namespace SchoolProject.WebApplication.Controllers
             }
         }
 
-        private ActionResult RedirectToLocal(string returnUrl) {
+        private ActionResult RedirectToLocal(string returnUrl, string userName) {
             if (Url.IsLocalUrl(returnUrl)) {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("ManageReview", "PerformanceManagement", new { username = userName});
         }
 
         [HttpGet]

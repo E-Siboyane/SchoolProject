@@ -17,10 +17,6 @@ namespace SchoolProject.WebApplication.Models {
         public string OverallEmployeeComments { get; set; }
         public string OverallLineManagerComments { get; set; }
         public string OverallAuditComments { get; set; }
-        [Required]
-        public DateTime StartDate { get; set; }
-        [Required]
-        public DateTime EndDate { get; set; }
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
         public virtual AdminStatus Status { get; set; }

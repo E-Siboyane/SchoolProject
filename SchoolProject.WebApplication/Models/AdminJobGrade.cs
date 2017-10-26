@@ -11,6 +11,7 @@ namespace SchoolProject.WebApplication.Models {
         public string JobGrade { get; set; }
         [Required, StringLength(50)]
         public string JobGradeCode { get; set; }
+        public string JobGradeDescription { get; set; }
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
         public virtual AdminStatus Status { get; set; }

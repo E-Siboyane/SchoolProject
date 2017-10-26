@@ -1,0 +1,76 @@
+﻿@model SchoolProject.WebApplication.ViewModels.PerformanceReviewModelView
+@using SchoolProject.WebApplication.ViewModels;
+
+@{
+    ViewBag.Title = "Create Performance Review";
+}
+<h2>Create New Performance Review</h2>
+<hr />
+
+@using (Html.BeginForm("CreateReviewDocument", "PerformanceManagement", FormMethod.Post, new { @id = "CreatePerformanceReviewForm" })) {
+ @Html.HiddenFor(model => model.ReportingStructureId)
+    for (int i = 0; i < Model.ReviewPeriods.Count; i++) {
+        @Html.HiddenFor(model => Model.ReviewPeriods[i].ValueText)
+        @Html.HiddenFor(model => Model.ReviewPeriods[i].DisplayText)
+    }
+ @*Display Error messages*@
+if (!ViewData.ModelState.IsValid) {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.ValidationSummary()
+            </p>
+        </div>
+    </div>
+}
+
+    @*Display Processing Status*@
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (Model.ProcessingStatus)) {
+    
+    <div class="row">
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+
+    @*Display Processing Status*@
+if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (!Model.ProcessingStatus)) {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+    <div class="row">
+        <div class="col-md-6">
+
+               <div class="row">
+                    @Html.Label("Select Performance Review", htmlAttributes: new { @class = "control-label" })<br />
+                    @Html.DropDownList("ReviewPeriodId", new SelectList(Model.ReviewPeriods, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Review Period"), new { @class = "form-control", @required = true })
+                    @Html.ValidationMessageFor(model => model.ReviewPeriodId, "", new { @class = "text-danger" })
+                </div>           
+            <br />
+            <div class="row">
+                    <a href="@Url.Action("ManageReview", "PerformanceManagement", new {username = User.Identity.Name})" class="btn btn-md btn-primary" role="button">
+                        <span class="glyphicon glyphicon-chevron-left glyphicon-chevron-left">
+                        </span>&nbsp;Back To Performance Reviews Listing
+                    </a>
+                    <button id="SubmitCreateReview" type="submit" class="btn btn-md btn-primary">
+                        <span class="glyphicon glyphicon-plus">
+                        </span>&nbsp;Add New Performance Review
+                    </button>
+            </div>
+            <br />
+        </div>
+
+    </div>
+
+}

@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using SchoolProject.WebApplication.Models.Abstract;
 
 namespace SchoolProject.WebApplication.Models {
-    public class PMMeasure : Audit {
+    public class PMeasure : Audit {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long PMMeasureId { get; set; }
-        [Required, ForeignKey("PMObjective")]
-        public long PMObjectiveId { get; set; }        
-        public virtual PMObjective PMObjective { get; set; }
+        [Required, ForeignKey("StrategeicGoal")]
+        public int PMStrategicGoalId { get; set; }
+        public virtual PMStrategicGoal StrategeicGoal { get; set; }
+        public string PMObjective { get; set; }
         [Required]
         public string MeasureName { get; set; }
         [StringLength(150)]

@@ -1,0 +1,233 @@
+﻿USE [PerformanceManagement]
+GO
+INSERT [dbo].[AspNetRoles] ([Id], [Name]) VALUES (N'205a2447-8d8b-43d4-ac98-24e23d3a5421', N'Admin')
+GO
+INSERT [dbo].[AspNetUsers] ([Id], [Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName]) VALUES (N'15fa2d7c-b0d3-4b99-a4d9-d283fa7c9500', N'ngwako@gmail.com', 1, N'AAcBqutQ0ysFQMQI/ngXfCluN34DlDlutdU9t2XH951S98Wg3teGW4suXwMKnsR8Dw==', N'1a4ff15f-a051-4872-bb17-2003d9da78ce', NULL, 0, 0, NULL, 1, 0, N'E9126')
+GO
+INSERT [dbo].[AspNetUsers] ([Id], [Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEndDateUtc], [LockoutEnabled], [AccessFailedCount], [UserName]) VALUES (N'b414cc61-ecac-4681-bcf1-6270bbb79ef2', N'ngwako@gmail.com', 0, N'AExM+AWu5OEfcOF00SZ2M/20gzN3D/kf3tmRG6iPzxrqj3P1UOFYAx0n0qSxvoY76Q==', N'92e3934b-85fa-4936-8846-6104814c7f44', NULL, 0, 0, NULL, 0, 0, N'E9470')
+GO
+INSERT [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'b414cc61-ecac-4681-bcf1-6270bbb79ef2', N'205a2447-8d8b-43d4-ac98-24e23d3a5421')
+GO
+SET IDENTITY_INSERT [dbo].[AdminStatus] ON 
+
+GO
+INSERT [dbo].[AdminStatus] ([StatusId], [StatusName], [StatusCode], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'Active', N'A', CAST(N'2017-04-16 09:25:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminStatus] ([StatusId], [StatusName], [StatusCode], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, N'Suspended', N'S', CAST(N'2017-05-02 17:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminStatus] ([StatusId], [StatusName], [StatusCode], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (4, N'Deleted', N'D', CAST(N'2017-05-02 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminStatus] ([StatusId], [StatusName], [StatusCode], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (8, N'Completed', N'C', CAST(N'2017-05-02 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[AdminStatus] OFF
+GO
+SET IDENTITY_INSERT [dbo].[AdminJobGrade] ON 
+
+GO
+INSERT [dbo].[AdminJobGrade] ([JobGradeId], [JobGrade], [JobGradeCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeDescription]) VALUES (1, N'Band F', N'F1', 1, CAST(N'2017-12-07 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminJobGrade] ([JobGradeId], [JobGrade], [JobGradeCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeDescription]) VALUES (2, N'Band E1', N'E1', 1, CAST(N'2017-12-07 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminJobGrade] ([JobGradeId], [JobGrade], [JobGradeCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeDescription]) VALUES (3, N'Band E3', N'E3', 1, CAST(N'2017-12-07 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminJobGrade] ([JobGradeId], [JobGrade], [JobGradeCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeDescription]) VALUES (4, N'Band D', N'D', 1, CAST(N'2017-07-12 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminJobGrade] ([JobGradeId], [JobGrade], [JobGradeCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeDescription]) VALUES (5, N'Band C', N'C', 1, CAST(N'2017-07-12 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminJobGrade] ([JobGradeId], [JobGrade], [JobGradeCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeDescription]) VALUES (6, N'Band B', N'B', 1, CAST(N'2017-07-12 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminJobGrade] ([JobGradeId], [JobGrade], [JobGradeCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeDescription]) VALUES (7, N'Band A', N'A', 1, CAST(N'2017-07-12 00:00:00.000' AS DateTime), N'Es', NULL, NULL, NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[AdminJobGrade] OFF
+GO
+SET IDENTITY_INSERT [dbo].[StructureOrganisation] ON 
+
+GO
+INSERT [dbo].[StructureOrganisation] ([StructureOrganisationId], [OrganisationName], [OrganisationCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'School Project', N'SP', 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[StructureOrganisation] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Portfolio] ON 
+
+GO
+INSERT [dbo].[Portfolio] ([PortfolioId], [PortfolioCode], [PortfolioName], [StructureOrganisationId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'BSO', N'Business Support Operations', 1, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[Portfolio] ([PortfolioId], [PortfolioCode], [PortfolioName], [StructureOrganisationId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, N'CBO', N'Core Business Operations', 1, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[Portfolio] OFF
+GO
+SET IDENTITY_INSERT [dbo].[StructureDepartment] ON 
+
+GO
+INSERT [dbo].[StructureDepartment] ([DepartmentId], [DepartmentName], [PortfolioId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [DepartmentCode]) VALUES (1, N'Information Communication & Technology', 1, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, N'ICT')
+GO
+INSERT [dbo].[StructureDepartment] ([DepartmentId], [DepartmentName], [PortfolioId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [DepartmentCode]) VALUES (2, N'Marketing', 1, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, N'MKT')
+GO
+INSERT [dbo].[StructureDepartment] ([DepartmentId], [DepartmentName], [PortfolioId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [DepartmentCode]) VALUES (3, N'New Business Development', 2, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, N'NBD')
+GO
+INSERT [dbo].[StructureDepartment] ([DepartmentId], [DepartmentName], [PortfolioId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [DepartmentCode]) VALUES (4, N'Finance', 2, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, N'FIN')
+GO
+INSERT [dbo].[StructureDepartment] ([DepartmentId], [DepartmentName], [PortfolioId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [DepartmentCode]) VALUES (5, N'Human Resources', 1, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, N'HR')
+GO
+INSERT [dbo].[StructureDepartment] ([DepartmentId], [DepartmentName], [PortfolioId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [DepartmentCode]) VALUES (6, N'Business Operations', 2, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, N'BS')
+GO
+SET IDENTITY_INSERT [dbo].[StructureDepartment] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Team] ON 
+
+GO
+INSERT [dbo].[Team] ([TeamId], [TeamCode], [TeamName], [DepartmentId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'IM', N'Information Management', 1, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[Team] ([TeamId], [TeamCode], [TeamName], [DepartmentId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, N'BI', N'Business Intelligent', 1, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[Team] ([TeamId], [TeamCode], [TeamName], [DepartmentId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (3, N'IDA', N'Infrastructure & Database Administration', 1, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[Team] ([TeamId], [TeamCode], [TeamName], [DepartmentId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (4, N'BA', N'Business Development', 3, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[Team] ([TeamId], [TeamCode], [TeamName], [DepartmentId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (5, N'OP', N'Operations', 6, 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[Team] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Employee] ON 
+
+GO
+INSERT [dbo].[Employee] ([EmployeeRecordId], [EmployeeCode], [Name], [Surname], [NetworkUsername], [TeamId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeId]) VALUES (1002, N'E9470', N'Elivis Noko', N'Malatji', N'E9470', 1, 1, CAST(N'2017-09-21 00:00:00.000' AS DateTime), N'ES', CAST(N'2017-09-25 12:59:49.977' AS DateTime), N'System', NULL, NULL, 3)
+GO
+INSERT [dbo].[Employee] ([EmployeeRecordId], [EmployeeCode], [Name], [Surname], [NetworkUsername], [TeamId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeId]) VALUES (1003, N'E9478', N'Ngwako', N'Malatji', N'E9478', 1, 1, CAST(N'2017-09-21 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL, 4)
+GO
+INSERT [dbo].[Employee] ([EmployeeRecordId], [EmployeeCode], [Name], [Surname], [NetworkUsername], [TeamId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeId]) VALUES (1004, N'E9480', N'Sam Duke John', N'Smith', N'E9489', 1, 1, CAST(N'2017-09-21 00:00:00.000' AS DateTime), N'ES', CAST(N'2017-09-25 12:53:41.660' AS DateTime), N'System', NULL, NULL, 3)
+GO
+INSERT [dbo].[Employee] ([EmployeeRecordId], [EmployeeCode], [Name], [Surname], [NetworkUsername], [TeamId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeId]) VALUES (1005, N'E9126', N'John', N'Dow', N'E9126', 1, 1, CAST(N'2017-09-25 10:40:21.503' AS DateTime), N'System', NULL, NULL, NULL, NULL, 4)
+GO
+INSERT [dbo].[Employee] ([EmployeeRecordId], [EmployeeCode], [Name], [Surname], [NetworkUsername], [TeamId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeId]) VALUES (1006, N'E9000', N'John', N'Snow', N'E9000', 2, 2, CAST(N'2017-09-25 13:44:51.413' AS DateTime), N'System', NULL, NULL, CAST(N'2017-09-25 14:16:52.800' AS DateTime), N'System', 2)
+GO
+INSERT [dbo].[Employee] ([EmployeeRecordId], [EmployeeCode], [Name], [Surname], [NetworkUsername], [TeamId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeId]) VALUES (1007, N'E90006', N'Delete', N'Delete', N'E90006', 5, 2, CAST(N'2017-09-25 16:49:21.613' AS DateTime), N'System', NULL, NULL, CAST(N'2017-09-25 16:50:00.090' AS DateTime), N'System', 1)
+GO
+INSERT [dbo].[Employee] ([EmployeeRecordId], [EmployeeCode], [Name], [Surname], [NetworkUsername], [TeamId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy], [JobGradeId]) VALUES (1008, N'E9765', N'Delete', N'Me', N'E9765', 3, 1, CAST(N'2017-09-25 20:57:40.490' AS DateTime), N'System', NULL, NULL, NULL, NULL, 1)
+GO
+SET IDENTITY_INSERT [dbo].[Employee] OFF
+GO
+SET IDENTITY_INSERT [dbo].[AdminTerm] ON 
+
+GO
+INSERT [dbo].[AdminTerm] ([TermId], [TermName], [TermCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'Montlhly', N'M', 1, CAST(N'2017-06-02 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminTerm] ([TermId], [TermName], [TermCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (3, N'Yearly', N'Y', 1, CAST(N'2017-06-02 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminTerm] ([TermId], [TermName], [TermCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (4, N'Quarterly', N'Q', 1, CAST(N'2017-06-02 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminTerm] ([TermId], [TermName], [TermCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (5, N'Half-Yearly', N'HY', 1, CAST(N'2017-06-02 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminTerm] ([TermId], [TermName], [TermCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (6, N'Daily', N'D', 1, CAST(N'2017-06-02 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[AdminTerm] OFF
+GO
+SET IDENTITY_INSERT [dbo].[PerformanceYear] ON 
+
+GO
+INSERT [dbo].[PerformanceYear] ([PerformanceYearId], [PerformanceYearName], [StartDate], [EndDate], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'2016-2017', CAST(N'2016-04-01 00:00:00.000' AS DateTime), CAST(N'2017-03-31 00:00:00.000' AS DateTime), 1, CAST(N'2017-06-06 00:00:00.000' AS DateTime), N'Elias Seboyane', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[PerformanceYear] ([PerformanceYearId], [PerformanceYearName], [StartDate], [EndDate], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, N'2019up', CAST(N'2019-01-01 00:00:00.000' AS DateTime), CAST(N'2019-12-01 00:00:00.000' AS DateTime), 2, CAST(N'2017-10-14 08:50:54.957' AS DateTime), N'Administrator', CAST(N'2017-10-14 08:51:22.530' AS DateTime), N'System', CAST(N'2017-10-14 08:51:50.267' AS DateTime), N'Administrator')
+GO
+INSERT [dbo].[PerformanceYear] ([PerformanceYearId], [PerformanceYearName], [StartDate], [EndDate], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1003, N'fgtrtrtrfddffdfdfd', CAST(N'2017-02-16 00:00:00.000' AS DateTime), CAST(N'2017-04-12 00:00:00.000' AS DateTime), 1, CAST(N'2017-10-16 13:59:43.160' AS DateTime), N'Administrator', CAST(N'2017-10-16 14:00:31.537' AS DateTime), N'System', NULL, NULL)
+GO
+INSERT [dbo].[PerformanceYear] ([PerformanceYearId], [PerformanceYearName], [StartDate], [EndDate], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2002, N'Jan 2020 - Dec 2020', CAST(N'2020-01-31 00:00:00.000' AS DateTime), CAST(N'2020-12-31 00:00:00.000' AS DateTime), 1, CAST(N'2017-10-23 09:00:32.727' AS DateTime), N'Administrator', CAST(N'2017-10-23 09:06:08.943' AS DateTime), N'System', NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[PerformanceYear] OFF
+GO
+SET IDENTITY_INSERT [dbo].[PMDocumentType] ON 
+
+GO
+INSERT [dbo].[PMDocumentType] ([DocumentTypeId], [DocumentTypeCode], [DocumentTypeName], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'IND', N'Individual', 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[PMDocumentType] ([DocumentTypeId], [DocumentTypeCode], [DocumentTypeName], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, N'PORT', N'Porfolio', 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[PMDocumentType] ([DocumentTypeId], [DocumentTypeCode], [DocumentTypeName], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (3, N'ORG', N'Organisational', 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[PMDocumentType] ([DocumentTypeId], [DocumentTypeCode], [DocumentTypeName], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (4, N'DEPT', N'Department', 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[PMDocumentType] ([DocumentTypeId], [DocumentTypeCode], [DocumentTypeName], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (5, N'TM', N'Team', 1, CAST(N'2017-07-10 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[PMDocumentType] OFF
+GO
+SET IDENTITY_INSERT [dbo].[AdminReviewPeriod] ON 
+
+GO
+INSERT [dbo].[AdminReviewPeriod] ([ReviewPeriodId], [ReviewPeriodName], [ReviewPeriodCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'Monthly Review', N'MR', 1, CAST(N'2017-06-07 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminReviewPeriod] ([ReviewPeriodId], [ReviewPeriodName], [ReviewPeriodCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, N'Quarterly Review', N'QR', 1, CAST(N'2017-06-07 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminReviewPeriod] ([ReviewPeriodId], [ReviewPeriodName], [ReviewPeriodCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (4, N'Mid-Year Review', N'MYR', 1, CAST(N'2017-06-07 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminReviewPeriod] ([ReviewPeriodId], [ReviewPeriodName], [ReviewPeriodCode], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (6, N'Yearly Review', N'Y', 1, CAST(N'2017-06-07 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[AdminReviewPeriod] OFF
+GO
+SET IDENTITY_INSERT [dbo].[PMReviewPeriod] ON 
+
+GO
+INSERT [dbo].[PMReviewPeriod] ([PMReviewPeriodId], [ReviewPeriodId], [PerformanceYearId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, 2, 1, 1, CAST(N'2017-06-07 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[PMReviewPeriod] ([PMReviewPeriodId], [ReviewPeriodId], [PerformanceYearId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (4, 4, 1, 1, CAST(N'2017-06-07 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[PMReviewPeriod] ([PMReviewPeriodId], [ReviewPeriodId], [PerformanceYearId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (5, 6, 1, 1, CAST(N'2017-06-07 00:00:00.000' AS DateTime), N'Elias', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[PMReviewPeriod] ([PMReviewPeriodId], [ReviewPeriodId], [PerformanceYearId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1002, 1, 1, 1, CAST(N'2017-10-15 12:04:54.967' AS DateTime), N'Admin', CAST(N'2017-10-15 12:04:54.967' AS DateTime), N'Admin', NULL, NULL)
+GO
+INSERT [dbo].[PMReviewPeriod] ([PMReviewPeriodId], [ReviewPeriodId], [PerformanceYearId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2002, 1, 2002, 1, CAST(N'2017-10-23 09:08:50.957' AS DateTime), N'Admin', CAST(N'2017-10-23 09:08:50.957' AS DateTime), N'Admin', NULL, NULL)
+GO
+INSERT [dbo].[PMReviewPeriod] ([PMReviewPeriodId], [ReviewPeriodId], [PerformanceYearId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2003, 4, 2002, 1, CAST(N'2017-10-23 17:06:30.830' AS DateTime), N'Admin', CAST(N'2017-10-23 17:06:30.830' AS DateTime), N'Admin', NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[PMReviewPeriod] OFF
+GO
+SET IDENTITY_INSERT [dbo].[ReportingStructure] ON 
+
+GO
+INSERT [dbo].[ReportingStructure] ([ReviewReportingStructureId], [MemberId], [ManagerId], [DocumentTypeId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1002, 1002, 1003, 1, 1, CAST(N'2017-09-21 00:00:00.000' AS DateTime), N'ES', CAST(N'2017-09-25 21:28:25.000' AS DateTime), N'System', NULL, NULL)
+GO
+INSERT [dbo].[ReportingStructure] ([ReviewReportingStructureId], [MemberId], [ManagerId], [DocumentTypeId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1003, 1004, 1003, 1, 1, CAST(N'2017-09-21 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[ReportingStructure] ([ReviewReportingStructureId], [MemberId], [ManagerId], [DocumentTypeId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1004, 1008, 1005, 1, 2, CAST(N'2017-09-25 21:02:00.893' AS DateTime), N'System', NULL, NULL, CAST(N'2017-09-25 21:20:02.410' AS DateTime), N'System')
+GO
+INSERT [dbo].[ReportingStructure] ([ReviewReportingStructureId], [MemberId], [ManagerId], [DocumentTypeId], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2002, 1008, 1003, 1, 1, CAST(N'2017-10-23 17:01:43.073' AS DateTime), N'System', CAST(N'2017-10-23 17:02:01.740' AS DateTime), N'System', NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[ReportingStructure] OFF
+GO
+SET IDENTITY_INSERT [dbo].[AdminStrategicGoal] ON 
+
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'Mobile Applications Development', N'MAD', CAST(0.00 AS Decimal(18, 2)), 1, CAST(N'2017-09-26 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, N'Database Management', N'DBA', CAST(0.00 AS Decimal(18, 2)), 1, CAST(N'2017-09-26 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (3, N'Web Applications Development', N'WAD', CAST(0.00 AS Decimal(18, 2)), 1, CAST(N'2017-09-26 00:00:00.000' AS DateTime), N'ES', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (4, N'Systems Support & Development', N'SSD', CAST(0.00 AS Decimal(18, 2)), 1, CAST(N'2017-09-26 20:05:22.967' AS DateTime), N'System', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (5, N'New Goal gfgfgfgf', N'NG', CAST(0.00 AS Decimal(18, 2)), 2, CAST(N'2017-09-26 20:14:05.570' AS DateTime), N'System', CAST(N'2017-09-26 20:26:47.270' AS DateTime), N'System', CAST(N'2017-09-26 20:26:57.053' AS DateTime), N'System')
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (6, N'Business Development', N'BD', CAST(0.00 AS Decimal(18, 2)), 1, CAST(N'2017-09-26 20:19:10.550' AS DateTime), N'System', NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (7, N'fdfdfdfdfd', N'fdfd', CAST(0.00 AS Decimal(18, 2)), 2, CAST(N'2017-09-26 20:24:25.693' AS DateTime), N'System', NULL, NULL, CAST(N'2017-09-26 20:26:25.087' AS DateTime), N'System')
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (8, N'DSHGDSHG', N'DDD', CAST(0.00 AS Decimal(18, 2)), 2, CAST(N'2017-09-26 20:27:17.933' AS DateTime), N'System', CAST(N'2017-09-26 20:27:33.323' AS DateTime), N'System', CAST(N'2017-09-26 20:27:45.170' AS DateTime), N'System')
+GO
+INSERT [dbo].[AdminStrategicGoal] ([StrategicGoalId], [StrategicGoalName], [StrategicGoalCode], [DefaultOverallWeight], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1002, N'code goal 1', N'ytytyt', CAST(0.00 AS Decimal(18, 2)), 2, CAST(N'2017-10-23 17:05:27.367' AS DateTime), N'System', NULL, NULL, CAST(N'2017-10-23 17:05:37.453' AS DateTime), N'System')
+GO
+SET IDENTITY_INSERT [dbo].[AdminStrategicGoal] OFF
+GO
+SET IDENTITY_INSERT [dbo].[PMProcessStage] ON 
+
+GO
+INSERT [dbo].[PMProcessStage] ([ProcessStageId], [ProcessStageName], [ProcessStageCode], [ProcessingOrderNumber], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (1, N'Content Creation', N'CC', 0, 1, CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', NULL, NULL)
+GO
+INSERT [dbo].[PMProcessStage] ([ProcessStageId], [ProcessStageName], [ProcessStageCode], [ProcessingOrderNumber], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (2, N'Content Creattion Completed', N'CCC', 1, 1, CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', NULL, NULL)
+GO
+INSERT [dbo].[PMProcessStage] ([ProcessStageId], [ProcessStageName], [ProcessStageCode], [ProcessingOrderNumber], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (3, N'Employee Scoring', N'ES', 2, 1, CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', NULL, NULL)
+GO
+INSERT [dbo].[PMProcessStage] ([ProcessStageId], [ProcessStageName], [ProcessStageCode], [ProcessingOrderNumber], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (4, N'Line Manager Scoring', N'LMS', 3, 1, CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', NULL, NULL)
+GO
+INSERT [dbo].[PMProcessStage] ([ProcessStageId], [ProcessStageName], [ProcessStageCode], [ProcessingOrderNumber], [StatusId], [DateCreated], [CreatedBy], [DateModified], [ModifiedBy], [DateDeleted], [DeletedBy]) VALUES (6, N'Scoring Completed', N'SC', 4, 1, CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', CAST(N'2017-10-26 00:00:00.000' AS DateTime), N'Ngwako', NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[PMProcessStage] OFF
+GO

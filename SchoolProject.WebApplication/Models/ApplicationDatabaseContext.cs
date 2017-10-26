@@ -32,7 +32,7 @@ namespace SchoolProject.WebApplication.Models {
         public DbSet<AdminStrategicGoal> StrategicGoal { get; set; }
         public DbSet<AdminTerm> Term { get; set; }
         public DbSet<PMDocumentType> PMDocumentType { get; set; }
-        public DbSet<PMMeasure> PMMeasure { get; set; }
+        public DbSet<PMeasure> PMMeasure { get; set; }
         public DbSet<PMObjective> PMObjective { get; set; }
         public DbSet<PMProcessStage> PMProcessStage { get; set; }
         public DbSet<PMReview> PMReview { get; set; }

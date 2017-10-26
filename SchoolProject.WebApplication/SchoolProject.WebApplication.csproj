@@ -441,6 +441,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PerformanceManagementController.cs" />
     <Compile Include="DTO\Department.cs" />
     <Compile Include="DTO\DocumentType.cs" />
     <Compile Include="DTO\JobGrade.cs" />
@@ -451,6 +452,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710261515479_First-Migration.cs" />
+    <Compile Include="Migrations\201710261515479_First-Migration.Designer.cs">
+      <DependentUpon>201710261515479_First-Migration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Abstract\Audit.cs" />
     <Compile Include="Models\AdminJobGrade.cs" />
     <Compile Include="Models\AdminMeasure.cs" />
@@ -467,7 +473,7 @@
     <Compile Include="Models\Interface\IAudit.cs" />
     <Compile Include="Models\Interface\IStatus.cs" />
     <Compile Include="Models\PMDocumentType.cs" />
-    <Compile Include="Models\PMMeasure.cs" />
+    <Compile Include="Models\PMeasure.cs" />
     <Compile Include="Models\PMObjective.cs" />
     <Compile Include="Models\PMProcessStage.cs" />
     <Compile Include="Models\PMReview.cs" />
@@ -499,6 +505,8 @@
     <Compile Include="ViewModels\LinkEmployeeManager.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ManageUserAccount.cs" />
+    <Compile Include="ViewModels\PerformanceReviewModelView.cs" />
+    <Compile Include="ViewModels\ProcessStatus.cs" />
     <Compile Include="ViewModels\RegisterEmployee.cs" />
     <Compile Include="ViewModels\RegisterPerformanceYear.cs" />
     <Compile Include="ViewModels\RegisterPerformanceYearReviewPeriodLink.cs" />
@@ -571,6 +579,7 @@
     <Content Include="Scripts\vendors\jquery\dist\jquery.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="SQLScripts\DbScript.txt" />
+    <Content Include="SQLScripts\InsertDefaultData.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -624,6 +633,8 @@
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\AccessDenied.cshtml" />
+    <Content Include="Views\PerformanceManagement\ManageReview.cshtml" />
+    <Content Include="Views\PerformanceManagement\CreateReviewDocument.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -636,6 +647,11 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201710261515479_First-Migration.resx">
+      <DependentUpon>201710261515479_First-Migration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
