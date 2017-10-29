@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 
 namespace SchoolProject.WebApplication.ViewModels {
-    public enum ProcessStatus {
+    public enum ReviewProcessStatus {
         Content_Creation,
         Content_Creattion_Completed,
         Employee_Scoring,

@@ -446,6 +446,7 @@
     <Compile Include="DTO\DocumentType.cs" />
     <Compile Include="DTO\JobGrade.cs" />
     <Compile Include="DTO\LinkPerformanceYearReviewPeriod.cs" />
+    <Compile Include="DTO\ManagePerformanceReview.cs" />
     <Compile Include="DTO\Portfolio.cs" />
     <Compile Include="DTO\ReportingStructure.cs" />
     <Compile Include="DTO\Team.cs" />
@@ -504,9 +505,10 @@
     <Compile Include="ViewModels\FormModeOption.cs" />
     <Compile Include="ViewModels\LinkEmployeeManager.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\ManageReviewModelView.cs" />
     <Compile Include="ViewModels\ManageUserAccount.cs" />
     <Compile Include="ViewModels\PerformanceReviewModelView.cs" />
-    <Compile Include="ViewModels\ProcessStatus.cs" />
+    <Compile Include="ViewModels\ReviewProcessStatus.cs" />
     <Compile Include="ViewModels\RegisterEmployee.cs" />
     <Compile Include="ViewModels\RegisterPerformanceYear.cs" />
     <Compile Include="ViewModels\RegisterPerformanceYearReviewPeriodLink.cs" />

@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using SchoolProject.WebApplication.DTO;
 using SchoolProject.WebApplication.Models;
 using SchoolProject.WebApplication.ServiceManager.Interface;
 using SchoolProject.WebApplication.ViewModels;
@@ -17,7 +18,6 @@ namespace SchoolProject.WebApplication.Controllers
         private readonly IAdmininstrationManager _iAdminstrationManager;
         private ApplicationDatabaseContext _dbContext;
 
-
         public PerformanceManagementController(IAdmininstrationManager iAdmininstrationManager) {
             _iAdminstrationManager = iAdmininstrationManager;
             _dbContext = new ApplicationDatabaseContext();
@@ -25,7 +25,25 @@ namespace SchoolProject.WebApplication.Controllers
 
         [HttpGet]
         public ActionResult ManageReview(string username) {
-            return View();
+            if (!string.IsNullOrEmpty(username)) {
+                var modelView = new ManageReviewModelView();
+                modelView.EmployeeReviewPeriods = GetEmployeeReviewPeriods(username);
+                modelView.UserRole = GetUserRole(username);
+                modelView.DirectReportReviews = GetDirectReportingReviewPeriods(username);
+                return View(modelView);
+            }
+            return RedirectToAction("Login", "Account");
+        }
+
+        public string GetUserRole(string username) {
+            var user = _dbContext.Users.Include(x => x.Roles).FirstOrDefault(x => string.Compare(x.UserName, username) == 0);
+
+            if (user != null)
+                if (user.Roles.Count > 0) {
+                    var roleId = user.Roles.FirstOrDefault().RoleId;
+                    return _dbContext.Roles.FirstOrDefault(x => string.Compare(x.Id, roleId, true) == 0).Name;
+                }
+            return ("Employee");
         }
 
         [HttpGet]
@@ -41,12 +59,13 @@ namespace SchoolProject.WebApplication.Controllers
             }
             else {
                 var createReviewPeriodModel = new PerformanceReviewModelView() {
-                  ProcessingStatus = false,
-                  ProcessingStatusMessage = "Your Line Manager is not yet added, please ask System Administrator to add your Line Manager."
+                    ProcessingStatus = false,
+                    ProcessingStatusMessage = "Your Line Manager is not yet added, please ask System Administrator to add your Line Manager.",
+                    ReviewPeriods = ReviewPeriods(),
+                    ReportingStructureId = -1
                 };
                 return View(createReviewPeriodModel);
             }
-            
         }
 
         [HttpPost]
@@ -131,6 +150,72 @@ namespace SchoolProject.WebApplication.Controllers
                 });
             }
             return (results);
+        }
+
+        public List<ManagePerformanceReview> GetEmployeeReviewPeriods(string usernmame) {
+            var performanceReviews = new List<ManagePerformanceReview>();
+            var results = _dbContext.PMReviewProgressStatus.Where(x => x.DateDeleted == null).Include(x => x.ProcessStage).
+                              Include(x => x.PMReview).Include(x => x.PMReview.ReportingStructure).Include(x => x.PMReview.ReportingStructure.Owner).
+                              Include(x => x.PMReview.ReportingStructure.Manager).Include(x => x.PMReview.ReportingStructure.DocumentType).
+                              Include(x => x.PMReview.PMReviewPeriod.PerformanceYear).
+                              Include(x=> x.PMReview.PMReviewPeriod.ReviewPeriod).
+                              Where(x => x.PMReview.ReportingStructure.Owner.NetworkUsername == usernmame).ToList();
+
+            var reviews = results.Select(x => x.PMReviewId).Distinct();
+            foreach(var reviewId in reviews) {
+                var filterReview = results.OrderByDescending(x => x.ProcessStageId).FirstOrDefault(x => x.PMReviewId == reviewId);
+                performanceReviews.Add(new ManagePerformanceReview() {
+                    PerformancereviewPeriodStageId = filterReview.PMReviewProgressStatusId,
+                    ProcessStageId = filterReview.ProcessStageId,
+                    ReviewStageName = filterReview.ProcessStage.ProcessStageName,
+                    PMReviewId = filterReview.PMReviewId,
+                    ReviewPeriodName = string.Format("{0} - {1}", filterReview.PMReview.PMReviewPeriod.PerformanceYear.PerformanceYearName,
+                                                                  filterReview.PMReview.PMReviewPeriod.ReviewPeriod.ReviewPeriodName),
+                    DocumentOwnerId = filterReview.PMReview.ReportingStructure.MemberId,
+                    LineManagerId = filterReview.PMReview.ReportingStructure.ManagerId,
+                    EmployeeName = string.Format("{0} {1}", filterReview.PMReview.ReportingStructure.Owner.Name,
+                                                            filterReview.PMReview.ReportingStructure.Owner.Name),
+                    LineManagerName = string.Format("{0} {1}", filterReview.PMReview.ReportingStructure.Manager.Name,
+                                                            filterReview.PMReview.ReportingStructure.Manager.Name),
+                    NetworkUsername = usernmame,
+                    DocumentType = filterReview.PMReview.ReportingStructure.DocumentType.DocumentTypeName
+                });
+            }
+
+            return(performanceReviews);
+        }
+
+        public List<ManagePerformanceReview> GetDirectReportingReviewPeriods(string usernmame) {
+            var performanceReviews = new List<ManagePerformanceReview>();
+            var results = _dbContext.PMReviewProgressStatus.Where(x => x.DateDeleted == null).Include(x => x.ProcessStage).
+                              Include(x => x.PMReview).Include(x => x.PMReview.ReportingStructure).Include(x => x.PMReview.ReportingStructure.Owner).
+                              Include(x => x.PMReview.ReportingStructure.Manager).Include(x => x.PMReview.ReportingStructure.DocumentType).
+                              Include(x => x.PMReview.PMReviewPeriod.PerformanceYear).
+                              Include(x => x.PMReview.PMReviewPeriod.ReviewPeriod).
+                              Where(x => x.PMReview.ReportingStructure.Manager.NetworkUsername == usernmame).ToList();
+
+            var reviews = results.Select(x => x.PMReviewId).Distinct();
+            foreach (var reviewId in reviews) {
+                var filterReview = results.OrderByDescending(x => x.ProcessStageId).FirstOrDefault(x => x.PMReviewId == reviewId);
+                performanceReviews.Add(new ManagePerformanceReview() {
+                    PerformancereviewPeriodStageId = filterReview.PMReviewProgressStatusId,
+                    ProcessStageId = filterReview.ProcessStageId,
+                    ReviewStageName = filterReview.ProcessStage.ProcessStageName,
+                    PMReviewId = filterReview.PMReviewId,
+                    ReviewPeriodName = string.Format("{0} - {1}", filterReview.PMReview.PMReviewPeriod.PerformanceYear.PerformanceYearName,
+                                                                  filterReview.PMReview.PMReviewPeriod.ReviewPeriod.ReviewPeriodName),
+                    DocumentOwnerId = filterReview.PMReview.ReportingStructure.MemberId,
+                    LineManagerId = filterReview.PMReview.ReportingStructure.ManagerId,
+                    EmployeeName = string.Format("{0} {1}", filterReview.PMReview.ReportingStructure.Owner.Name,
+                                                            filterReview.PMReview.ReportingStructure.Owner.Name),
+                    LineManagerName = string.Format("{0} {1}", filterReview.PMReview.ReportingStructure.Manager.Name,
+                                                            filterReview.PMReview.ReportingStructure.Manager.Name),
+                    NetworkUsername = usernmame,
+                    DocumentType = filterReview.PMReview.ReportingStructure.DocumentType.DocumentTypeName
+                });
+            }
+
+            return (performanceReviews);
         }
     }
 }

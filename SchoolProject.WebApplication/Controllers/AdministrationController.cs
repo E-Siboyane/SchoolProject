@@ -326,8 +326,9 @@ namespace SchoolProject.WebApplication.Controllers
                                 TempData["viewModelLinkEmployeeManager"] = createNew;
                                 return RedirectToAction("LinkEmployeeToManager");
                             }
-                            else {
-                                ModelState.AddModelError(string.Empty, "Employee Manager linking aready exist...");
+                            else {                               
+                               linkEmployeeManager.ProcessingStatusMessage = "Employee Manager linking aready exist...";
+                                linkEmployeeManager.ProcessingStatus = false;
                                 break;
                             }
                         }
@@ -392,7 +393,8 @@ namespace SchoolProject.WebApplication.Controllers
                         }
                 }
             }
-            return View(linkEmployeeManager);
+            TempData["viewModelLinkEmployeeManager"] = linkEmployeeManager;
+            return RedirectToAction("LinkEmployeeToManager");
         }
 
         public PMReviewReportingStructure TransformEmployeeManagerLink(LinkEmployeeManager linkEmployeeManager) {
@@ -417,14 +419,14 @@ namespace SchoolProject.WebApplication.Controllers
 
         public List<SelectionOptions> GetEmployees() {
             var resulst = new List<SelectionOptions>();
-            var employeesList = new List<string>() {
-                "F1".ToUpper(),
-                "E1".ToUpper(),
-                "E3".ToUpper()
-            };
+            //var employeesList = new List<string>() {
+            //    "F1".ToUpper(),
+            //    "E1".ToUpper(),
+            //    "E3".ToUpper()
+            //};
 
-            var employees = dbContext.StructureEmployee.Include(x => x.JobGrade).Where(x => x.StatusId == 1 && 
-                                                              employeesList.Contains(x.JobGrade.JobGradeCode.ToUpper()));
+            var employees = dbContext.StructureEmployee.Include(x => x.JobGrade).Where(x => x.StatusId == 1); // && 
+                                                              //employeesList.Contains(x.JobGrade.JobGradeCode.ToUpper()));
 
             employees.ToList().ForEach(x => {
                 resulst.Add(new SelectionOptions() {

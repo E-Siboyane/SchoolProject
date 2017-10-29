@@ -1,7 +1,68 @@
-﻿
+﻿@model SchoolProject.WebApplication.ViewModels.ManageReviewModelView
+@using SchoolProject.WebApplication.ViewModels
 @{
     ViewBag.Title = "ManageReview";
 }
 
-<h2>ManageReview</h2>
+<h2>Manage Review</h2>
+<hr />
+@if (Model.EmployeeReviewPeriods != null) {
+    <div class="table-responsive">
+        <table id="datatable" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>@Html.Raw("Employee")</th>
+                    <th>@Html.Raw("Line Manager")</th>
+                    <th>@Html.Raw("Document Type")</th>
+                    <th>@Html.Raw("Performance Review Name")</th>
+                    <th>@Html.Raw("Review Stage")</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.EmployeeReviewPeriods) {
+                    <tr>
+                        <td>@Html.Raw(item.EmployeeName)</td>
+                        <td>@Html.Raw(item.LineManagerName)</td>
+                        <td>@Html.Raw(item.DocumentType)</td>
+                        <td>@Html.Raw(item.ReviewPeriodName)</td>
+                        <td>@Html.Raw(item.ReviewStageName)</td>
+                        <td>
+                            @if (item.ReviewStageName == ReviewProcessStatus.Content_Creation.ToString().Replace("_", " ")) {
+                                <a href="#">Add Review Contents</a>
+                            }
+                            @if (item.ReviewStageName == ReviewProcessStatus.Content_Creattion_Completed.ToString().Replace("_", " ")) {
+                                <a href="#">Score Performance Review</a>
+                            }
+                            @if (item.ReviewStageName == ReviewProcessStatus.Scoring_Completed.ToString().Replace("_", " ")) {
+                               <a href="#">@item.ReviewStageName</a>
+                            }
+                        </td>
+                    </tr>
+                }
 
+                @foreach (var item in Model.DirectReportReviews) {
+                    <tr>
+                        <td>@Html.Raw(item.EmployeeName)</td>
+                        <td>@Html.Raw(item.LineManagerName)</td>
+                        <td>@Html.Raw(item.DocumentType)</td>
+                        <td>@Html.Raw(item.ReviewPeriodName)</td>
+                        <td>@Html.Raw(item.ReviewStageName)</td>
+                        <td>
+                            @if (item.ReviewStageName == ReviewProcessStatus.Content_Creation.ToString().Replace("_", " ")) {
+                                <a href="#">Add Review Contents</a>
+                            }
+                            @if (item.ReviewStageName == ReviewProcessStatus.Content_Creattion_Completed.ToString().Replace("_", " ")) {
+                                <a href="#">Score Performance Review</a>
+                            }
+                            @if (item.ReviewStageName == ReviewProcessStatus.Scoring_Completed.ToString().Replace("_", " ")) {
+                                <a href="#">@item.ReviewStageName</a>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+}

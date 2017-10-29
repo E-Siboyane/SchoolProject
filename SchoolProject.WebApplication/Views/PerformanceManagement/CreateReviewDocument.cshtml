@@ -63,10 +63,12 @@ if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (!Model.Processing
                         <span class="glyphicon glyphicon-chevron-left glyphicon-chevron-left">
                         </span>&nbsp;Back To Performance Reviews Listing
                     </a>
+                @if (Model.ReportingStructureId > 0){
                     <button id="SubmitCreateReview" type="submit" class="btn btn-md btn-primary">
                         <span class="glyphicon glyphicon-plus">
                         </span>&nbsp;Add New Performance Review
                     </button>
+                }
             </div>
             <br />
         </div>
