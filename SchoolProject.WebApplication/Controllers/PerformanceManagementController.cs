@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -228,9 +229,11 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddPerformanceReviewContents(int? performanceReviewId, FormModeOption? formProcessingMode, long? measureId) {
+        public ActionResult AddPerformanceReviewContents(int? performanceReviewId, FormModeOption? formProcessingMode, long? 
+                                                              measureId, bool? processingStatus, string message) {
             if ((performanceReviewId == null) || (formProcessingMode == null))
                 return RedirectToAction("ManageReview", new { username = User.Identity.Name });
+
             var modelView = new CreateMeasureModelView();
             modelView.Username = User.Identity.Name;
             modelView.ManagerUsername = ManagerNetworkUsername((int)performanceReviewId);
@@ -248,6 +251,11 @@ namespace SchoolProject.WebApplication.Controllers
                     modelView.StrategicGoalId = measure.PMStrategicGoalId;
                     modelView.ObjectiveName = measure.PMObjective;
                 }
+            }
+
+            if (!string.IsNullOrEmpty(message)) {
+                modelView.ProcessingStatusMessage = message;
+                modelView.ProcessingStatus = (bool)processingStatus;
             }
             //REFRESH
             modelView.CreatedMeasures = GetReviewCapturedMeasures((int)performanceReviewId);
@@ -304,8 +312,8 @@ namespace SchoolProject.WebApplication.Controllers
 
         public List<PerformanceReeviewContent> GetReviewCapturedMeasures(int PerformanceReviewId) {
             var currentMesures = new List<PerformanceReeviewContent>();
-            var results = _dbContext.PMMeasure.Where(X => X.DateDeleted == null).Include(x => x.StrategeicGoal).
-                                              Include(x => x.StrategeicGoal.StrategicGoal);
+            var results = _dbContext.PMMeasure.Where(X => X.DateDeleted == null && X.StrategeicGoal.PMReviewId == PerformanceReviewId).
+                              Include(x => x.StrategeicGoal).Include(x => x.StrategeicGoal.StrategicGoal);
             foreach( var measure in results) {
                 currentMesures.Add(new PerformanceReeviewContent() {
                     MeasureId = measure.PMMeasureId,
@@ -326,12 +334,12 @@ namespace SchoolProject.WebApplication.Controllers
                 switch (modelView.FormProcessingMode) {
                     case FormModeOption.CREATE: {
                             if (AddNewMeasure(modelView)) {
-                                modelView.MeasureName = string.Empty;
-                                modelView.ObjectiveName = string.Empty;
-                                modelView.MeasureWeight = 0;
-                                modelView.StrategicGoalId = 0;
-                                modelView.ProcessingStatus = true;
-                                modelView.ProcessingStatusMessage = string.Format("Successfully added measure: {0}.", modelView.MeasureName);
+                               var successOne = string.Format("Successfully added measure: {0}.", modelView.MeasureName);
+                               return RedirectToAction("AddPerformanceReviewContents", 
+                                    new {
+                                    performanceReviewId = modelView.PerformanceReviewId, formProcessingMode = FormModeOption.CREATE,
+                                    processingStatus = true, message = successOne 
+                                });
                             }
                             else {
                                 modelView.ProcessingStatus = false;
@@ -341,10 +349,45 @@ namespace SchoolProject.WebApplication.Controllers
                             break;
                         }
                     case FormModeOption.EDIT:
-                        
-                        break;
+                        var measure = _dbContext.PMMeasure.Find(modelView.MeasureId);
+                        measure.MeasureName = modelView.MeasureName;
+                        measure.MeasureWeight = measure.MeasureWeight;
+                        measure.PMStrategicGoalId = GetReviewStrategicGoal(modelView);
+                        measure.PMObjective = modelView.ObjectiveName;
+                        measure.ModifiedBy = modelView.Username;
+                        measure.DateModified = DateTime.Now;
+                        _dbContext.SaveChanges();
+                        //DbEntityEntry entry = _dbContext.Entry(measure);
+                        //if (entry.State == EntityState.Detached) {
+                        //    entry.State = EntityState.Modified;
+                        //    _dbContext.SaveChanges();
+                        //}
+
+                       var success = modelView.ProcessingStatusMessage = string.Format("Successfully updated measure: {0}.", measure.MeasureName);
+                        return RedirectToAction("AddPerformanceReviewContents",
+                                    new {
+                                        performanceReviewId = modelView.PerformanceReviewId, formProcessingMode = FormModeOption.CREATE,
+                                        processingStatus = true, message = success
+                                    });
                     case FormModeOption.DELETE:
-                        break;
+                        var deleteMeasure = _dbContext.PMMeasure.Find(modelView.MeasureId);
+                        deleteMeasure.DeletedBy = modelView.Username;
+                        deleteMeasure.DateDeleted = DateTime.Now;
+                        deleteMeasure.StatusId = 4; //Deleted
+                        deleteMeasure.ModifiedBy = modelView.Username;
+                        deleteMeasure.DateModified = DateTime.Now;
+                        _dbContext.SaveChanges();
+                        //DbEntityEntry entryDelete = _dbContext.Entry(deleteMeasure);
+                        //if (entryDelete.State == EntityState.Detached) {
+                        //    entryDelete.State = EntityState.Modified;
+                        //    _dbContext.SaveChanges();
+                        //}
+                        var successTwo = string.Format("Successfully Deleted measure: {0}.", deleteMeasure.MeasureName);
+                        return RedirectToAction("AddPerformanceReviewContents",
+                                    new {
+                                        performanceReviewId = modelView.PerformanceReviewId, formProcessingMode = FormModeOption.CREATE,
+                                        processingStatus = true, message = successTwo
+                                    });
                 }
             }
             modelView.CreatedMeasures = GetReviewCapturedMeasures(modelView.PerformanceReviewId);
@@ -372,9 +415,14 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         private int GetReviewStrategicGoal(CreateMeasureModelView modelView) {
-            return (_dbContext.PMStrategicGoal.FirstOrDefault(x => x.PMReviewId == modelView.PerformanceReviewId &&
+            var goal =  (_dbContext.PMStrategicGoal.FirstOrDefault(x => x.PMReviewId == modelView.PerformanceReviewId &&
                                                                          x.StrategicGoalId == modelView.StrategicGoalId &&
-                                                                         x.DateDeleted == null).PMStrategicGoalId);
+                                                                         x.DateDeleted == null));
+            if (goal != null)
+                return goal.PMStrategicGoalId;
+            var addStrategicGoal = _dbContext.PMStrategicGoal.Add(TransformStrategicGoal(modelView));
+            _dbContext.SaveChanges();
+            return (addStrategicGoal.PMStrategicGoalId);
         }
 
         private PMeasure TransformMeasure(CreateMeasureModelView modelView, int reviewStrategicGoalId) {

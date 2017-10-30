@@ -180,12 +180,12 @@ namespace SchoolProject.WebApplication.Controllers
                             employee.NetworkUsername = registerEmployee.NetworkUsername;
                             employee.DateModified = DateTime.Now;
                             employee.ModifiedBy = "System";
-
-                            DbEntityEntry entry = dbContext.Entry(employee);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            dbContext.SaveChanges();
+                            //DbEntityEntry entry = dbContext.Entry(employee);
+                            //if (entry.State == EntityState.Detached) {
+                            //    entry.State = EntityState.Modified;
+                            //    dbContext.SaveChanges();
+                            //}
                             
                             var createNew = new RegisterEmployee();
                             createNew.Team = GetJobTeams();
@@ -203,12 +203,12 @@ namespace SchoolProject.WebApplication.Controllers
                             employee.DeletedBy = "System";
                             employee.DateDeleted = DateTime.Now;
                             employee.StatusId = 2; //Deleted Status Id
-
-                            DbEntityEntry entry = dbContext.Entry(employee);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            dbContext.SaveChanges();
+                            //DbEntityEntry entry = dbContext.Entry(employee);
+                            //if (entry.State == EntityState.Detached) {
+                            //    entry.State = EntityState.Modified;
+                            //    dbContext.SaveChanges();
+                            //}
 
                             var createNew = new RegisterEmployee();
                             createNew.Team = GetJobTeams();
@@ -339,12 +339,12 @@ namespace SchoolProject.WebApplication.Controllers
                             link.DocumentTypeId = linkEmployeeManager.DocumentTypeId;
                             link.DateModified = DateTime.Now;
                             link.ModifiedBy = "System";
-
-                            DbEntityEntry entry = dbContext.Entry(link);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            dbContext.SaveChanges();
+                            //DbEntityEntry entry = dbContext.Entry(link);
+                            //if (entry.State == EntityState.Detached) {
+                            //    entry.State = EntityState.Modified;
+                            //    dbContext.SaveChanges();
+                            //}
 
                             var employeeName = linkEmployeeManager.Employees.FirstOrDefault(x => x.ValueText == linkEmployeeManager.EmployeeRecordId.ToString()).DisplayText;
                             var managerName = linkEmployeeManager.Managers.FirstOrDefault(x => x.ValueText == linkEmployeeManager.ManagerRecordId.ToString()).DisplayText;
@@ -365,12 +365,12 @@ namespace SchoolProject.WebApplication.Controllers
                             link.DeletedBy = "System";
                             link.DateDeleted = DateTime.Now;
                             link.StatusId = 2; //Deleted Status Id
-
-                            DbEntityEntry entry = dbContext.Entry(link);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            dbContext.SaveChanges();
+                            //DbEntityEntry entry = dbContext.Entry(link);
+                            //if (entry.State == EntityState.Detached) {
+                            //    entry.State = EntityState.Modified;
+                            //    dbContext.SaveChanges();
+                            //}
 
                             var employeeName = linkEmployeeManager.Employees.FirstOrDefault(x => x.ValueText == linkEmployeeManager.EmployeeRecordId.ToString()).DisplayText;
                             var managerName = linkEmployeeManager.Managers.FirstOrDefault(x => x.ValueText == linkEmployeeManager.ManagerRecordId.ToString()).DisplayText;
@@ -554,12 +554,12 @@ namespace SchoolProject.WebApplication.Controllers
                             dbGoal.StrategicGoalName = goal.StrategicGoalName;
                             dbGoal.DateModified = DateTime.Now;
                             dbGoal.ModifiedBy = "System";
-
-                            DbEntityEntry entry = dbContext.Entry(dbGoal);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            dbContext.SaveChanges();
+                            //DbEntityEntry entry = dbContext.Entry(dbGoal);
+                            //if (entry.State == EntityState.Detached) {
+                            //    entry.State = EntityState.Modified;
+                            //    dbContext.SaveChanges();
+                            //}
 
                             var createNew = new RegisterStrategicGoal();
                             createNew.FormMode = FormModeOption.CREATE;
@@ -573,13 +573,13 @@ namespace SchoolProject.WebApplication.Controllers
                             var dbGoal = _iAdminstrationManager.FindStrategicGoal(goal.StrategicGoalId);
                             dbGoal.DeletedBy = "System";
                             dbGoal.DateDeleted = DateTime.Now;
-                            dbGoal.StatusId = 2; //Deleted Status Id
-
-                            DbEntityEntry entry = dbContext.Entry(dbGoal);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            dbGoal.StatusId = 4; //Deleted Status Id
+                            dbContext.SaveChanges();
+                            //DbEntityEntry entry = dbContext.Entry(dbGoal);
+                            //if (entry.State == EntityState.Detached) {
+                            //    entry.State = EntityState.Modified;
+                            //    dbContext.SaveChanges();
+                            //}
 
                             var createNew = new RegisterStrategicGoal();
                             createNew.FormMode = FormModeOption.CREATE;
@@ -694,12 +694,12 @@ namespace SchoolProject.WebApplication.Controllers
                             dbYear.EndDate = DateTime.Parse(performanceYear.EndDate).Date;
                             dbYear.DateModified = DateTime.Now;
                             dbYear.ModifiedBy = "System";
-
-                            DbEntityEntry entry = dbContext.Entry(dbYear);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            dbContext.SaveChanges();
+                            //DbEntityEntry entry = dbContext.Entry(dbYear);
+                            //if (entry.State == EntityState.Detached) {
+                            //    entry.State = EntityState.Modified;
+                            //    dbContext.SaveChanges();
+                            //}
 
                             var createNew = new RegisterPerformanceYear();
                             createNew.FormMode = FormModeOption.CREATE;
@@ -715,13 +715,13 @@ namespace SchoolProject.WebApplication.Controllers
                             var dbYear = _iAdminstrationManager.FindPerformanceYear(performanceYear.PerformanceYearId);
                             dbYear.DeletedBy = "Administrator";
                             dbYear.DateDeleted = DateTime.Now;
-                            dbYear.StatusId = 2; //Deleted Status Id
-
-                            DbEntityEntry entry = dbContext.Entry(dbYear);
-                            if (entry.State == EntityState.Detached) {
-                                entry.State = EntityState.Modified;
-                                dbContext.SaveChanges();
-                            }
+                            dbYear.StatusId = 4; //Deleted Status Id
+                            dbContext.SaveChanges();
+                            //DbEntityEntry entry = dbContext.Entry(dbYear);
+                            //if (entry.State == EntityState.Detached) {
+                            //    entry.State = EntityState.Modified;
+                            //    dbContext.SaveChanges();
+                            //}
 
                             var createNew = new RegisterPerformanceYear();
                             createNew.FormMode = FormModeOption.CREATE;
@@ -859,7 +859,8 @@ namespace SchoolProject.WebApplication.Controllers
                             dbYearLink.PerformanceYearId = performanceYearReviewLink.PerformanceYearId;
                             dbYearLink.DateModified = DateTime.Now;
                             dbYearLink.ModifiedBy = "System";
-                            var update = _iAdminstrationManager.UpdatePMReview(dbYearLink);
+                            dbContext.SaveChanges();
+                            //var update = _iAdminstrationManager.UpdatePMReview(dbYearLink);
 
                             var createNew = new RegisterPerformanceYearReviewPeriodLink();
                             createNew.PerformanceYears = GetPerformanceYearsSelection();
@@ -876,8 +877,9 @@ namespace SchoolProject.WebApplication.Controllers
                             var dbYearLink = _iAdminstrationManager.FindPMReview(performanceYearReviewLink.PMReviewPeriodId);
                             dbYearLink.DeletedBy = "Administrator";
                             dbYearLink.DateDeleted = DateTime.Now;
-                            dbYearLink.StatusId = 2; //Deleted Status Id
-                            var updatePMReviewPeriod = _iAdminstrationManager.DeletePMReview(dbYearLink);
+                            dbYearLink.StatusId = 4; //Deleted Status Id
+                            dbContext.SaveChanges();
+                            //var updatePMReviewPeriod = _iAdminstrationManager.DeletePMReview(dbYearLink);
 
                             var createNew = new RegisterPerformanceYearReviewPeriodLink();
                             createNew.PerformanceYears = GetPerformanceYearsSelection();
