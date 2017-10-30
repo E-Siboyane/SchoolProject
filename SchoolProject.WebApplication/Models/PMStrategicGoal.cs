@@ -18,7 +18,7 @@ namespace SchoolProject.WebApplication.Models {
         [Required, ForeignKey("StrategicGoal")]
         public int StrategicGoalId { get; set; }
         public virtual AdminStrategicGoal StrategicGoal { get; set; }
-        public decimal StrategicGoalWeight { get; set; }
+        public decimal? StrategicGoalWeight { get; set; }
         [Required, ForeignKey("Status")]
         public int StatusId { get; set; }
         public virtual AdminStatus Status { get; set; }

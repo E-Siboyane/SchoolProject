@@ -11,7 +11,7 @@ using SchoolProject.WebApplication.ViewModels;
 
 namespace SchoolProject.WebApplication.Controllers
 {
-    public class AdministrationController : Controller
+    public class AdministrationController : _BaseController
     {
         private readonly IAdmininstrationManager _iAdminstrationManager;
         private ApplicationDatabaseContext dbContext;

@@ -18,7 +18,7 @@ using System.Data.Entity;
 namespace SchoolProject.WebApplication.Controllers
 {   
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : _BaseController
     {
         private ApplicationDatabaseContext _dbContext;
         private ApplicationSignInManager _signInManager;
@@ -108,6 +108,7 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles="Admin")]
         public ActionResult ManageUsers()
         {
             ViewBag.Message = null;
@@ -129,6 +130,7 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult AssignUserAdminRole(string userId) {
             var fullName = GetEmployeeLoginDetails().FirstOrDefault(x => string.Compare(x.UserId, userId, false) == 0).FullName;
             var assignRole = UserManager.AddToRole(userId, "Admin");
@@ -184,6 +186,7 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult RegisterUser() {
             if (TempData["viewModelRegisterUser"] != null) {
                 return View((RegisterUserViewModel)TempData["viewModelRegisterUser"]);
@@ -249,6 +252,7 @@ namespace SchoolProject.WebApplication.Controllers
                 TempData["AddedUser"] = null;
                 var changePasswordModel = new ChangePasswordViewModel() {
                     UserId = userId,
+                    Role = GetEmployeeLoginDetails().FirstOrDefault(x => string.Compare(x.UserId, userId,true) ==0).Role,
                     FullName = userDetails.FullName
                 };
                 return View(changePasswordModel);

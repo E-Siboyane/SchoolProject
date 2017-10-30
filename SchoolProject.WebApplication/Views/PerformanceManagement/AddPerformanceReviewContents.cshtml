@@ -1,0 +1,274 @@
+﻿@model SchoolProject.WebApplication.ViewModels.CreateMeasureModelView
+@using SchoolProject.WebApplication.ViewModels
+@{
+    ViewBag.Title = "Performance Review Contents";
+}
+
+<h2>Manage Performance Review Contents</h2>
+<hr />
+@*Display Error messages*@
+@if (!ViewData.ModelState.IsValid) {
+<div class="row">
+    <div class="alert alert-danger alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <p>
+            @Html.ValidationSummary()
+        </p>
+    </div>
+</div>
+}
+
+@*Display Processing Status*@
+@if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (!Model.ProcessingStatus)) {
+<div class="row">
+    <div class="alert alert-danger alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <p>
+            @Html.Raw(Model.ProcessingStatusMessage)
+        </p>
+    </div>
+</div>
+}
+
+@*Display Processing Status*@
+@if ((!string.IsNullOrEmpty(Model.ProcessingStatusMessage)) && (Model.ProcessingStatus)) {
+<div class="row">
+    <div class="alert alert-success alert-dismissable">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <p>
+            @Html.Raw(Model.ProcessingStatusMessage)
+        </p>
+    </div>
+</div>
+}
+
+@using (Html.BeginForm("AddPerformanceReviewContents", "PerformanceManagement", FormMethod.Post, new { @id = "ManageReviewContents" })) {
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.FormProcessingMode)
+    var formModes = Enum.GetValues(typeof(FormModeOption)).Cast<FormModeOption>().Where(i => i == FormModeOption.DELETE ||
+                                                                                       i == FormModeOption.EDIT).ToList();
+    @Html.HiddenFor(model => model.ManagerUsername)
+    @Html.HiddenFor(model => model.Username)
+    @Html.HiddenFor(model => model.CurrentReviewStatus)
+    @Html.HiddenFor(model => model.PerformanceReviewId)
+
+    if (formModes.Contains(Model.FormProcessingMode)) {
+        @Html.HiddenFor(model => model.MeasureId)
+    }
+
+    for (int i = 0; i < Model.StrategicGoals.Count; i++) {
+        @Html.HiddenFor(model => Model.StrategicGoals[i].ValueText)
+        @Html.HiddenFor(model => Model.StrategicGoals[i].DisplayText)
+    }
+
+    if (Model.CreatedMeasures != null) {
+        for (int i = 0; i < Model.CreatedMeasures.Count; i++) {
+        @Html.HiddenFor(model => Model.CreatedMeasures[i].MeasureId)
+        @Html.HiddenFor(model => Model.CreatedMeasures[i].MeasureName)
+        @Html.HiddenFor(model => Model.CreatedMeasures[i].StrategicGoalID)
+        @Html.HiddenFor(model => Model.CreatedMeasures[i].StrategicGoalName)
+        @Html.HiddenFor(model => Model.CreatedMeasures[i].ObjectiveName)
+        @Html.HiddenFor(model => Model.CreatedMeasures[i].MeasureWeight)
+        }
+    }
+
+    if (Model.CurrentReviewStatus == ReviewProcessStatus.Content_Creation) {
+    <div class="panel panel-success" style="border-color:#1c84c6">
+        <a role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="trigger collapsed">
+            <div class="panel-heading" role="tab" id="headingOne" style="background-color:#1c84c6">
+                <h4 class="panel-title">
+                    <span style="color:#ffffff">Add New Content Measure</span>
+                </h4>
+            </div>
+        </a>
+        <div id="collapseOne" class="panel-collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body" style="margin-right:12px;margin-left:12px">
+                <div class="row">
+                    <div class="col-md-7">
+    @if ((Model.FormProcessingMode == FormModeOption.CREATE) || (Model.FormProcessingMode == FormModeOption.EDIT)) {
+        <div class="row">
+            @Html.Label("Strategic Goal", htmlAttributes: new { @class = "control-label" })<br />
+            @Html.DropDownList("StrategicGoalId", new SelectList(Model.StrategicGoals, "ValueText", "DisplayText"), string.Format("- Please Select {0} -", "Strategic Goal"), new { @class = "form-control", @required = true })
+        </div>
+                        <div class="row">
+                            @Html.Label("Objective", htmlAttributes: new { @class = "control-label" })<br />
+                            @Html.TextAreaFor(model => model.ObjectiveName, new { @class = "form-control", @required = true })
+                        </div>
+
+                        <div class="row">
+                            @Html.Label("Measure ", htmlAttributes: new { @class = "control-label" })<br />
+                            @Html.TextAreaFor(model => model.MeasureName, new { @class = "form-control", @required = true })
+                        </div>
+                        <div class="row">
+                            @Html.Label("Measure Weight ", htmlAttributes: new { @class = "control-label" })<br />
+                            @Html.TextBoxFor(model => model.MeasureWeight, new { @class = "form-control", @required = true })
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-8 col-md-4">
+                                <br />
+                                <button type="submit" class="btn btn-md btn-success" role="button">
+                                    <span class="glyphicon glyphicon-plus">
+                                    </span>&nbsp;Add New Measure
+                                </button>
+                                </div>
+                            </div>
+                                }
+                                else {
+                                <div class="row">
+                                    Delete Mode
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    </div>
+
+    <div class="panel panel-success" style="border-color:#1c84c6">
+        <a role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" class="trigger collapsed">
+            <div class="panel-heading" role="tab" id="headingTwo" style="background-color:#1c84c6">
+                <h4 class="panel-title">
+                    <span style="color:#ffffff">Manage Performance Review Measures</span>
+                </h4>
+            </div>
+        </a>
+        <div id="collapseTwo" class="panel-collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body" style="margin-right:12px;margin-left:12px">
+                <div class="row">
+                    <div class="row">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>@Html.Raw("Objective") </th>
+                                    <th>@Html.Raw("Measure") </th>
+                                    <th>@Html.Raw("Weight") </th>
+                                    <th></th>
+                                </tr>                                
+                            </thead>
+                            <tbody>
+                                @if (Model.CreatedMeasures != null) {
+                                    foreach (var group in Model.CreatedMeasures.GroupBy(x => x.StrategicGoalName)) {
+                                        <tr class="group-header">
+                                            <td colspan="4" style="text-align:center;font-weight:bold; cursor:pointer">
+                                                @Html.Raw(string.Format("{0} - {1} %", @group.Key, @group.Sum(x => x.MeasureWeight).ToString("0.##")))
+                                            </td>
+                                        </tr>
+                                        foreach (var item in group) {
+                                            <tr>
+                                                <td>
+                                                    @Html.Raw(item.ObjectiveName)
+                                                </td>
+                                                <td>
+                                                    @Html.Raw(item.MeasureName)
+                                                </td>
+                                                <td>
+                                                    @Html.Raw(item.MeasureWeight)
+                                                </td>
+                                                <td>
+                                                    <a  href="@Url.Action("AddPerformanceReviewContents", "PerformanceManagement",
+                                                             new { performanceReviewId = Model.PerformanceReviewId,formProcessingMode = FormModeOption.EDIT,
+                                                                 measureId = item.MeasureId })">
+                                                        <span class="glyphicon glyphicon-pencil" style="color:darkblue">
+                                                        </span>&nbsp;Edit Measure
+                                                    </a>&nbsp;&nbsp;
+                                                    <a  href="@Url.Action("AddPerformanceReviewContents", "PerformanceManagement",
+                                                             new { performanceReviewId = Model.PerformanceReviewId,formProcessingMode = FormModeOption.DELETE,
+                                                                    measureId = item.MeasureId })">
+                                                        <span class="glyphicon glyphicon-remove" style="color:red">
+                                                        </span>&nbsp;Delete Measure
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-offset-4 col-md-8" >
+            <a href="@Url.Action("ManageReview", "PerformanceManagement", new { username = Model.Username})" class="btn btn-md btn-primary" role="button">
+                <span class="glyphicon glyphicon-chevron-left glyphicon-chevron-left">
+                </span>&nbsp;Back To Performance Reviews Listing
+            </a>
+            @if (string.Compare(User.Identity.Name, Model.ManagerUsername, true) == 0) {
+                <a href="@Url.Action("ConfirmReviewPeriodContentCreation", "PerformanceManagement", new {reviewId = Model.PerformanceReviewId })" class="btn btn-md btn-primary" role="button">
+                    <span class="glyphicon glyphicon-pencil">
+                    </span>&nbsp;Comfirm Performance Review Contents 
+                </a>
+           }
+        </div>
+    </div>
+
+}
+else {
+    <div class="row">
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p>
+                @Html.Raw(Model.ProcessingStatusMessage)
+            </p>
+        </div>
+    </div>
+}
+}
+
+
+@section Styles {
+    <style>
+        a:hover, a:visited, a:link, a:active {
+            text-decoration: none;
+        }
+
+        .controls {
+            margin-bottom: 10px;
+        }
+
+        .collapse-group {
+            padding: 10px;
+            border: 1px solid darkgrey;
+            margin-bottom: 10px;
+        }
+
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //initial bootstrap tooltip and hide after click event
+            $('body').tooltip({
+                selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+                trigger: 'hover',
+                container: 'body'
+            }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+                $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+            });
+
+            $(function () {
+                $('.group-header').click(function () {
+                    $(this).nextUntil('.group-header').toggle();
+                });
+            });
+
+        });
+    </script>
+}
+
+

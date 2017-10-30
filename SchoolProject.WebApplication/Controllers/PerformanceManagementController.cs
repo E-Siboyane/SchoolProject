@@ -13,14 +13,24 @@ namespace SchoolProject.WebApplication.Controllers
 {
     [Authorize]
     [HandleError]
-    public class PerformanceManagementController : Controller
-    {
+    public class PerformanceManagementController : _BaseController {
         private readonly IAdmininstrationManager _iAdminstrationManager;
         private ApplicationDatabaseContext _dbContext;
 
         public PerformanceManagementController(IAdmininstrationManager iAdmininstrationManager) {
             _iAdminstrationManager = iAdmininstrationManager;
             _dbContext = new ApplicationDatabaseContext();
+        }
+
+        [HttpGet]
+        public ActionResult ChangeUserPassword(string username) {
+            if (string.IsNullOrEmpty(username))
+                return RedirectToAction("Login", "Account");
+            var user = _dbContext.Users.FirstOrDefault(x => string.Compare(x.UserName,username, true) ==0);
+            if (user != null) {
+                return RedirectToAction("ChangePassword", "Account", new { userId = user.Id});
+            }
+            return RedirectToAction("Login", "Account");
         }
 
         [HttpGet]
@@ -214,8 +224,196 @@ namespace SchoolProject.WebApplication.Controllers
                     DocumentType = filterReview.PMReview.ReportingStructure.DocumentType.DocumentTypeName
                 });
             }
-
             return (performanceReviews);
+        }
+
+        [HttpGet]
+        public ActionResult AddPerformanceReviewContents(int? performanceReviewId, FormModeOption? formProcessingMode, long? measureId) {
+            if ((performanceReviewId == null) || (formProcessingMode == null))
+                return RedirectToAction("ManageReview", new { username = User.Identity.Name });
+            var modelView = new CreateMeasureModelView();
+            modelView.Username = User.Identity.Name;
+            modelView.ManagerUsername = ManagerNetworkUsername((int)performanceReviewId);
+            modelView.CurrentReviewStatus = GetCurrentReviewStatus((int)performanceReviewId);
+            modelView.PerformanceReviewId = (int)performanceReviewId;
+            modelView.StrategicGoals = GetReviewStrategicGoals();
+            modelView.FormProcessingMode = (FormModeOption)formProcessingMode;
+
+            if ((formProcessingMode == FormModeOption.EDIT) || (formProcessingMode == FormModeOption.DELETE)) {
+                var measure = _dbContext.PMMeasure.Find((long)measureId);
+                if (measure != null) {
+                    modelView.MeasureId = measure.PMMeasureId;
+                    modelView.MeasureName = measure.MeasureName;
+                    modelView.MeasureWeight = measure.MeasureWeight;
+                    modelView.StrategicGoalId = measure.PMStrategicGoalId;
+                    modelView.ObjectiveName = measure.PMObjective;
+                }
+            }
+            //REFRESH
+            modelView.CreatedMeasures = GetReviewCapturedMeasures((int)performanceReviewId);
+            modelView.StrategicGoals = GetReviewStrategicGoals();
+
+            return View(modelView);
+        }
+
+        public string ManagerNetworkUsername(int performanceReviewId) {
+            var result = _dbContext.PMReview.Include(x => x.ReportingStructure.Owner).Include(x => x.ReportingStructure.Manager).
+                         FirstOrDefault(x => x.PMReviewPeriodId == performanceReviewId && x.ReportingStructure.Manager.DateDeleted == null);
+            if (result != null)
+                return result.ReportingStructure.Manager.NetworkUsername;
+            return ("Unknown");
+        }
+
+        public List<SelectionOptions> GetReviewStrategicGoals() {
+            var results = new List<SelectionOptions>();
+            var goals = _dbContext.StrategicGoal.Where(x => x.DateDeleted == null);
+            foreach(var goal in goals) {
+                results.Add(new SelectionOptions() {
+                    DisplayText = goal.StrategicGoalName,
+                    ValueText = goal.StrategicGoalId.ToString()
+                });
+            }
+            return (results);
+        }
+
+        public ReviewProcessStatus GetCurrentReviewStatus(int performanceReviewId) {
+            var review = _dbContext.PMReviewProgressStatus.Where(x => x.PMReviewId == performanceReviewId).Include(x => x.ProcessStage).
+                         OrderByDescending(x => x.PMReviewProgressStatusId).FirstOrDefault();
+            if (review == null)
+                return ReviewProcessStatus.Unknown;
+            return CastReviewProgressStatus(review.ProcessStage.ProcessStageName);
+
+        }
+
+        public ReviewProcessStatus CastReviewProgressStatus(string reviewStageName) {
+            switch (reviewStageName.ToUpper()) {
+                case "CONTENT CREATION":
+                    return ReviewProcessStatus.Content_Creation;
+                case "CONTENT CREATION COMPLETED":
+                    return ReviewProcessStatus.Content_Creattion_Completed;
+                case "EMPLOYEE SCORING":
+                    return ReviewProcessStatus.Employee_Scoring;
+                case "LINE MANAGER SCORING":
+                    return ReviewProcessStatus.Line_Manager_Scoring;
+                case "SCORING COMPLETED":
+                    return ReviewProcessStatus.Scoring_Completed;
+                default:
+                    return ReviewProcessStatus.Unknown;
+            }
+        }
+
+        public List<PerformanceReeviewContent> GetReviewCapturedMeasures(int PerformanceReviewId) {
+            var currentMesures = new List<PerformanceReeviewContent>();
+            var results = _dbContext.PMMeasure.Where(X => X.DateDeleted == null).Include(x => x.StrategeicGoal).
+                                              Include(x => x.StrategeicGoal.StrategicGoal);
+            foreach( var measure in results) {
+                currentMesures.Add(new PerformanceReeviewContent() {
+                    MeasureId = measure.PMMeasureId,
+                    MeasureName = measure.MeasureName,
+                    ObjectiveName = measure.PMObjective,
+                    StrategicGoalID = measure.PMStrategicGoalId,
+                    StrategicGoalName = measure.StrategeicGoal.StrategicGoal.StrategicGoalName,
+                    MeasureWeight = measure.MeasureWeight
+                });
+            }
+            return (currentMesures);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddPerformanceReviewContents(CreateMeasureModelView modelView) {
+            if (ModelState.IsValid) {
+                switch (modelView.FormProcessingMode) {
+                    case FormModeOption.CREATE: {
+                            if (AddNewMeasure(modelView)) {
+                                modelView.MeasureName = string.Empty;
+                                modelView.ObjectiveName = string.Empty;
+                                modelView.MeasureWeight = 0;
+                                modelView.StrategicGoalId = 0;
+                                modelView.ProcessingStatus = true;
+                                modelView.ProcessingStatusMessage = string.Format("Successfully added measure: {0}.", modelView.MeasureName);
+                            }
+                            else {
+                                modelView.ProcessingStatus = false;
+                                modelView.ProcessingStatusMessage = string.Format("An error occurred while trying to save measure: {0}. " +
+                                                 "Please try again and if the error persist contact System Support.", modelView.MeasureName);
+                            }
+                            break;
+                        }
+                    case FormModeOption.EDIT:
+                        
+                        break;
+                    case FormModeOption.DELETE:
+                        break;
+                }
+            }
+            modelView.CreatedMeasures = GetReviewCapturedMeasures(modelView.PerformanceReviewId);
+            //Model contains errors
+            return View(modelView);
+        }
+
+        private bool AddNewMeasure(CreateMeasureModelView modelView) {
+            var pmStrategicGoalId = 0;
+            if (!StrategicGoalExist(modelView.StrategicGoalId, modelView.PerformanceReviewId)) {
+                var addStrategicGoal = _dbContext.PMStrategicGoal.Add(TransformStrategicGoal(modelView));
+                _dbContext.SaveChanges();
+                pmStrategicGoalId = addStrategicGoal.PMStrategicGoalId;
+            }
+            else {
+                pmStrategicGoalId = GetReviewStrategicGoal(modelView);
+            }
+
+            if (pmStrategicGoalId == 0)
+                return false;
+            var measure = TransformMeasure(modelView, pmStrategicGoalId);
+            _dbContext.PMMeasure.Add(measure);
+            _dbContext.SaveChanges();
+            return measure.PMMeasureId > 0 ? true : false;
+        }
+
+        private int GetReviewStrategicGoal(CreateMeasureModelView modelView) {
+            return (_dbContext.PMStrategicGoal.FirstOrDefault(x => x.PMReviewId == modelView.PerformanceReviewId &&
+                                                                         x.StrategicGoalId == modelView.StrategicGoalId &&
+                                                                         x.DateDeleted == null).PMStrategicGoalId);
+        }
+
+        private PMeasure TransformMeasure(CreateMeasureModelView modelView, int reviewStrategicGoalId) {
+            return (new PMeasure() {
+                PMStrategicGoalId = reviewStrategicGoalId,
+                MeasureName = modelView.MeasureName,
+                MeasureWeight = modelView.MeasureWeight,
+                PMObjective =modelView.ObjectiveName,
+                SubjectMatterExpert = "Employee",
+                StatusId = 1,
+                CreatedBy = modelView.Username,
+                DateCreated = DateTime.Now,
+                DateModified = DateTime.Now,
+                ModifiedBy = modelView.Username,
+                AuditScore = 1,
+                LineManagerScore = 1,
+                EmployeeScore = 1,
+                TermId = 1
+            });
+        }
+
+        private PMStrategicGoal TransformStrategicGoal(CreateMeasureModelView modelView) {
+            return (new PMStrategicGoal() {
+                StrategicGoalId = modelView.StrategicGoalId,
+                PMReviewId = modelView.PerformanceReviewId,
+                StrategicGoalWeight = 0.00M,
+                StatusId = 1,
+                CreatedBy = modelView.Username,
+                DateCreated = DateTime.Now,
+                DateModified = DateTime.Now,
+                ModifiedBy = modelView.Username
+            });
+        }
+
+        private bool StrategicGoalExist(int strategicGoalId, int performanceReviewId) {
+            var result = _dbContext.PMStrategicGoal.FirstOrDefault(x => x.PMReviewId == performanceReviewId && 
+                                                                         x.StrategicGoalId == strategicGoalId && 
+                                                                         x.DateDeleted == null);
+            return result == null ? false : true;
         }
     }
 }

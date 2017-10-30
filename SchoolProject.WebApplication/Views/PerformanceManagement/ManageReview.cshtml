@@ -29,7 +29,11 @@
                         <td>@Html.Raw(item.ReviewStageName)</td>
                         <td>
                             @if (item.ReviewStageName == ReviewProcessStatus.Content_Creation.ToString().Replace("_", " ")) {
-                                <a href="#">Add Review Contents</a>
+                                <a role="button" class="btn btn-sm btn-success" href="@Url.Action("AddPerformanceReviewContents", "PerformanceManagement", new { performanceReviewId = item.PMReviewId,
+                                        formProcessingMode = FormModeOption.CREATE
+                                     })">
+                                     Add Review Contents
+                                </a>
                             }
                             @if (item.ReviewStageName == ReviewProcessStatus.Content_Creattion_Completed.ToString().Replace("_", " ")) {
                                 <a href="#">Score Performance Review</a>
@@ -50,7 +54,11 @@
                         <td>@Html.Raw(item.ReviewStageName)</td>
                         <td>
                             @if (item.ReviewStageName == ReviewProcessStatus.Content_Creation.ToString().Replace("_", " ")) {
-                                <a href="#">Add Review Contents</a>
+                                <a role="button" class="btn btn-sm btn-success" href="@Url.Action("AddPerformanceReviewContents", "PerformanceManagement", new { performanceReviewId = item.PMReviewId,
+                                        formProcessingMode = FormModeOption.CREATE
+                                     })">
+                                    Add Review Contents
+                                </a>
                             }
                             @if (item.ReviewStageName == ReviewProcessStatus.Content_Creattion_Completed.ToString().Replace("_", " ")) {
                                 <a href="#">Score Performance Review</a>

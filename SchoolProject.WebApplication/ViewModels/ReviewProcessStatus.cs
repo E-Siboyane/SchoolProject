@@ -5,6 +5,7 @@ using System.Web;
 
 namespace SchoolProject.WebApplication.ViewModels {
     public enum ReviewProcessStatus {
+        Unknown,
         Content_Creation,
         Content_Creattion_Completed,
         Employee_Scoring,

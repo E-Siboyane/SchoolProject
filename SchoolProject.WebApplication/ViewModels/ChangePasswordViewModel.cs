@@ -9,6 +9,7 @@ namespace SchoolProject.WebApplication.ViewModels {
     public class ChangePasswordViewModel {
         [Required]
         public string FullName { get; set; }
+        public string Role { get; set; }
         [Required]
         public string UserId { get; set; }
         [Required]

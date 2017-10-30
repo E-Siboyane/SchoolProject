@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using SchoolProject.WebApplication.Controllers;
+@{
+    var userInfo = (_BaseController)ViewContext.Controller;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,11 +19,11 @@
     <div class="container body">
         <div class="main_container">
             <!-- Left Navigation-->
-            @Html.Partial("_LeftNavigation")
+            @Html.Partial("_LeftNavigation", userInfo)
             <!-- /Left Navigation-->
 
             <!-- Top Vavigation -->
-            @Html.Partial("_TopNavigation")
+            @Html.Partial("_TopNavigation", userInfo)
             <!-- /top navigation -->
 
             <!-- page content -->

@@ -15,18 +15,18 @@ namespace SchoolProject.WebApplication.Models {
         public string MeasureName { get; set; }
         [StringLength(150)]
         public string SourceOfInformation { get; set; }
-        [Required, StringLength(150)]
+        [StringLength(150)]
         public string SubjectMatterExpert { get; set; }
         [Required, ForeignKey("Term")]
         public int TermId { get; set; }
         public virtual AdminTerm Term { get; set; }
-        [Required, Range(0.01, 100.00, ErrorMessage ="Weight should be between 0.01 to 100")]
+        [Required, Range(1, 100.00, ErrorMessage ="Weight should be between 1 to 100")]
         public decimal MeasureWeight { get; set; }
-        [Range(0.01, 100.00, ErrorMessage = "Weight should be between 0.01 to 100")]
+        [Range(1, 100.00, ErrorMessage = "Weight should be between 1 to 5")]
         public decimal EmployeeScore { get; set; }
-        [Range(0.01, 100.00, ErrorMessage = "Weight should be between 0.01 to 100")]
+        [Range(1, 100.00, ErrorMessage = "Weight should be between 1 to 5")]
         public decimal LineManagerScore { get; set; }
-        [Range(0.01, 100.00, ErrorMessage = "Weight should be between 0.01 to 100")]
+        [Range(1, 100.00, ErrorMessage = "Weight should be between 1 to 5")]
         public decimal AuditScore { get; set; }
         public string EmployeeComments { get; set; }
         public string LineManagerComments { get; set; }

@@ -442,6 +442,7 @@
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PerformanceManagementController.cs" />
+    <Compile Include="Controllers\_BaseController.cs" />
     <Compile Include="DTO\Department.cs" />
     <Compile Include="DTO\DocumentType.cs" />
     <Compile Include="DTO\JobGrade.cs" />
@@ -502,11 +503,13 @@
     <Compile Include="ServiceManager\NinjectStandardModuleManager.cs" />
     <Compile Include="ServiceManager\PerformanceDocumentManager.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\CreateMeasureModelView.cs" />
     <Compile Include="ViewModels\FormModeOption.cs" />
     <Compile Include="ViewModels\LinkEmployeeManager.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ManageReviewModelView.cs" />
     <Compile Include="ViewModels\ManageUserAccount.cs" />
+    <Compile Include="ViewModels\PerformanceReeviewContent.cs" />
     <Compile Include="ViewModels\PerformanceReviewModelView.cs" />
     <Compile Include="ViewModels\ReviewProcessStatus.cs" />
     <Compile Include="ViewModels\RegisterEmployee.cs" />
@@ -637,10 +640,12 @@
     <Content Include="Views\Account\AccessDenied.cshtml" />
     <Content Include="Views\PerformanceManagement\ManageReview.cshtml" />
     <Content Include="Views\PerformanceManagement\CreateReviewDocument.cshtml" />
+    <Content Include="Views\PerformanceManagement\AddPerformanceReviewContents.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\css\" />
+    <Folder Include="Views\_BaseController\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
