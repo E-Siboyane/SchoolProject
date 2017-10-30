@@ -150,7 +150,7 @@
                                     foreach (var group in Model.CreatedMeasures.GroupBy(x => x.StrategicGoalName)) {
                                         <tr class="group-header">
                                             <td colspan="4" style="text-align:center;font-weight:bold; cursor:pointer">
-                                                @Html.Raw(string.Format("{0} - {1} %", @group.Key, @group.Sum(x => x.MeasureWeight).ToString("0.##")))
+                                                @Html.Raw(string.Format("{0} - Total Strategic Goal Weight {1} %", @group.Key, decimal.Round(@group.Sum(x => x.MeasureWeight), 2, MidpointRounding.AwayFromZero)))
                                             </td>
                                         </tr>
                                         foreach (var item in group) {
@@ -162,7 +162,7 @@
                                                     @Html.Raw(item.MeasureName)
                                                 </td>
                                                 <td>
-                                                    @Html.Raw(item.MeasureWeight)
+                                                  @Html.Raw(string.Format("{0} %", decimal.Round(item.MeasureWeight, 2, MidpointRounding.AwayFromZero)))
                                                 </td>
                                                 <td>
                                                     <a  href="@Url.Action("AddPerformanceReviewContents", "PerformanceManagement",
