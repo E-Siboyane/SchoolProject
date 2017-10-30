@@ -166,11 +166,14 @@ namespace SchoolProject.WebApplication.Controllers
         public List<ManagePerformanceReview> GetEmployeeReviewPeriods(string usernmame) {
             var performanceReviews = new List<ManagePerformanceReview>();
             var results = _dbContext.PMReviewProgressStatus.Where(x => x.DateDeleted == null).Include(x => x.ProcessStage).
-                              Include(x => x.PMReview).Include(x => x.PMReview.ReportingStructure).Include(x => x.PMReview.ReportingStructure.Owner).
+                              Include(x => x.PMReview).Include(x => x.PMReview.ReportingStructure).
+                              Include(x => x.PMReview.ReportingStructure.Owner).
                               Include(x => x.PMReview.ReportingStructure.Manager).Include(x => x.PMReview.ReportingStructure.DocumentType).
                               Include(x => x.PMReview.PMReviewPeriod.PerformanceYear).
                               Include(x=> x.PMReview.PMReviewPeriod.ReviewPeriod).
-                              Where(x => x.PMReview.ReportingStructure.Owner.NetworkUsername == usernmame).ToList();
+                              Where(x => x.PMReview.ReportingStructure.Owner.NetworkUsername == usernmame &&
+                              x.PMReview.ReportingStructure.Owner.DateDeleted == null && x.PMReview.DateDeleted == null &&
+                              x.PMReview.ReportingStructure.DateDeleted == null).ToList();
 
             var reviews = results.Select(x => x.PMReviewId).Distinct();
             foreach(var reviewId in reviews) {
@@ -203,7 +206,9 @@ namespace SchoolProject.WebApplication.Controllers
                               Include(x => x.PMReview.ReportingStructure.Manager).Include(x => x.PMReview.ReportingStructure.DocumentType).
                               Include(x => x.PMReview.PMReviewPeriod.PerformanceYear).
                               Include(x => x.PMReview.PMReviewPeriod.ReviewPeriod).
-                              Where(x => x.PMReview.ReportingStructure.Manager.NetworkUsername == usernmame).ToList();
+                              Where(x => x.PMReview.ReportingStructure.Manager.NetworkUsername == usernmame && 
+                              x.PMReview.ReportingStructure.Manager.DateDeleted == null 
+                              && x.PMReview.DateDeleted == null && x.PMReview.ReportingStructure.DateDeleted == null).ToList();
 
             var reviews = results.Select(x => x.PMReviewId).Distinct();
             foreach (var reviewId in reviews) {
@@ -357,12 +362,6 @@ namespace SchoolProject.WebApplication.Controllers
                         measure.ModifiedBy = modelView.Username;
                         measure.DateModified = DateTime.Now;
                         _dbContext.SaveChanges();
-                        //DbEntityEntry entry = _dbContext.Entry(measure);
-                        //if (entry.State == EntityState.Detached) {
-                        //    entry.State = EntityState.Modified;
-                        //    _dbContext.SaveChanges();
-                        //}
-
                        var success = modelView.ProcessingStatusMessage = string.Format("Successfully updated measure: {0}.", measure.MeasureName);
                         return RedirectToAction("AddPerformanceReviewContents",
                                     new {
@@ -377,11 +376,6 @@ namespace SchoolProject.WebApplication.Controllers
                         deleteMeasure.ModifiedBy = modelView.Username;
                         deleteMeasure.DateModified = DateTime.Now;
                         _dbContext.SaveChanges();
-                        //DbEntityEntry entryDelete = _dbContext.Entry(deleteMeasure);
-                        //if (entryDelete.State == EntityState.Detached) {
-                        //    entryDelete.State = EntityState.Modified;
-                        //    _dbContext.SaveChanges();
-                        //}
                         var successTwo = string.Format("Successfully Deleted measure: {0}.", deleteMeasure.MeasureName);
                         return RedirectToAction("AddPerformanceReviewContents",
                                     new {
