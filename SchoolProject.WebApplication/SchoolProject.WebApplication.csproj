@@ -511,6 +511,7 @@
     <Compile Include="ViewModels\ManageUserAccount.cs" />
     <Compile Include="ViewModels\PerformanceReeviewContent.cs" />
     <Compile Include="ViewModels\PerformanceReviewModelView.cs" />
+    <Compile Include="ViewModels\PerformanceReviewScoringContent.cs" />
     <Compile Include="ViewModels\ReviewProcessStatus.cs" />
     <Compile Include="ViewModels\RegisterEmployee.cs" />
     <Compile Include="ViewModels\RegisterPerformanceYear.cs" />
@@ -518,6 +519,7 @@
     <Compile Include="ViewModels\RegisterStrategicGoal.cs" />
     <Compile Include="ViewModels\RegisterUserViewModel.cs" />
     <Compile Include="ViewModels\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModels\ScoreReviewViewModel.cs" />
     <Compile Include="ViewModels\SelectionOptions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -641,6 +643,7 @@
     <Content Include="Views\PerformanceManagement\ManageReview.cshtml" />
     <Content Include="Views\PerformanceManagement\CreateReviewDocument.cshtml" />
     <Content Include="Views\PerformanceManagement\AddPerformanceReviewContents.cshtml" />
+    <Content Include="Views\PerformanceManagement\ScoreReview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

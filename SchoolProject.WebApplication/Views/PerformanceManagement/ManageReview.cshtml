@@ -14,6 +14,7 @@
                     <th>@Html.Raw("Employee")</th>
                     <th>@Html.Raw("Line Manager")</th>
                     <th>@Html.Raw("Document Type")</th>
+                    <th>@Html.Raw("Own Document")</th>
                     <th>@Html.Raw("Performance Review Name")</th>
                     <th>@Html.Raw("Review Stage")</th>
                     <th></th>
@@ -25,6 +26,7 @@
                         <td>@Html.Raw(item.EmployeeName)</td>
                         <td>@Html.Raw(item.LineManagerName)</td>
                         <td>@Html.Raw(item.DocumentType)</td>
+                        <td>@Html.Raw("Yes")</td>
                         <td>@Html.Raw(item.ReviewPeriodName)</td>
                         <td>@Html.Raw(item.ReviewStageName)</td>
                         <td>
@@ -32,11 +34,16 @@
                                 <a role="button" class="btn btn-sm btn-primary" href="@Url.Action("AddPerformanceReviewContents", "PerformanceManagement", new { performanceReviewId = item.PMReviewId,
                                         formProcessingMode = FormModeOption.CREATE
                                      })">
-                                     Add Review Contents
+                                    <span class="glyphicon glyphicon-plus">
+                                    </span>&nbsp;Add Review Contents
                                 </a>
                             }
                             @if (item.ReviewStageName == ReviewProcessStatus.Content_Creattion_Completed.ToString().Replace("_", " ")) {
-                                <a href="#">Score Performance Review</a>
+                                <a role="button" class="btn btn-sm btn-primary" href="@Url.Action("ScoreReview", "PerformanceManagement",
+                                                                                     new { performanceReviewId = item.PMReviewId })">
+                                    <span class="glyphicon glyphicon-check">
+                                    </span>&nbsp;Score Review
+                                </a>
                             }
                             @if (item.ReviewStageName == ReviewProcessStatus.Scoring_Completed.ToString().Replace("_", " ")) {
                                <a href="#">@item.ReviewStageName</a>
@@ -50,6 +57,7 @@
                         <td>@Html.Raw(item.EmployeeName)</td>
                         <td>@Html.Raw(item.LineManagerName)</td>
                         <td>@Html.Raw(item.DocumentType)</td>
+                        <td>@Html.Raw("No")</td>
                         <td>@Html.Raw(item.ReviewPeriodName)</td>
                         <td>@Html.Raw(item.ReviewStageName)</td>
                         <td>
@@ -57,11 +65,16 @@
                                 <a role="button" class="btn btn-sm btn-primary" href="@Url.Action("AddPerformanceReviewContents", "PerformanceManagement", new { performanceReviewId = item.PMReviewId,
                                         formProcessingMode = FormModeOption.CREATE
                                      })">
-                                    Add Review Contents
+                                    <span class="glyphicon glyphicon-plus">
+                                    </span>&nbsp;Add Review Contents
                                 </a>
                             }
                             @if (item.ReviewStageName == ReviewProcessStatus.Content_Creattion_Completed.ToString().Replace("_", " ")) {
-                                <a href="#">Score Performance Review</a>
+                                <a role="button" class="btn btn-sm btn-primary" href="@Url.Action("ScoreReview", "PerformanceManagement",
+                                                                                     new { performanceReviewId = item.PMReviewId })">
+                                    <span class="glyphicon glyphicon-check">
+                                    </span>&nbsp;Score Review
+                                </a>
                             }
                             @if (item.ReviewStageName == ReviewProcessStatus.Scoring_Completed.ToString().Replace("_", " ")) {
                                 <a href="#">@item.ReviewStageName</a>

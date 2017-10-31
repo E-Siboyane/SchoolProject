@@ -262,7 +262,8 @@
                         </span>&nbsp;Back To Performance Reviews Listing
                     </a>
                     @if (string.Compare(User.Identity.Name, Model.ManagerUsername, true) == 0) {
-                        <a href="@Url.Action("ConfirmReviewPeriodContentCreation", "PerformanceManagement", new {reviewId = Model.PerformanceReviewId })" class="btn btn-md btn-primary" role="button">
+                        <a href="@Url.Action("ConfirmReviewPeriodContentCreation", "PerformanceManagement",
+                                new {performanceReviewId = Model.PerformanceReviewId, managerUsername = Model.ManagerUsername })" class="btn btn-md btn-primary" role="button">
                             <span class="glyphicon glyphicon-pencil">
                             </span>&nbsp;Comfirm Performance Review Contents
                         </a>
@@ -276,7 +277,7 @@
                 <div class="alert alert-danger alert-dismissable">
                     <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
                     <p>
-                        @Html.Raw(Model.ProcessingStatusMessage)
+                        @Html.Raw("Performance Review Content Creation Completed, navigate to Manage Reviews and start scoring the Performance review")
                     </p>
                 </div>
             </div>

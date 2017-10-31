@@ -15,6 +15,7 @@ namespace SchoolProject.WebApplication.DTO {
         public string LineManagerName { get; set; }
         public string EmployeeName { get; set; }
         public string NetworkUsername { get; set; }
+        public string ManagerUsername { get; set; }
         public string UserId { get; set; }
         public string DocumentType { get; set; }
     }

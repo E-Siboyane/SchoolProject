@@ -10,8 +10,7 @@ using SchoolProject.WebApplication.Models;
 using SchoolProject.WebApplication.ServiceManager.Interface;
 using SchoolProject.WebApplication.ViewModels;
 
-namespace SchoolProject.WebApplication.Controllers
-{
+namespace SchoolProject.WebApplication.Controllers {
     [Authorize]
     [HandleError]
     public class PerformanceManagementController : _BaseController {
@@ -27,9 +26,9 @@ namespace SchoolProject.WebApplication.Controllers
         public ActionResult ChangeUserPassword(string username) {
             if (string.IsNullOrEmpty(username))
                 return RedirectToAction("Login", "Account");
-            var user = _dbContext.Users.FirstOrDefault(x => string.Compare(x.UserName,username, true) ==0);
+            var user = _dbContext.Users.FirstOrDefault(x => string.Compare(x.UserName, username, true) == 0);
             if (user != null) {
-                return RedirectToAction("ChangePassword", "Account", new { userId = user.Id});
+                return RedirectToAction("ChangePassword", "Account", new { userId = user.Id });
             }
             return RedirectToAction("Login", "Account");
         }
@@ -89,7 +88,7 @@ namespace SchoolProject.WebApplication.Controllers
                     //Set PMReviewProgressStatus Content Creation
                     var setProgressStatus = CreatePMReviewProgressStatus(1, pmReviewPeriod.PMReviewId);
 
-                    var reviewName = createReviewPeriodModel.ReviewPeriods.FirstOrDefault(x => string.Compare(x.ValueText, 
+                    var reviewName = createReviewPeriodModel.ReviewPeriods.FirstOrDefault(x => string.Compare(x.ValueText,
                                                   createReviewPeriodModel.ReviewPeriodId.ToString()) == 0).DisplayText;
                     createReviewPeriodModel.ReviewPeriodId = 0;
                     createReviewPeriodModel.ProcessingStatus = true;
@@ -100,15 +99,15 @@ namespace SchoolProject.WebApplication.Controllers
                     createReviewPeriodModel.ProcessingStatusMessage = "Performance Review already exist, please complete review or create " +
                                                                   "a different Peformance Review Period.";
                 }
-                
+
             }
-            
+
             return View(createReviewPeriodModel);
         }
 
         private bool PerformanceReviewPeriodExist(PerformanceReviewModelView createReviewPeriodModel) {
-            var result = _dbContext.PMReview.FirstOrDefault(x => x.DateDeleted == null && 
-                                                   x.PMReviewPeriodId == createReviewPeriodModel.ReviewPeriodId && 
+            var result = _dbContext.PMReview.FirstOrDefault(x => x.DateDeleted == null &&
+                                                   x.PMReviewPeriodId == createReviewPeriodModel.ReviewPeriodId &&
                                                    x.ReviewReportingStructureId == createReviewPeriodModel.ReportingStructureId);
             return result == null ? false : true;
 
@@ -154,10 +153,10 @@ namespace SchoolProject.WebApplication.Controllers
         public List<SelectionOptions> ReviewPeriods() {
             var results = new List<SelectionOptions>();
             var reviewPeriods = _dbContext.PMReviewPeriod.Where(x => x.DateDeleted == null).Include(x => x.ReviewPeriod).Include(x => x.PerformanceYear).ToList();
-            foreach(var review in reviewPeriods) {
+            foreach (var review in reviewPeriods) {
                 results.Add(new SelectionOptions() {
                     ValueText = review.PMReviewPeriodId.ToString(),
-                    DisplayText = string.Format("{0} - {1}", review.PerformanceYear.PerformanceYearName,review.ReviewPeriod.ReviewPeriodName)
+                    DisplayText = string.Format("{0} - {1}", review.PerformanceYear.PerformanceYearName, review.ReviewPeriod.ReviewPeriodName)
                 });
             }
             return (results);
@@ -165,76 +164,74 @@ namespace SchoolProject.WebApplication.Controllers
 
         public List<ManagePerformanceReview> GetEmployeeReviewPeriods(string usernmame) {
             var performanceReviews = new List<ManagePerformanceReview>();
-            var results = _dbContext.PMReviewProgressStatus.Where(x => x.DateDeleted == null).Include(x => x.ProcessStage).
-                              Include(x => x.PMReview).Include(x => x.PMReview.ReportingStructure).
-                              Include(x => x.PMReview.ReportingStructure.Owner).
-                              Include(x => x.PMReview.ReportingStructure.Manager).Include(x => x.PMReview.ReportingStructure.DocumentType).
-                              Include(x => x.PMReview.PMReviewPeriod.PerformanceYear).
-                              Include(x=> x.PMReview.PMReviewPeriod.ReviewPeriod).
-                              Where(x => x.PMReview.ReportingStructure.Owner.NetworkUsername == usernmame &&
-                              x.PMReview.ReportingStructure.Owner.DateDeleted == null && x.PMReview.DateDeleted == null &&
-                              x.PMReview.ReportingStructure.DateDeleted == null).ToList();
 
-            var reviews = results.Select(x => x.PMReviewId).Distinct();
-            foreach(var reviewId in reviews) {
-                var filterReview = results.OrderByDescending(x => x.ProcessStageId).FirstOrDefault(x => x.PMReviewId == reviewId);
+            var filterReviews = _dbContext.PMReview.Where(x => x.DateDeleted == null && x.ReportingStructure.Owner.NetworkUsername == usernmame).
+                              Include(x => x.ReportingStructure).Include(x => x.PMReviewPeriod).
+                              Include(x => x.PMReviewPeriod.PerformanceYear).Include(x => x.PMReviewPeriod.ReviewPeriod).
+                              Include(x => x.ReportingStructure.Manager).Include(x => x.ReportingStructure.Owner).
+                              Include(x => x.ReportingStructure.DocumentType).Include(x => x.PMReviewPeriod.PerformanceYear).
+                              Include(x => x.PMReviewPeriod.ReviewPeriod);
+            var reviewIds = filterReviews.Select(x => x.PMReviewId).ToList();
+            var reviewStages = _dbContext.PMReviewProgressStatus.Where(x => reviewIds.Contains(x.PMReviewId)).Include(x => x.ProcessStage).ToList();
+            foreach (var review in filterReviews) {
+                var stage = reviewStages.OrderByDescending(x => x.ProcessStageId).FirstOrDefault(x => x.PMReviewId == review.PMReviewId);
                 performanceReviews.Add(new ManagePerformanceReview() {
-                    PerformancereviewPeriodStageId = filterReview.PMReviewProgressStatusId,
-                    ProcessStageId = filterReview.ProcessStageId,
-                    ReviewStageName = filterReview.ProcessStage.ProcessStageName,
-                    PMReviewId = filterReview.PMReviewId,
-                    ReviewPeriodName = string.Format("{0} - {1}", filterReview.PMReview.PMReviewPeriod.PerformanceYear.PerformanceYearName,
-                                                                  filterReview.PMReview.PMReviewPeriod.ReviewPeriod.ReviewPeriodName),
-                    DocumentOwnerId = filterReview.PMReview.ReportingStructure.MemberId,
-                    LineManagerId = filterReview.PMReview.ReportingStructure.ManagerId,
-                    EmployeeName = string.Format("{0} {1}", filterReview.PMReview.ReportingStructure.Owner.Name,
-                                                            filterReview.PMReview.ReportingStructure.Owner.Name),
-                    LineManagerName = string.Format("{0} {1}", filterReview.PMReview.ReportingStructure.Manager.Name,
-                                                            filterReview.PMReview.ReportingStructure.Manager.Name),
+                    PerformancereviewPeriodStageId = stage.PMReviewProgressStatusId,
+                    ProcessStageId = stage.ProcessStageId,
+                    ReviewStageName = stage.ProcessStage.ProcessStageName,
+                    PMReviewId = stage.PMReviewId,
+                    ReviewPeriodName = string.Format("{0} - {1}", review.PMReviewPeriod.PerformanceYear.PerformanceYearName,
+                                                                  review.PMReviewPeriod.ReviewPeriod.ReviewPeriodName),
+                    DocumentOwnerId = review.ReportingStructure.MemberId,
+                    LineManagerId = review.ReportingStructure.ManagerId,
+                    EmployeeName = string.Format("{0} {1}", review.ReportingStructure.Owner.Name,
+                                                            review.ReportingStructure.Owner.Name),
+                    LineManagerName = string.Format("{0} {1}", review.ReportingStructure.Manager.Name,
+                                                              review.ReportingStructure.Manager.Name),
                     NetworkUsername = usernmame,
-                    DocumentType = filterReview.PMReview.ReportingStructure.DocumentType.DocumentTypeName
+                    ManagerUsername = review.ReportingStructure.Manager.NetworkUsername,
+                    DocumentType = review.ReportingStructure.DocumentType.DocumentTypeName
                 });
             }
-
-            return(performanceReviews);
+            return (performanceReviews);
         }
 
         public List<ManagePerformanceReview> GetDirectReportingReviewPeriods(string usernmame) {
             var performanceReviews = new List<ManagePerformanceReview>();
-            var results = _dbContext.PMReviewProgressStatus.Where(x => x.DateDeleted == null).Include(x => x.ProcessStage).
-                              Include(x => x.PMReview).Include(x => x.PMReview.ReportingStructure).Include(x => x.PMReview.ReportingStructure.Owner).
-                              Include(x => x.PMReview.ReportingStructure.Manager).Include(x => x.PMReview.ReportingStructure.DocumentType).
-                              Include(x => x.PMReview.PMReviewPeriod.PerformanceYear).
-                              Include(x => x.PMReview.PMReviewPeriod.ReviewPeriod).
-                              Where(x => x.PMReview.ReportingStructure.Manager.NetworkUsername == usernmame && 
-                              x.PMReview.ReportingStructure.Manager.DateDeleted == null 
-                              && x.PMReview.DateDeleted == null && x.PMReview.ReportingStructure.DateDeleted == null).ToList();
 
-            var reviews = results.Select(x => x.PMReviewId).Distinct();
-            foreach (var reviewId in reviews) {
-                var filterReview = results.OrderByDescending(x => x.ProcessStageId).FirstOrDefault(x => x.PMReviewId == reviewId);
+            var filterReviews = _dbContext.PMReview.Where(x => x.DateDeleted == null && x.ReportingStructure.Manager.NetworkUsername == usernmame).
+                              Include(x => x.ReportingStructure).Include(x => x.PMReviewPeriod).
+                              Include(x => x.PMReviewPeriod.PerformanceYear).Include(x => x.PMReviewPeriod.ReviewPeriod).
+                              Include(x => x.ReportingStructure.Manager).Include(x => x.ReportingStructure.Owner).
+                              Include(x => x.ReportingStructure.DocumentType).Include(x => x.PMReviewPeriod.PerformanceYear).
+                              Include(x => x.PMReviewPeriod.ReviewPeriod);
+            var reviewIds = filterReviews.Select(x => x.PMReviewId).ToList();
+            var reviewStages = _dbContext.PMReviewProgressStatus.Where(x => reviewIds.Contains(x.PMReviewId)).Include(x => x.ProcessStage).ToList();
+            foreach (var review in filterReviews) {
+                var stage = reviewStages.OrderByDescending(x => x.ProcessStageId).FirstOrDefault(x => x.PMReviewId == review.PMReviewId);
                 performanceReviews.Add(new ManagePerformanceReview() {
-                    PerformancereviewPeriodStageId = filterReview.PMReviewProgressStatusId,
-                    ProcessStageId = filterReview.ProcessStageId,
-                    ReviewStageName = filterReview.ProcessStage.ProcessStageName,
-                    PMReviewId = filterReview.PMReviewId,
-                    ReviewPeriodName = string.Format("{0} - {1}", filterReview.PMReview.PMReviewPeriod.PerformanceYear.PerformanceYearName,
-                                                                  filterReview.PMReview.PMReviewPeriod.ReviewPeriod.ReviewPeriodName),
-                    DocumentOwnerId = filterReview.PMReview.ReportingStructure.MemberId,
-                    LineManagerId = filterReview.PMReview.ReportingStructure.ManagerId,
-                    EmployeeName = string.Format("{0} {1}", filterReview.PMReview.ReportingStructure.Owner.Name,
-                                                            filterReview.PMReview.ReportingStructure.Owner.Name),
-                    LineManagerName = string.Format("{0} {1}", filterReview.PMReview.ReportingStructure.Manager.Name,
-                                                            filterReview.PMReview.ReportingStructure.Manager.Name),
-                    NetworkUsername = usernmame,
-                    DocumentType = filterReview.PMReview.ReportingStructure.DocumentType.DocumentTypeName
+                    PerformancereviewPeriodStageId = stage.PMReviewProgressStatusId,
+                    ProcessStageId = stage.ProcessStageId,
+                    ReviewStageName = stage.ProcessStage.ProcessStageName,
+                    PMReviewId = stage.PMReviewId,
+                    ReviewPeriodName = string.Format("{0} - {1}", review.PMReviewPeriod.PerformanceYear.PerformanceYearName,
+                                                                  review.PMReviewPeriod.ReviewPeriod.ReviewPeriodName),
+                    DocumentOwnerId = review.ReportingStructure.MemberId,
+                    LineManagerId = review.ReportingStructure.ManagerId,
+                    EmployeeName = string.Format("{0} {1}", review.ReportingStructure.Owner.Name,
+                                                            review.ReportingStructure.Owner.Name),
+                    LineManagerName = string.Format("{0} {1}", review.ReportingStructure.Manager.Name,
+                                                              review.ReportingStructure.Manager.Name),
+                    NetworkUsername = review.ReportingStructure.Owner.NetworkUsername,
+                    ManagerUsername = review.ReportingStructure.Manager.NetworkUsername,
+                    DocumentType = review.ReportingStructure.DocumentType.DocumentTypeName
                 });
             }
             return (performanceReviews);
         }
 
         [HttpGet]
-        public ActionResult AddPerformanceReviewContents(int? performanceReviewId, FormModeOption? formProcessingMode, long? 
+        public ActionResult AddPerformanceReviewContents(int? performanceReviewId, FormModeOption? formProcessingMode, long?
                                                               measureId, bool? processingStatus, string message) {
             if ((performanceReviewId == null) || (formProcessingMode == null))
                 return RedirectToAction("ManageReview", new { username = User.Identity.Name });
@@ -271,7 +268,7 @@ namespace SchoolProject.WebApplication.Controllers
 
         public string ManagerNetworkUsername(int performanceReviewId) {
             var result = _dbContext.PMReview.Include(x => x.ReportingStructure.Owner).Include(x => x.ReportingStructure.Manager).
-                         FirstOrDefault(x => x.PMReviewPeriodId == performanceReviewId && x.ReportingStructure.Manager.DateDeleted == null);
+                         FirstOrDefault(x => x.PMReviewId == performanceReviewId && x.ReportingStructure.Manager.DateDeleted == null);
             if (result != null)
                 return result.ReportingStructure.Manager.NetworkUsername;
             return ("Unknown");
@@ -280,7 +277,7 @@ namespace SchoolProject.WebApplication.Controllers
         public List<SelectionOptions> GetReviewStrategicGoals() {
             var results = new List<SelectionOptions>();
             var goals = _dbContext.StrategicGoal.Where(x => x.DateDeleted == null);
-            foreach(var goal in goals) {
+            foreach (var goal in goals) {
                 results.Add(new SelectionOptions() {
                     DisplayText = goal.StrategicGoalName,
                     ValueText = goal.StrategicGoalId.ToString()
@@ -319,7 +316,7 @@ namespace SchoolProject.WebApplication.Controllers
             var currentMesures = new List<PerformanceReeviewContent>();
             var results = _dbContext.PMMeasure.Where(X => X.DateDeleted == null && X.StrategeicGoal.PMReviewId == PerformanceReviewId).
                               Include(x => x.StrategeicGoal).Include(x => x.StrategeicGoal.StrategicGoal);
-            foreach( var measure in results) {
+            foreach (var measure in results) {
                 currentMesures.Add(new PerformanceReeviewContent() {
                     MeasureId = measure.PMMeasureId,
                     MeasureName = measure.MeasureName,
@@ -339,12 +336,12 @@ namespace SchoolProject.WebApplication.Controllers
                 switch (modelView.FormProcessingMode) {
                     case FormModeOption.CREATE: {
                             if (AddNewMeasure(modelView)) {
-                               var successOne = string.Format("Successfully added measure: {0}.", modelView.MeasureName);
-                               return RedirectToAction("AddPerformanceReviewContents", 
-                                    new {
-                                    performanceReviewId = modelView.PerformanceReviewId, formProcessingMode = FormModeOption.CREATE,
-                                    processingStatus = true, message = successOne 
-                                });
+                                var successOne = string.Format("Successfully added measure: {0}.", modelView.MeasureName);
+                                return RedirectToAction("AddPerformanceReviewContents",
+                                     new {
+                                         performanceReviewId = modelView.PerformanceReviewId, formProcessingMode = FormModeOption.CREATE,
+                                         processingStatus = true, message = successOne
+                                     });
                             }
                             else {
                                 modelView.ProcessingStatus = false;
@@ -362,7 +359,7 @@ namespace SchoolProject.WebApplication.Controllers
                         measure.ModifiedBy = modelView.Username;
                         measure.DateModified = DateTime.Now;
                         _dbContext.SaveChanges();
-                       var success = modelView.ProcessingStatusMessage = string.Format("Successfully updated measure: {0}.", measure.MeasureName);
+                        var success = string.Format("Successfully updated measure: {0}.", measure.MeasureName);
                         return RedirectToAction("AddPerformanceReviewContents",
                                     new {
                                         performanceReviewId = modelView.PerformanceReviewId, formProcessingMode = FormModeOption.CREATE,
@@ -409,9 +406,9 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         private int GetReviewStrategicGoal(CreateMeasureModelView modelView) {
-            var goal =  (_dbContext.PMStrategicGoal.FirstOrDefault(x => x.PMReviewId == modelView.PerformanceReviewId &&
-                                                                         x.StrategicGoalId == modelView.StrategicGoalId &&
-                                                                         x.DateDeleted == null));
+            var goal = (_dbContext.PMStrategicGoal.FirstOrDefault(x => x.PMReviewId == modelView.PerformanceReviewId &&
+                                                                        x.StrategicGoalId == modelView.StrategicGoalId &&
+                                                                        x.DateDeleted == null));
             if (goal != null)
                 return goal.PMStrategicGoalId;
             var addStrategicGoal = _dbContext.PMStrategicGoal.Add(TransformStrategicGoal(modelView));
@@ -424,7 +421,7 @@ namespace SchoolProject.WebApplication.Controllers
                 PMStrategicGoalId = reviewStrategicGoalId,
                 MeasureName = modelView.MeasureName,
                 MeasureWeight = modelView.MeasureWeight,
-                PMObjective =modelView.ObjectiveName,
+                PMObjective = modelView.ObjectiveName,
                 SubjectMatterExpert = "Employee",
                 StatusId = 1,
                 CreatedBy = modelView.Username,
@@ -452,10 +449,127 @@ namespace SchoolProject.WebApplication.Controllers
         }
 
         private bool StrategicGoalExist(int strategicGoalId, int performanceReviewId) {
-            var result = _dbContext.PMStrategicGoal.FirstOrDefault(x => x.PMReviewId == performanceReviewId && 
-                                                                         x.StrategicGoalId == strategicGoalId && 
+            var result = _dbContext.PMStrategicGoal.FirstOrDefault(x => x.PMReviewId == performanceReviewId &&
+                                                                         x.StrategicGoalId == strategicGoalId &&
                                                                          x.DateDeleted == null);
             return result == null ? false : true;
+        }
+
+        [HttpGet]
+        public ActionResult ConfirmReviewPeriodContentCreation(int? performanceReviewId, string managerUsername) {
+            if (performanceReviewId == null)
+                return RedirectToAction("ManageReview", new { username = User.Identity.Name });
+            var status = false;
+            var processingMessage = string.Empty;
+            var totalMeasures = _dbContext.PMMeasure.Where(x => x.StrategeicGoal.PMReviewId == (int)performanceReviewId &&
+                                     x.DateDeleted == null).Include(x => x.StrategeicGoal).ToList();
+            if (totalMeasures.Count == 0) {
+                return RedirectToAction("AddPerformanceReviewContents",
+                            new {
+                                performanceReviewId = performanceReviewId, formProcessingMode = FormModeOption.CREATE,
+                                processingStatus = false, message = "Please capture Performance Review Contents!!"
+                            });
+            }
+
+            if (totalMeasures.Sum(x => x.MeasureWeight) == 100) {
+                if (CreatePMReviewProgressStatus(2, (int)performanceReviewId, managerUsername)) {
+                    status = true;
+                    processingMessage = "Successfully completed Performance Review Content Creation";
+                }
+                else {
+                    status = false;
+                    processingMessage = "An error has occurred while trying to move the Performance Review to " +
+                                        "Content Creation!! Please try again";
+                }
+            }
+            else {
+                status = false;
+                processingMessage = string.Format("The Total Overall Performace Review Weight should be 100.00 %!. " +
+                                           "Current Total Weight: {0} %", totalMeasures.Sum(x => x.MeasureWeight));
+
+            }
+            return RedirectToAction("AddPerformanceReviewContents",
+                            new {
+                                performanceReviewId = performanceReviewId, formProcessingMode = FormModeOption.CREATE,
+                                processingStatus = status, message = processingMessage
+                            });
+        }
+
+        private bool CreatePMReviewProgressStatus(int processStageId, int pmReviewId, string username) {
+            var progressStage = new PMReviewProgressStatus() {
+                ProcessStageId = processStageId,
+                PMReviewId = pmReviewId,
+                DateCreated = DateTime.Now,
+                CreatedBy = username,
+                StatusId = 1,
+                DateModified = DateTime.Now,
+                ModifiedBy = username,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now
+            };
+            _dbContext.PMReviewProgressStatus.Add(progressStage);
+            _dbContext.SaveChanges();
+            return (true);
+        }
+
+        [HttpGet]
+        public ActionResult ScoreMeasure(int? performanceReviewId, long? measureId) {
+            if (performanceReviewId == null)
+                return RedirectToAction("ManageReview", new { username = User.Identity.Name });
+            if (measureId == null)
+                measureId = _dbContext.PMMeasure.FirstOrDefault(x => x.StrategeicGoal.PMReviewId == performanceReviewId
+                                                                 && x.DateDeleted == null).PMMeasureId;
+            var measure = _dbContext.PMMeasure.Include(x => x.StrategeicGoal).Include(x => x.StrategeicGoal.StrategicGoal)
+                                              .FirstOrDefault(x => x.PMMeasureId == (long)measureId && x.DateDeleted == null);
+
+            var modelView = new ScoreReviewViewModel() {
+                Username = User.Identity.Name,
+                ManagerUsername = ManagerNetworkUsername((int)performanceReviewId),
+                CurrentReviewStatus = GetCurrentReviewStatus((int)performanceReviewId),
+                PerformanceReviewId = (int)performanceReviewId,
+                MeasureId = measure.PMMeasureId,
+                MeasureName = measure.MeasureName,
+                MeasureWeight = measure.MeasureWeight,
+                StrategicGoal = measure.StrategeicGoal.StrategicGoal.StrategicGoalName,
+                Objective = measure.PMObjective,
+                IsLineManager = IsLineManager(User.Identity.Name, (int)performanceReviewId),
+                MaximumScore = GetMaximumRating(),
+                ReviewContents = GetReviewMeasures((int)performanceReviewId)
+            };
+            return View(modelView);
+        }
+
+        private bool IsLineManager(string username, int reviewId) {
+            var employee = _dbContext.PMReview.Include(x => x.ReportingStructure.Manager).FirstOrDefault(x => x.PMReviewId == reviewId 
+                                                        && x.DateDeleted == null);
+            if (employee == null)
+                return false;
+            return string.Compare(employee.ReportingStructure.Manager.NetworkUsername, username, true) == 0 ? true : false;
+        }
+
+        public List<PerformanceReviewScoringContent> GetReviewMeasures(int PerformanceReviewId) {
+            var currentMesures = new List<PerformanceReviewScoringContent>();
+            var results = _dbContext.PMMeasure.Where(X => X.DateDeleted == null && X.StrategeicGoal.PMReviewId == PerformanceReviewId).
+                              Include(x => x.StrategeicGoal).Include(x => x.StrategeicGoal.StrategicGoal);
+            foreach (var measure in results) {
+                currentMesures.Add(new PerformanceReviewScoringContent() {
+                    MeasureId = measure.PMMeasureId,
+                    MeasureName = measure.MeasureName,
+                    ObjectiveName = measure.PMObjective,
+                    StrategicGoalID = measure.PMStrategicGoalId,
+                    StrategicGoalName = measure.StrategeicGoal.StrategicGoal.StrategicGoalName,
+                    MeasureWeight = measure.MeasureWeight,
+                    EmployeeComments = measure.EmployeeComments,
+                    ManagerComments = measure.LineManagerComments,
+                    EmployeeScore = measure.EmployeeScore,
+                    ManagerScore = measure.LineManagerScore
+                });
+            }
+            return (currentMesures);
+        }
+
+        private decimal GetMaximumRating() {
+            return _dbContext.ScoreRating.Max(x => x.MaxScore);
         }
     }
 }
