@@ -11,6 +11,8 @@ using SchoolProject.WebApplication.ViewModels;
 
 namespace SchoolProject.WebApplication.Controllers
 {
+    [Authorize]
+    [HandleError]
     public class AdministrationController : _BaseController
     {
         private readonly IAdmininstrationManager _iAdminstrationManager;

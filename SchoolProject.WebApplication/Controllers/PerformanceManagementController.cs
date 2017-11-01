@@ -300,7 +300,7 @@ namespace SchoolProject.WebApplication.Controllers {
                 case "CONTENT CREATION":
                     return ReviewProcessStatus.Content_Creation;
                 case "CONTENT CREATION COMPLETED":
-                    return ReviewProcessStatus.Content_Creattion_Completed;
+                    return ReviewProcessStatus.Content_Creation_Completed;
                 case "EMPLOYEE SCORING":
                     return ReviewProcessStatus.Employee_Scoring;
                 case "LINE MANAGER SCORING":
@@ -353,7 +353,7 @@ namespace SchoolProject.WebApplication.Controllers {
                     case FormModeOption.EDIT:
                         var measure = _dbContext.PMMeasure.Find(modelView.MeasureId);
                         measure.MeasureName = modelView.MeasureName;
-                        measure.MeasureWeight = measure.MeasureWeight;
+                        measure.MeasureWeight = modelView.MeasureWeight;
                         measure.PMStrategicGoalId = GetReviewStrategicGoal(modelView);
                         measure.PMObjective = modelView.ObjectiveName;
                         measure.ModifiedBy = modelView.Username;
@@ -513,7 +513,7 @@ namespace SchoolProject.WebApplication.Controllers {
         }
 
         [HttpGet]
-        public ActionResult ScoreMeasure(int? performanceReviewId, long? measureId) {
+        public ActionResult ScoreReview(int? performanceReviewId, long? measureId, bool? processingStatus, string message) {
             if (performanceReviewId == null)
                 return RedirectToAction("ManageReview", new { username = User.Identity.Name });
             if (measureId == null)
@@ -536,8 +536,64 @@ namespace SchoolProject.WebApplication.Controllers {
                 MaximumScore = GetMaximumRating(),
                 ReviewContents = GetReviewMeasures((int)performanceReviewId)
             };
+
+            modelView.Score = measure.EmployeeScore;
+            modelView.CaptureComments = measure.EmployeeComments;
+            if (modelView.IsLineManager) {
+                modelView.Score = measure.LineManagerScore;
+                modelView.CaptureComments = measure.LineManagerComments;
+            }
+
+            if (!string.IsNullOrEmpty(message)) {
+                modelView.ProcessingStatusMessage = message;
+                modelView.ProcessingStatus = (bool)processingStatus;
+            }
+
             return View(modelView);
         }
+
+        [HttpPost]
+        public ActionResult ScoreReview(ScoreReviewViewModel modelView) {
+            if (ModelState.IsValid) {
+                if (modelView.Score <= modelView.MaximumScore) {
+                    if (UpdateMeasureScore(modelView)) {
+                        modelView.ProcessingStatus = true;
+                        modelView.ProcessingStatusMessage = string.Format("Successfully updated measure: {0}  score to {1}", modelView.MeasureName, modelView.Score);
+                    }
+                    else {
+                        modelView.ProcessingStatus = false;
+                        modelView.ProcessingStatusMessage = string.Format("Failed to update measure: {0}  score!!! Please try again", modelView.MeasureName);
+                    }
+                }
+                else {
+                    modelView.ProcessingStatus = false;
+                    modelView.ProcessingStatusMessage = string.Format("The Maximum allowed score is {0}", modelView.MaximumScore);
+                }
+            }
+            modelView.ReviewContents = GetReviewMeasures(modelView.PerformanceReviewId);
+            //REFRESH
+            return View(modelView);
+        }
+
+        private bool UpdateMeasureScore(ScoreReviewViewModel modelView) {
+            var measure = _dbContext.PMMeasure.Find(modelView.MeasureId);
+
+            //Manager Scoring
+            if (modelView.IsLineManager) {
+                measure.LineManagerScore = modelView.Score;
+                measure.LineManagerComments = modelView.CaptureComments;
+                measure.ModifiedBy = modelView.ManagerUsername;
+                measure.DateModified = DateTime.Now;
+            }
+            else {
+                measure.EmployeeScore = modelView.Score;
+                measure.EmployeeComments = modelView.CaptureComments;
+                measure.ModifiedBy = modelView.Username;
+                measure.DateModified = DateTime.Now;
+            }
+            _dbContext.SaveChanges();
+            return true;
+        } 
 
         private bool IsLineManager(string username, int reviewId) {
             var employee = _dbContext.PMReview.Include(x => x.ReportingStructure.Manager).FirstOrDefault(x => x.PMReviewId == reviewId 
@@ -568,8 +624,73 @@ namespace SchoolProject.WebApplication.Controllers {
             return (currentMesures);
         }
 
+        [HttpGet]
+        public ActionResult ConfirmReviewScoring(int? performanceReviewId, string managerUsername) {
+            if (performanceReviewId == null)
+                return RedirectToAction("ManageReview", new { username = User.Identity.Name });
+            var status = false;
+            var processingMessage = string.Empty;
+            var totalMeasures = _dbContext.PMMeasure.Where(x => x.StrategeicGoal.PMReviewId == performanceReviewId &&
+                                     x.DateDeleted == null && x.LineManagerScore <= 0).Include(x => x.StrategeicGoal).ToList();
+            if (totalMeasures.Count > 0) {
+                return RedirectToAction("ScoreReview",
+                            new {
+                                performanceReviewId = performanceReviewId,
+                                processingStatus = false, message = "Please capture all review score before concluding the Performance review!!"
+                            });
+            }
+
+            if (totalMeasures.Count == 0) {
+                if (CreatePMReviewProgressStatus(6, (int)performanceReviewId, managerUsername)) {
+                    status = true;
+                    processingMessage = "Successfully completed Performance Review Scoring";
+                }
+                else {
+                    status = false;
+                    processingMessage = "An error has occurred while trying to conclude the Performance Review!!! " +
+                                        "Please try again.";
+                }
+            }
+            
+            return RedirectToAction("ScoreReview",
+                            new {
+                                performanceReviewId = performanceReviewId,
+                                processingStatus = status, message = processingMessage
+                            });
+        }
+
         private decimal GetMaximumRating() {
             return _dbContext.ScoreRating.Max(x => x.MaxScore);
+        }
+
+        [HttpGet]
+        public ActionResult ViewReviewResult(int? performanceReviewId) {
+            if (performanceReviewId == null)
+                return RedirectToAction("ManageReview", new { username = User.Identity.Name });
+
+            var reviewContents = GetReviewMeasures((int)performanceReviewId);
+            var reviewAverageScore = GetReviewAverageScore(reviewContents);
+
+            var modelView = new ViewReviewResultModel() {
+                Username = User.Identity.Name,
+                AverageReviewScore = reviewAverageScore,
+                ReviewMeasures = reviewContents,
+                ReviewRating = GetReviewRating(reviewAverageScore)
+            };
+            return View(modelView);
+        }
+
+        private string GetReviewRating(decimal reviewAverageScore) {
+            var result = _dbContext.ScoreRating.Where(x => reviewAverageScore >= x.MinScore).
+                         Where(x => reviewAverageScore < x.MaxScore).FirstOrDefault();
+            if (result == null)
+                return "UNKNOWN RATING";
+            return result.Rating.ToUpper();
+        }
+
+        private decimal GetReviewAverageScore(List<PerformanceReviewScoringContent> reviewContents) {
+            var score = reviewContents.Sum(x => x.ManagerScore * (x.MeasureWeight / 100));
+            return score;
         }
     }
 }

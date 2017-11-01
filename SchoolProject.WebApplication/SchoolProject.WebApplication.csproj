@@ -521,6 +521,7 @@
     <Compile Include="ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\ScoreReviewViewModel.cs" />
     <Compile Include="ViewModels\SelectionOptions.cs" />
+    <Compile Include="ViewModels\ViewReviewResultModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -644,6 +645,7 @@
     <Content Include="Views\PerformanceManagement\CreateReviewDocument.cshtml" />
     <Content Include="Views\PerformanceManagement\AddPerformanceReviewContents.cshtml" />
     <Content Include="Views\PerformanceManagement\ScoreReview.cshtml" />
+    <Content Include="Views\PerformanceManagement\ViewReviewResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

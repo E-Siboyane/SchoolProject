@@ -1,0 +1,103 @@
+﻿@model SchoolProject.WebApplication.ViewModels.ViewReviewResultModel
+
+@{
+    ViewBag.Title = "ViewReviewResult";
+}
+
+<h2>View Performance Review Result</h2>
+<hr />
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <tr style="background-color:#2e6da4;color:#ffffff">
+            <th>@Html.Raw("Objective")</th>
+            <th>@Html.Raw("Measure")</th>
+            <th>@Html.Raw("Employee Score")</th>
+            <th>@Html.Raw("Manager Score")</th>
+        </tr>
+        @foreach (var group in Model.ReviewMeasures.GroupBy(x => x.StrategicGoalName)) {
+            <tr class="group-header">
+                <td colspan="4" style="text-align:center;font-weight:bold; cursor:pointer">
+                    @Html.Raw(string.Format("{0} - Total Weight {1} %", @group.Key, decimal.Round(@group.Sum(x => x.MeasureWeight), 2, MidpointRounding.AwayFromZero)))
+                </td>
+            </tr>
+            foreach (var item in group) {
+                <tr>
+                    <td>@Html.Raw(item.ObjectiveName)</td>
+                    <td>@Html.Raw(string.Format("{0} - Weight {1}%", item.MeasureName, decimal.Round(item.MeasureWeight, 2, MidpointRounding.AwayFromZero)))</td>
+                    <td>@Html.Raw(item.EmployeeScore)</td>
+                    <td>@Html.Raw(item.ManagerScore)</td>
+                </tr>
+            }
+        }
+        <tr class="group-header" style="background-color:#2e6da4; color:#ffffff">
+            <td colspan="2" style="text-align:center;font-weight:bold; cursor:pointer">
+                @Html.Raw(string.Format("{0} : {1}", "Performance Review Rating".ToUpper(), Model.ReviewRating))
+            </td>
+            <td colspan="2" style="text-align:center;font-weight:bold; cursor:pointer">
+                @Html.Raw(string.Format("{0} : {1}", "AVERAGE SCORE", decimal.Round(Model.AverageReviewScore, 2, MidpointRounding.AwayFromZero)))
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-md-offset-4 col-md-8">
+        <a href="@Url.Action("ManageReview", "PerformanceManagement", new { username = Model.Username})" class="btn btn-md btn-primary" role="button">
+            <span class="glyphicon glyphicon-chevron-left glyphicon-chevron-left">
+            </span>&nbsp;Back To Performance Reviews Listing
+        </a>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        a:hover, a:visited, a:link, a:active {
+            text-decoration: none;
+        }
+
+        .controls {
+            margin-bottom: 10px;
+        }
+
+        .collapse-group {
+            padding: 10px;
+            border: 1px solid darkgrey;
+            margin-bottom: 10px;
+        }
+
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+            $(document).ready(function () {
+
+                //initial bootstrap tooltip and hide after click event
+                $('body').tooltip({
+                    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+                    trigger: 'hover',
+                    container: 'body'
+                }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+                    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+                });
+
+                $(function () {
+                    $('.group-header').click(function () {
+                        $(this).nextUntil('.group-header').toggle();
+                    });
+                });
+
+            });
+    </script>
+}
