@@ -5,9 +5,10 @@
 }
 
 <h2>Performance Review Years</h2>
+<hr />
 
 <div class="table-responsive">
-    <table id="datatable" class="table table-hover">
+    <table id="datatable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>
@@ -36,11 +37,11 @@
                         @Html.Raw(item.EndDate.ToString("MMMM dd yyyy"))
                     </td>
                     <td>
-                        <a href="@Url.Action("ManagePerformanceYear", "Administration", new { performanceYearId = item.PerformanceYearId , formMode = FormModeOption.EDIT  })" class="btn btn-md btn-primary" role="button">
+                        <a href="@Url.Action("ManagePerformanceYear", "Administration", new { performanceYearId = item.PerformanceYearId , formMode = FormModeOption.EDIT  })" class="btn btn-sm btn-primary" role="button">
                             <span class="glyphicon glyphicon-pencil">
                             </span>
                         </a>
-                        <a href="@Url.Action("ManagePerformanceYear", "Administration", new { performanceYearId = item.PerformanceYearId, formMode = FormModeOption.DELETE  })" class="btn btn-md btn-danger" role="button">
+                        <a href="@Url.Action("ManagePerformanceYear", "Administration", new { performanceYearId = item.PerformanceYearId, formMode = FormModeOption.DELETE  })" class="btn btn-sm btn-danger" role="button">
                             <span class="glyphicon glyphicon-remove">
                             </span>
                         </a>

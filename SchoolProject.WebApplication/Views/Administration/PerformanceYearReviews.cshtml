@@ -6,50 +6,31 @@
 
 <h2>Performance Year Review Period</h2>
 
-<p>
-    
-</p>
-<table id="datatable" class="table table-hover">
-    <thead>
-        <tr>
-            <th>
-                @Html.Raw("Review Period Name")
-            </th>
-            <th>
-                @Html.Raw("Review Period Code")
-            </th>
-            <th>
-                @Html.ActionLink("Create New", "Create")
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
-            <tr>               
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReviewPeriodName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReviewPeriodCode)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
+<hr />
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.Raw("Review Period Name")
+                </th>
+                <th>
+                    @Html.Raw("Review Period Code")
+                </th>
             </tr>
-        }
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>
-                @Html.Raw("Review Period Name")
-            </th>
-            <th>
-                @Html.Raw("Review Period Code")
-            </th>
-            <th>
-            </th>
-        </tr>
-    </tfoot>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReviewPeriodName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReviewPeriodCode)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>

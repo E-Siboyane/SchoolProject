@@ -7,7 +7,7 @@
 <h2>Manage Employees</h2>
 <hr />
 <div class="table-responsive">
-<table id="datatable" class="table table-hover">
+<table id="datatable" class="table table-striped table-hover">
     <thead>
         <tr>
             <th>@Html.Raw("Employee Code")</th>
@@ -30,11 +30,11 @@
                 <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
                 <td>
                    
-                    <a href="@Url.Action("UpdateEmployee", "Administration", new { employeeRecordId = item.EmployeeRecordId  })" class="btn btn-md btn-primary" role="button">
+                    <a href="@Url.Action("UpdateEmployee", "Administration", new { employeeRecordId = item.EmployeeRecordId  })" class="btn btn-sm btn-primary" role="button">
                         <span class="glyphicon glyphicon-pencil">
                         </span>
                     </a> 
-                    <a href="@Url.Action("RemoveEmployee", "Administration", new { employeeRecordId = item.EmployeeRecordId })" class="btn btn-md btn-danger" role="button">
+                    <a href="@Url.Action("RemoveEmployee", "Administration", new { employeeRecordId = item.EmployeeRecordId })" class="btn btn-sm btn-danger" role="button">
                         <span class="glyphicon glyphicon-remove">
                         </span>
                     </a>
@@ -42,17 +42,7 @@
             </tr>
         }
     </tbody>
-    <tfoot>
-        <tr>
-            <th>@Html.Raw("Employee Code")</th>
-            <th>@Html.Raw("Job Grade")</th>
-            <th>@Html.Raw("Employee Name")</th>
-            <th>@Html.Raw("Team")</th>
-            <th>@Html.Raw("Department")</th>
-            <th>@Html.Raw("Status")</th>
-            <th></th>
-        </tr>
-    </tfoot>
+    
 </table>
 </div>
 <div class="row">

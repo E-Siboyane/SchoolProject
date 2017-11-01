@@ -8,7 +8,7 @@
 <h2>Employees Reporting Structure</h2>
 <hr />
 <div class="table-responsive">
-    <table id="datatable" class="table table-hover">
+    <table id="datatable" class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>@Html.Raw("Job Grade")</th>
@@ -28,11 +28,11 @@
                     <td>@Html.DisplayFor(modelItem => item.DocumentTypeName)</td>
                     <td>@Html.DisplayFor(modelItem => item.StatusName)</td>
                     <td>
-                        <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.EDIT  })" class="btn btn-md btn-primary" role="button">
+                        <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.EDIT  })" class="btn btn-sm btn-primary" role="button">
                             <span class="glyphicon glyphicon-pencil">
                             </span>
                         </a>
-                        <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.DELETE })" class="btn btn-md btn-danger" role="button">
+                        <a href="@Url.Action("UpdateReportingStructure", "Administration", new { employeeReportingRecordId = item.EmployeeRecordId, formMode = FormModeOption.DELETE })" class="btn btn-sm btn-danger" role="button">
                             <span class="glyphicon glyphicon-remove">
                             </span>
                         </a>
@@ -40,16 +40,6 @@
                 </tr>
             }
         </tbody>
-        <tfoot>
-            <tr>
-                <th>@Html.Raw("Job Grade")</th>
-                <th>@Html.Raw("Employee")</th>
-                <th>@Html.Raw("Manager")</th>
-                <th>@Html.Raw("Document Type")</th>
-                <th>@Html.Raw("Status")</th>
-                <th></th>
-            </tr>
-        </tfoot>
     </table>
 </div>
 <div class="row">
