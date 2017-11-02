@@ -199,7 +199,8 @@ namespace SchoolProject.WebApplication.Controllers {
         public List<ManagePerformanceReview> GetDirectReportingReviewPeriods(string usernmame) {
             var performanceReviews = new List<ManagePerformanceReview>();
 
-            var filterReviews = _dbContext.PMReview.Where(x => x.DateDeleted == null && x.ReportingStructure.Manager.NetworkUsername == usernmame).
+            var filterReviews = _dbContext.PMReview.Where(x => x.DateDeleted == null && x.ReportingStructure.Manager.NetworkUsername == usernmame && 
+                                       x.ReportingStructure.DateDeleted == null).
                               Include(x => x.ReportingStructure).Include(x => x.PMReviewPeriod).
                               Include(x => x.PMReviewPeriod.PerformanceYear).Include(x => x.PMReviewPeriod.ReviewPeriod).
                               Include(x => x.ReportingStructure.Manager).Include(x => x.ReportingStructure.Owner).
@@ -689,8 +690,45 @@ namespace SchoolProject.WebApplication.Controllers {
         }
 
         private decimal GetReviewAverageScore(List<PerformanceReviewScoringContent> reviewContents) {
-            var score = reviewContents.Sum(x => x.ManagerScore * (x.MeasureWeight / 100));
-            return score;
+            if (reviewContents.Count > 0) {
+                var score = reviewContents.Sum(x => x.ManagerScore * (x.MeasureWeight / 100));
+                return score;
+            }
+            //Default
+            return 1;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult ViewAllReviewsResults() {
+            var listOfReviews = new List<AllReviewModelView>();
+            var filterReviews = _dbContext.PMReview.AsNoTracking().Where(x => x.DateDeleted == null).Include(x => x.PMReviewPeriod).
+                              Include(x => x.PMReviewPeriod.PerformanceYear).Include(x => x.PMReviewPeriod.ReviewPeriod).ToList();
+            var reviewIds = filterReviews.Select(x => x.PMReviewId).ToList();
+            var reviewStages = _dbContext.PMReviewProgressStatus.AsNoTracking().Where(x => reviewIds.Contains(x.PMReviewId)).Include(x => x.ProcessStage).ToList();
+            var Employees = _dbContext.PMReviewReportingStructure.AsNoTracking().Include(x => x.Owner.Team).Include(x => x.Manager.Team).
+                               Include(x => x.Manager.Team.Department).Include(x => x.Owner.Team.Department).ToList();
+            foreach (var performanceReviewId in reviewIds) {
+                var stage = reviewStages.Where(x => x.PMReviewId == performanceReviewId && x.DateDeleted == null).
+                    OrderByDescending(x => x.PMReviewProgressStatusId).FirstOrDefault();
+                var reviewContents = GetReviewMeasures((int)performanceReviewId);
+                var reviewAverageScore = GetReviewAverageScore(reviewContents);
+                var rating = GetReviewRating(reviewAverageScore);
+                var review = filterReviews.FirstOrDefault(x => x.PMReviewId == performanceReviewId);
+                var employee = Employees.FirstOrDefault(x => x.ReviewReportingStructureId == review.ReviewReportingStructureId);
+                listOfReviews.Add(new AllReviewModelView() {
+                    PerformanceReviewId = performanceReviewId,
+                    ReviewName = string.Format("{0} - {1}", review.PMReviewPeriod.PerformanceYear.PerformanceYearName,
+                                                                  review.PMReviewPeriod.ReviewPeriod.ReviewPeriodName),
+                    EmployeeName = string.Format("{0} {1}", employee.Owner.Name, employee.Owner.Surname),
+                    Manager = string.Format("{0} {1}", employee.Manager.Name, employee.Manager.Surname),
+                    Department = employee.Owner.Team.Department.DepartmentName,
+                    Rating = rating,
+                    ReviewStatus = stage.ProcessStage.ProcessStageName,
+                    AverageScore = reviewAverageScore
+                });
+            }
+            return View(listOfReviews);
         }
     }
 }

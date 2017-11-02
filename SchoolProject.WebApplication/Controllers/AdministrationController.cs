@@ -11,7 +11,7 @@ using SchoolProject.WebApplication.ViewModels;
 
 namespace SchoolProject.WebApplication.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HandleError]
     public class AdministrationController : _BaseController
     {

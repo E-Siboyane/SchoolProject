@@ -503,6 +503,7 @@
     <Compile Include="ServiceManager\NinjectStandardModuleManager.cs" />
     <Compile Include="ServiceManager\PerformanceDocumentManager.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AllReviewModelView.cs" />
     <Compile Include="ViewModels\CreateMeasureModelView.cs" />
     <Compile Include="ViewModels\FormModeOption.cs" />
     <Compile Include="ViewModels\LinkEmployeeManager.cs" />
@@ -646,6 +647,7 @@
     <Content Include="Views\PerformanceManagement\AddPerformanceReviewContents.cshtml" />
     <Content Include="Views\PerformanceManagement\ScoreReview.cshtml" />
     <Content Include="Views\PerformanceManagement\ViewReviewResult.cshtml" />
+    <Content Include="Views\PerformanceManagement\ViewAllReviewsResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
