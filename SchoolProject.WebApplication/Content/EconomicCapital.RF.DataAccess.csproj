@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{22CB0D57-10DD-4A26-8B89-AC14C06D5308}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EconomicCapital.RF.DataAccess</RootNamespace>
+    <AssemblyName>EconomicCapital.RF.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
+    <Compile Include="IRFDataProcessing.cs" />
+    <Compile Include="ISimPakDataProcessing.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RFDatabaseContext.cs" />
+    <Compile Include="RFDataProcessing.cs" />
+    <Compile Include="SimPakDataProcessing.cs" />
+    <Compile Include="SP_Get_RFCounterParty.cs" />
+    <Compile Include="Sp_Get_RFCounterPartyRSquared.cs" />
+    <Compile Include="Sp_Get_RFCovarianceModelFactorCoefficients.cs" />
+    <Compile Include="Sp_Get_RFExposureUDV.cs" />
+    <Compile Include="Sp_Get_RFInstrumentPdsFlexible.cs" />
+    <Compile Include="Sp_Get_RFInstrumentPrice.cs" />
+    <Compile Include="Sp_Get_RFInstrumentRating.cs" />
+    <Compile Include="Sp_Get_RFPortfolio.cs" />
+    <Compile Include="Sp_Get_RFPortfolioDetail.cs" />
+    <Compile Include="Sp_Get_RFTermLoanAmortizing.cs" />
+    <Compile Include="Sp_Get_RFTermLoanBullet.cs" />
+    <Compile Include="SP_Get_RFYieldCurveHistory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EconomicCapital.RF.DTO\EconomicCapital.RF.DTO.csproj">
+      <Project>{028b4824-74a4-478b-8e49-f890ecb6eb71}</Project>
+      <Name>EconomicCapital.RF.DTO</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SQLSCRIPTS.V1\ABSA_INSERT_AnalysisJobManager.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_INSERT_AnalysisJobManager_CORE_DB.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_QUEUE_AnalysisJobReports.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_QUEUE_AnalysisJobReports_CORE_DB.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_Reports_AnalysisReports.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_Report_Detailed.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_Report_Detailed_REPORTING_DB.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_Report_Overview.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_Report_Overview_REPORTING_DB.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_SELECT_AnalysisJobReportsDueForProcessing.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_Select_RFAnalysisJobsDueForScheduling.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_Update_AnalysisJobManager.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_Update_AnalysisJobManager_CORE_DB.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_UPDATE_AnalysisJobReportToProcessed.sql" />
+    <Content Include="SQLSCRIPTS.V1\ABSA_UPDATE_AnalysisJobReportToProcessed_CORE_DB.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

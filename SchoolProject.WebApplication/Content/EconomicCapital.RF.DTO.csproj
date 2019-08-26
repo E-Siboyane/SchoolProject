@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{028B4824-74A4-478B-8E49-F890ECB6EB71}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EconomicCapital.RF.DTO</RootNamespace>
+    <AssemblyName>EconomicCapital.RF.DTO</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ABSARetailPolingTMSegmentParam.cs" />
+    <Compile Include="ABSARetailPoolingBulkUpdate.cs" />
+    <Compile Include="ABSARetailPoolingConfigType.cs" />
+    <Compile Include="ABSARetailPoolingConfigTypeDetail.cs" />
+    <Compile Include="ABSARetailPoolingEnumConfigType.cs" />
+    <Compile Include="ABSARetailPoolingGroupTM.cs" />
+    <Compile Include="ABSARetailPoolingLGDPERPDGROUP.cs" />
+    <Compile Include="ABSARetailPoolingLGDSegment.cs" />
+    <Compile Include="ABSARetailPoolingInput.cs" />
+    <Compile Include="ABSARetailPoolingLGDSegmentParam.cs" />
+    <Compile Include="ABSARetailPoolingPDSegment.cs" />
+    <Compile Include="ABSARetailPoolingPDSegmentParam.cs" />
+    <Compile Include="ABSARetailPoolingTMSegment.cs" />
+    <Compile Include="ABSARetailProcessingProgress.cs" />
+    <Compile Include="ABSARetailProcessingProgressDetail.cs" />
+    <Compile Include="AnalysisJobManager.cs" />
+    <Compile Include="AnalysisJobReport.cs" />
+    <Compile Include="AnalysisJobsDueForProcessing.cs" />
+    <Compile Include="ABSARetailPoolingClusterSegment.cs" />
+    <Compile Include="CommonFactors.cs" />
+    <Compile Include="CommonFactorStandardDeviation.cs" />
+    <Compile Include="Correlation.cs" />
+    <Compile Include="CorrelationModels.cs" />
+    <Compile Include="Counterparty.cs" />
+    <Compile Include="CounterpartyRSquared.cs" />
+    <Compile Include="CountryFactorBetas.cs" />
+    <Compile Include="CountryFactorRSquaredTemp.cs" />
+    <Compile Include="CountryFactors.cs" />
+    <Compile Include="CovarianceModelFactorCoefficients.cs" />
+    <Compile Include="DbContextType.cs" />
+    <Compile Include="ExposureUDV.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="ICorrelation.cs" />
+    <Compile Include="IDtoCommonMethod.cs" />
+    <Compile Include="ImportAsOfDate.cs" />
+    <Compile Include="ImportType.cs" />
+    <Compile Include="IndustryFactorBetas.cs" />
+    <Compile Include="IndustryFactorRSquared.cs" />
+    <Compile Include="IndustryFactors.cs" />
+    <Compile Include="InstrumentPdsFlexible.cs" />
+    <Compile Include="InstrumentPrice.cs" />
+    <Compile Include="InstrumentRating.cs" />
+    <Compile Include="LGDFinalPoolLogicParam.cs" />
+    <Compile Include="ParamPDRatioInitialRank.cs" />
+    <Compile Include="PDFinalPoolLogicParam.cs" />
+    <Compile Include="ABSAPoolingLookup.cs" />
+    <Compile Include="ProcessNewRanking.cs" />
+    <Compile Include="ProgressStatus.cs" />
+    <Compile Include="RetailInputFileParam.cs" />
+    <Compile Include="RetailPoolingFileType.cs" />
+    <Compile Include="RetailPoolingInput.cs" />
+    <Compile Include="PoolingInterval.cs" />
+    <Compile Include="Portfolio.cs" />
+    <Compile Include="PortfolioDetail.cs" />
+    <Compile Include="RetailBucketNumber.cs" />
+    <Compile Include="TermLoanAmortizing.cs" />
+    <Compile Include="TermLoanBullet.cs" />
+    <Compile Include="Job.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="YieldCurveHistory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
